@@ -362,7 +362,7 @@ export function CategoryDiscoveryExplorer({
       {/* ─────────────────────────────────────────────────────────────
           SECTION A: EDITORIAL DISCOVERY HERO
           ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl border border-stone-200/90 bg-gradient-to-b from-stone-900 via-stone-900 to-stone-950 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl border border-stone-800 bg-stone-950 text-white shadow-xl">
         {/* Subtle architectural backdrop */}
         <div className="absolute inset-0 z-0 opacity-25 mix-blend-luminosity">
           <Image
@@ -374,7 +374,7 @@ export function CategoryDiscoveryExplorer({
             className="object-cover object-center filter blur-[1px]"
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/80 to-stone-950/50" />
+          <div className="absolute inset-0 bg-stone-950/80" />
         </div>
 
         <div className="relative z-10 px-6 py-12 sm:px-12 sm:py-16 lg:py-20 max-w-4xl mx-auto text-center space-y-6">
@@ -834,7 +834,7 @@ export function CategoryDiscoveryExplorer({
       {/* ─────────────────────────────────────────────────────────────
           SECTION E: CUSTOM PROCUREMENT CTA
           ───────────────────────────────────────────────────────────── */}
-      <section className="rounded-3xl border border-stone-800 bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 p-8 sm:p-12 text-white shadow-2xl">
+      <section className="rounded-3xl border border-stone-800 bg-stone-950 p-8 sm:p-12 text-white shadow-2xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
           <div className="space-y-3 max-w-2xl">
             <span className="inline-block rounded-full bg-amber-500/20 px-3.5 py-1 text-xs font-semibold text-amber-300 border border-amber-500/30">
