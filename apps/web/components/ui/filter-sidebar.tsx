@@ -15,6 +15,7 @@ export interface FilterSidebarProps {
   colours?: FilterOption[];
   finishes?: FilterOption[];
   origins?: FilterOption[];
+  thicknesses?: FilterOption[];
   stockStatuses?: FilterOption[];
   className?: string;
   isMobileDrawer?: boolean;
@@ -72,6 +73,7 @@ export function FilterSidebar({
   colours = [],
   finishes = [],
   origins = [],
+  thicknesses = [],
   stockStatuses = [],
   className,
   isMobileDrawer = false,
@@ -149,6 +151,7 @@ export function FilterSidebar({
     getParamValues("colour").length +
     getParamValues("finish").length +
     getParamValues("origin").length +
+    getParamValues("thickness").length +
     getParamValues("stockStatus").length +
     (isVerified ? 1 : 0) +
     (minPrice ? 1 : 0) +
@@ -237,6 +240,17 @@ export function FilterSidebar({
         selectedValues={getParamValues("colour")}
         onChange={updateParams}
       />
+
+      {/* Thickness */}
+      {thicknesses.length > 0 && (
+        <FilterCheckboxGroup
+          label="Calibrated Thickness"
+          param="thickness"
+          options={thicknesses}
+          selectedValues={getParamValues("thickness")}
+          onChange={updateParams}
+        />
+      )}
 
       {/* Stock Status */}
       {stockStatuses.length > 0 && (
@@ -418,11 +432,17 @@ export function ActiveFilterPills() {
 
   const pills: { key: string; label: string; onRemove: () => void }[] = [];
 
-  ["category", "material", "colour", "finish", "origin", "stockStatus"].forEach((param) => {
+  ["category", "material", "colour", "finish", "origin", "thickness", "stockStatus"].forEach((param) => {
     searchParams.getAll(param).forEach((val) => {
+      let displayLabel = `${param.charAt(0).toUpperCase() + param.slice(1)}: ${val}`;
+      if (param === "thickness") {
+        displayLabel = `Thickness: ${val}mm`;
+      } else if (param === "stockStatus") {
+        displayLabel = val === "in_stock" ? "In Stock" : "Made to Order";
+      }
       pills.push({
         key: `${param}-${val}`,
-        label: `${param.charAt(0).toUpperCase() + param.slice(1)}: ${val}`,
+        label: displayLabel,
         onRemove: () => removeFilter(param, val),
       });
     });

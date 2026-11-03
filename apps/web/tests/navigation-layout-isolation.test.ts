@@ -44,9 +44,13 @@ vi.mock("@/features/admin/guard", () => ({
 
 const mockGetUserRoles = vi.fn();
 const mockRequireAuth = vi.fn();
+const mockGetCurrentUser = vi.fn(async () => ({ id: "buyer-1", email: "buyer@example.com" }));
+const mockHasRole = vi.fn(async () => true);
 vi.mock("@/lib/auth", () => ({
   getUserRoles: () => mockGetUserRoles(),
   requireAuth: () => mockRequireAuth(),
+  getCurrentUser: () => mockGetCurrentUser(),
+  hasRole: () => mockHasRole(),
 }));
 
 const mockRedirect = vi.fn();

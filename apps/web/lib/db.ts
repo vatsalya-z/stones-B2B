@@ -198,6 +198,12 @@ export interface ProductSummary {
   sellerCity: string | null;
   sellerState: string | null;
   isVerifiedSeller: boolean;
+  thickness?: number | null;
+  length?: number | null;
+  width?: number | null;
+  minimumOrderQuantity?: number | null;
+  stockStatus?: string | null;
+  leadTime?: number | null;
 }
 
 // ─── Default Sellers & Products (Curated Showcase Seed Data) ──────────────────
@@ -884,6 +890,12 @@ function mapSeedProductSummary(p: ProductDetail): ProductSummary {
     sellerCity: p.seller.city,
     sellerState: p.seller.state,
     isVerifiedSeller: p.seller.verification_status === "verified",
+    thickness: p.thickness,
+    length: p.length,
+    width: p.width,
+    minimumOrderQuantity: p.minimum_order_quantity,
+    stockStatus: p.stock_status,
+    leadTime: p.lead_time,
   };
 }
 
@@ -943,6 +955,13 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
   if (params.stockStatus) {
     const stats = Array.isArray(params.stockStatus) ? params.stockStatus : [params.stockStatus];
     list = list.filter((p) => p.stock_status && stats.includes(p.stock_status));
+  }
+
+  if (params.thickness) {
+    const thicks = (Array.isArray(params.thickness) ? params.thickness : [params.thickness])
+      .map((t) => Number(t))
+      .filter((t) => !isNaN(t));
+    list = list.filter((p) => p.thickness !== null && thicks.includes(p.thickness));
   }
 
   if (params.verified === "true" || params.verified === true) {
@@ -1007,6 +1026,9 @@ function filterSeedSellers(params: SellerFilterParams = {}): {
   if (params.state) {
     list = list.filter((s) => s.state === params.state);
   }
+  if (params.verified === true || params.verified === "true") {
+    list = list.filter((s) => Boolean(s.verifiedAt));
+  }
   if (params.q?.trim()) {
     const q = params.q.toLowerCase().trim();
     list = list.filter(
@@ -1019,10 +1041,19 @@ function filterSeedSellers(params: SellerFilterParams = {}): {
   }
   const total = list.length;
   const totalPages = Math.ceil(total / pageSize);
-  const paged: PublicSeller[] = list.slice(from, to + 1).map((s) => ({
-    ...s,
-    country: s.country || "India",
-  }));
+  const paged: PublicSeller[] = list.slice(from, to + 1).map((s) => {
+    const sellerProds = SEED_PRODUCTS.filter((p) => p.seller_id === s.id);
+    const materials = Array.from(
+      new Set(sellerProds.map((p) => p.material_type).filter((m): m is string => Boolean(m))),
+    );
+    return {
+      ...s,
+      country: s.country || "India",
+      productCount: sellerProds.length,
+      materialCapabilities: materials,
+      isVerified: Boolean(s.verifiedAt),
+    };
+  });
   return { sellers: paged, total, totalPages, page };
 }
 
@@ -1033,6 +1064,7 @@ export interface ProductFilterParams {
   colour?: string | string[];
   finish?: string | string[];
   origin?: string | string[];
+  thickness?: string | string[];
   stockStatus?: string | string[];
   minPrice?: string;
   maxPrice?: string;
@@ -1104,7 +1136,7 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       .select(
         `
         id, seller_id, category_id, name, slug, description, material_type,
-        stone_origin, colour, finish, thickness, minimum_order_quantity, unit,
+        stone_origin, colour, finish, thickness, length, width, minimum_order_quantity, unit,
         price_type, price, currency, stock_status, published_at,
         product_images(id, storage_path, alt_text, is_primary)
         `,
@@ -1186,6 +1218,18 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       );
     }
 
+    const thicknesses = Array.isArray(params.thickness)
+      ? params.thickness
+      : params.thickness
+        ? [params.thickness]
+        : [];
+    if (thicknesses.length > 0) {
+      const validThicks = thicknesses.map((t) => Number(t)).filter((t) => !isNaN(t));
+      if (validThicks.length > 0) {
+        query = query.in("thickness", validThicks);
+      }
+    }
+
     if (params.minPrice) {
       const min = Number(params.minPrice);
       if (!isNaN(min)) query = query.gte("price", min);
@@ -1240,6 +1284,8 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       colour: string | null;
       finish: string | null;
       thickness: number | null;
+      length: number | null;
+      width: number | null;
       minimum_order_quantity: number | null;
       unit: string;
       price_type: "fixed" | "starting" | "on_request" | "negotiable" | "range";
@@ -1294,6 +1340,11 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
           sellerCity: seller.city,
           sellerState: seller.state,
           isVerifiedSeller: Boolean(seller.verified_at),
+          thickness: r.thickness,
+          length: r.length,
+          width: r.width,
+          minimumOrderQuantity: r.minimum_order_quantity,
+          stockStatus: r.stock_status,
         };
       });
 
@@ -1502,15 +1553,40 @@ export async function getFeaturedProducts(limit = 6): Promise<ProductSummary[]> 
 }
 
 export async function getRelatedProducts(
-  categoryId: string,
+  categoryId: string | null | undefined,
   excludeId: string,
   limit = 4,
+  criteria?: {
+    materialType?: string | null;
+    finish?: string | null;
+    stoneOrigin?: string | null;
+  },
 ): Promise<ProductSummary[]> {
-  const seedFallback = () =>
-    SEED_PRODUCTS.filter((p) => p.id !== excludeId)
-      .sort((a, b) => (a.category_id === categoryId ? -1 : 1) - (b.category_id === categoryId ? -1 : 1))
+  const seedFallback = () => {
+    const scored = SEED_PRODUCTS.filter((p) => p.id !== excludeId).map((p) => {
+      let score = 0;
+      if (criteria?.materialType && p.material_type?.toLowerCase() === criteria.materialType.toLowerCase()) {
+        score += 4;
+      }
+      if (categoryId && p.category_id === categoryId) {
+        score += 3;
+      }
+      if (criteria?.finish && p.finish?.toLowerCase() === criteria.finish.toLowerCase()) {
+        score += 2;
+      }
+      if (criteria?.stoneOrigin && p.stone_origin && criteria.stoneOrigin.toLowerCase().includes(p.stone_origin.toLowerCase())) {
+        score += 1;
+      }
+      return { product: p, score };
+    });
+
+    // Sort by relevance score descending; if tied, preserve natural catalogue order
+    scored.sort((a, b) => b.score - a.score);
+
+    return scored
       .slice(0, limit)
-      .map(mapSeedProductSummary);
+      .map((item) => mapSeedProductSummary(item.product));
+  };
 
   if (!isSupabaseConfigured() || excludeId.startsWith("prod-")) {
     return seedFallback();
@@ -1518,24 +1594,32 @@ export async function getRelatedProducts(
 
   try {
     const supabase = await getSupabaseServerClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("products")
       .select(
         `
         id, seller_id, category_id, name, slug, material_type, stone_origin,
-        colour, finish, unit, price_type, price, currency,
+        colour, finish, thickness, length, width, minimum_order_quantity,
+        stock_status, lead_time, unit, price_type, price, currency,
         product_images(id, storage_path, alt_text, is_primary)
         `,
       )
-      .eq("category_id", categoryId)
       .neq("id", excludeId)
       .eq("moderation_status", "approved")
-      .not("published_at", "is", null)
+      .not("published_at", "is", null);
+
+    if (criteria?.materialType) {
+      query = query.eq("material_type", criteria.materialType);
+    } else if (categoryId) {
+      query = query.eq("category_id", categoryId);
+    }
+
+    const { data, error } = await query
       .order("published_at", { ascending: false })
       .limit(limit);
 
     if (error || !data || data.length === 0) {
-      return [];
+      return seedFallback();
     }
 
     const rawRows = data as unknown as Array<{
@@ -1548,6 +1632,12 @@ export async function getRelatedProducts(
       stone_origin: string | null;
       colour: string | null;
       finish: string | null;
+      thickness: number | null;
+      length: number | null;
+      width: number | null;
+      minimum_order_quantity: number | null;
+      stock_status: string | null;
+      lead_time: number | null;
       unit: string;
       price_type: "fixed" | "starting" | "on_request" | "negotiable" | "range";
       price: number | null;
@@ -1596,6 +1686,12 @@ export async function getRelatedProducts(
           sellerCity: seller.city,
           sellerState: seller.state,
           isVerifiedSeller: Boolean(seller.verified_at),
+          thickness: r.thickness,
+          length: r.length,
+          width: r.width,
+          minimumOrderQuantity: r.minimum_order_quantity,
+          stockStatus: r.stock_status,
+          leadTime: r.lead_time,
         };
       });
   } catch {
@@ -1708,14 +1804,19 @@ export interface PublicSeller {
   coverImageUrl: string | null;
   yearsInBusiness: number | null;
   verifiedAt: string | null;
+  productCount?: number;
+  materialCapabilities?: string[];
+  isVerified?: boolean;
 }
 
 export interface SellerFilterParams {
   q?: string;
   type?: string;
   state?: string;
+  verified?: boolean | string;
   page?: number | string;
   pageSize?: number;
+  fallback?: boolean;
 }
 
 export async function getPublicSellers(params: SellerFilterParams = {}): Promise<{
@@ -1732,22 +1833,36 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
 
   try {
     const supabase = await getSupabaseServerClient();
-    const hasFilters = Boolean(params.q?.trim() || params.type || params.state);
 
     let query = supabase
       .from("public_seller_profiles")
       .select("*", { count: "exact" });
 
     if (params.q?.trim()) {
-      query = query.ilike("business_name", `%${params.q.trim()}%`);
+      const cleanQ = params.q.trim().replace(/[%_,]/g, " ");
+      if (cleanQ.length > 0) {
+        query = query.or(
+          `business_name.ilike.%${cleanQ}%,city.ilike.%${cleanQ}%,state.ilike.%${cleanQ}%,description.ilike.%${cleanQ}%`,
+        );
+      }
     }
 
     if (params.type) {
-      query = query.eq("business_type", params.type);
+      if (params.type === "quarry_owner") {
+        query = query.in("business_type", ["mine_owner", "quarry_owner"]);
+      } else if (params.type === "processor") {
+        query = query.in("business_type", ["manufacturer", "stone_supplier", "processor"]);
+      } else {
+        query = query.eq("business_type", params.type);
+      }
     }
 
     if (params.state) {
       query = query.eq("state", params.state);
+    }
+
+    if (params.verified === true || params.verified === "true") {
+      query = query.not("verified_at", "is", null);
     }
 
     const { data, count, error } = await query
@@ -1755,24 +1870,55 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
       .range(from, to);
 
     if (error) {
+      console.error("[getPublicSellers] Database query error:", error);
+      if (params.fallback === false) {
+        return { sellers: [], total: 0, totalPages: 0, page };
+      }
       return filterSeedSellers(params);
     }
 
     const total = count ?? 0;
     if (total === 0) {
-      if (!hasFilters) {
-        return filterSeedSellers(params);
+      if (params.fallback === false) {
+        return { sellers: [], total: 0, totalPages: 0, page };
       }
-      const { count: liveSellerTotal } = await supabase
-        .from("public_seller_profiles")
-        .select("id", { count: "exact", head: true });
-      if (!liveSellerTotal || liveSellerTotal === 0) {
+      const hasFilters = Boolean(params.q?.trim() || params.type || params.state || params.verified);
+      if (!hasFilters) {
         return filterSeedSellers(params);
       }
       return { sellers: [], total: 0, totalPages: 0, page };
     }
 
     const rows = (data ?? []) as unknown as PublicSellerRow[];
+    const sellerIds = rows.map((r) => r.id);
+
+    // Single batch query for product counts & material capabilities for these sellers
+    const countsBySeller: Record<string, number> = {};
+    const materialsBySeller: Record<string, Set<string>> = {};
+
+    if (sellerIds.length > 0) {
+      try {
+        const { data: prodRows } = await supabase
+          .from("products")
+          .select("seller_id, material_type")
+          .in("seller_id", sellerIds)
+          .eq("moderation_status", "approved")
+          .not("published_at", "is", null);
+
+        for (const p of prodRows ?? []) {
+          if (p.seller_id) {
+            countsBySeller[p.seller_id] = (countsBySeller[p.seller_id] || 0) + 1;
+            if (p.material_type) {
+              const set = materialsBySeller[p.seller_id] ?? new Set();
+              set.add(p.material_type);
+              materialsBySeller[p.seller_id] = set;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("[getPublicSellers] Error fetching seller products summary:", err);
+      }
+    }
 
     const sellers: PublicSeller[] = rows.map((s) => ({
       id: s.id,
@@ -1787,6 +1933,9 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
       coverImageUrl: resolveStorageUrl(s.cover_image_url, "seller-cover-images"),
       yearsInBusiness: s.years_in_business,
       verifiedAt: s.verified_at,
+      productCount: countsBySeller[s.id] ?? 0,
+      materialCapabilities: Array.from(materialsBySeller[s.id] ?? []),
+      isVerified: Boolean(s.verified_at),
     }));
 
     const totalPages = Math.ceil(total / pageSize);

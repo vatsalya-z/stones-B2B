@@ -17,6 +17,7 @@ export interface ProductFilterBarProps {
   colours: FilterOption[];
   finishes: FilterOption[];
   origins: FilterOption[];
+  thicknesses?: FilterOption[];
   stockStatuses: FilterOption[];
   currentSort?: string;
   totalResults: number;
@@ -28,6 +29,7 @@ export function ProductFilterBar({
   colours,
   finishes,
   origins,
+  thicknesses = [],
   stockStatuses,
   currentSort,
   totalResults,
@@ -41,6 +43,7 @@ export function ProductFilterBar({
     searchParams.getAll("colour").length +
     searchParams.getAll("finish").length +
     searchParams.getAll("origin").length +
+    searchParams.getAll("thickness").length +
     searchParams.getAll("stockStatus").length +
     (searchParams.get("verified") === "true" ? 1 : 0) +
     (searchParams.get("minPrice") ? 1 : 0) +
@@ -71,6 +74,7 @@ export function ProductFilterBar({
           colours={colours}
           finishes={finishes}
           origins={origins}
+          thicknesses={thicknesses}
           stockStatuses={stockStatuses}
           isMobileDrawer
           onCloseDrawer={() => setIsDrawerOpen(false)}
