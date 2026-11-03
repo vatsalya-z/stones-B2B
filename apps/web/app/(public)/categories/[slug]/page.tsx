@@ -264,7 +264,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               className="object-cover object-center opacity-30 brightness-75 filter blur-[1px]"
               unoptimized={!fallbackImage.includes(".supabase.co")}
             />
-            <div className="absolute inset-0 bg-stone-950/80" />
+            <div className="absolute inset-0 bg-stone-950/70" />
           </div>
 
           <div className="relative z-10 p-6 sm:p-10 lg:p-12">

@@ -362,9 +362,9 @@ export function CategoryDiscoveryExplorer({
       {/* ─────────────────────────────────────────────────────────────
           SECTION A: EDITORIAL DISCOVERY HERO
           ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl border border-stone-800 bg-stone-950 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl border border-stone-800 bg-stone-900 text-white shadow-xl">
         {/* Subtle architectural backdrop */}
-        <div className="absolute inset-0 z-0 opacity-25 mix-blend-luminosity">
+        <div className="absolute inset-0 z-0 opacity-20 mix-blend-luminosity">
           <Image
             src="/images/hero/marble-showroom-hero.jpg"
             alt="Luxury architectural stone showroom and warehouse gallery"
@@ -374,7 +374,6 @@ export function CategoryDiscoveryExplorer({
             className="object-cover object-center filter blur-[1px]"
             unoptimized
           />
-          <div className="absolute inset-0 bg-stone-950/80" />
         </div>
 
         <div className="relative z-10 px-6 py-12 sm:px-12 sm:py-16 lg:py-20 max-w-4xl mx-auto text-center space-y-6">
