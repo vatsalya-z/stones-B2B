@@ -1,0 +1,5 @@
+{
+  "extends": "@stone/config/tsconfig/nextjs.json",
+  "compilerOptions": { "plugins": [] },
+  "include": ["src"]
+}

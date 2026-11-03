@@ -1,0 +1,4 @@
+{
+  "extends": "@stone/config/tsconfig/base.json",
+  "include": ["src"]
+}
