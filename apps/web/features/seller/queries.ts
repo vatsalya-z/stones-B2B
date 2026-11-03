@@ -1561,8 +1561,12 @@ export async function getSellerOrderDetail(orderId: string): Promise<SellerOrder
       .select("*")
       .eq("order_id", row.id)
       .order("created_at", { ascending: true }),
-    supabase.from("quotations").select("quote_number").eq("id", row.quotation_id).maybeSingle(),
-    supabase.from("enquiries").select("enquiry_title").eq("id", row.enquiry_id).maybeSingle(),
+    row.quotation_id
+      ? supabase.from("quotations").select("quote_number").eq("id", row.quotation_id).maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+    row.enquiry_id
+      ? supabase.from("enquiries").select("enquiry_title").eq("id", row.enquiry_id).maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
   ]);
 
   const sellerSnap = (row.seller_snapshot as OrderSellerSnapshot | null) ?? {};

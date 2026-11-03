@@ -9,6 +9,7 @@ import {
 } from "@/components/seller/status-badges";
 import { formatMoneyAmount, formatUnitLabel } from "@/features/buyer/buyer-meta";
 import { getSellerOrderDetail } from "@/features/seller/queries";
+import { PrintButton } from "@/components/ui/print-button";
 import { SellerOrderActions } from "./seller-order-actions";
 
 export const metadata: Metadata = {
@@ -66,13 +67,7 @@ export default async function SellerOrderDetailPage({ params }: SellerOrderDetai
           >
             ← Back to Orders
           </Link>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-50"
-          >
-            Print Pro-Forma Invoice
-          </button>
+          <PrintButton label="Print Pro-Forma Invoice" />
         </div>
       </div>
 
