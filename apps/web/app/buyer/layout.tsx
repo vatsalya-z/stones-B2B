@@ -1,7 +1,9 @@
 import React, { type ReactNode } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { BuyerShell } from "@/components/buyer/buyer-shell";
 import { getBuyerContext } from "@/features/buyer/queries";
+import { getCurrentUser, hasRole } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -15,6 +17,14 @@ export const metadata: Metadata = {
 };
 
 export default async function BuyerPortalLayout({ children }: { children: ReactNode }) {
+  // Guard: redirect unauthenticated users to login before getBuyerContext throws.
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  // Guard: redirect users who don't hold the buyer role.
+  const isBuyer = await hasRole("buyer");
+  if (!isBuyer) redirect("/unauthorized");
+
   const ctx = await getBuyerContext();
 
   return (

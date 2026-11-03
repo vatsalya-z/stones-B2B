@@ -37,9 +37,21 @@ export async function requireAuth() {
 export async function getUserRoles(): Promise<AppRole[]> {
   const user = await getCurrentUser();
   if (!user) return [];
-  const supabase = await getSupabaseServerClient();
-  const { data } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
-  return (data ?? []).map((r) => r.role as AppRole);
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id);
+    if (error) {
+      console.error("[getUserRoles] DB error:", error.message);
+      return [];
+    }
+    return (data ?? []).map((r) => r.role as AppRole);
+  } catch (err) {
+    console.error("[getUserRoles] Unexpected error:", err);
+    return [];
+  }
 }
 
 // ---------------------------------------------------------------------------
