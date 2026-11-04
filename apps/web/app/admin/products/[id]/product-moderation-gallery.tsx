@@ -93,3 +93,4 @@ export function ProductModerationGallery({
     </div>
   );
 }
+
