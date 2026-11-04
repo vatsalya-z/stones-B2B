@@ -31,6 +31,11 @@ export async function SiteHeader() {
   const roles = isLoggedIn ? await getUserRoles() : [];
   const isBuyer = roles.includes("buyer");
   const isSeller = roles.includes("seller");
+  const isAdmin = roles.includes("admin") || roles.includes("super_admin");
+  const userName =
+    (user?.user_metadata?.full_name as string) ||
+    (user?.user_metadata?.name as string) ||
+    null;
 
   return (
     <header className="sticky top-0 z-30 h-20 sm:h-[88px] border-b border-stone-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 shadow-sm transition-all print:hidden">
@@ -142,8 +147,10 @@ export async function SiteHeader() {
           <MobileNav
             isLoggedIn={isLoggedIn}
             userEmail={user?.email ?? null}
+            userName={userName}
             isBuyer={isBuyer}
             isSeller={isSeller}
+            isAdmin={isAdmin}
           />
         </div>
       </div>
