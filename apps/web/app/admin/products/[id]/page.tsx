@@ -1,10 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAdminContext } from "@/features/admin/guard";
 import { getAdminProductDetail } from "@/features/admin/queries";
 import { ProductModerationBadge } from "@/components/admin/status-badges";
 import { ProductActionsPanel } from "./product-actions-panel";
+import { ProductModerationGallery } from "./product-moderation-gallery";
 
 export const dynamic = "force-dynamic";
 
@@ -82,33 +82,12 @@ export default async function AdminProductDetailPage({ params }: ProductDetailPa
             Product Image Gallery ({images.length} images)
           </h2>
 
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {images.length === 0 ? (
-              <p className="col-span-full py-8 text-center text-xs text-stone-500">
-                No product images uploaded.
-              </p>
-            ) : (
-              images.map((img) => (
-                <div
-                  key={img.id}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-stone-800 bg-stone-950"
-                >
-                  <Image
-                    src={img.storage_path}
-                    alt={img.alt_text || product.name}
-                    fill
-                    className="object-cover transition-transform group-hover:scale-105"
-                    unoptimized
-                  />
-                  {img.is_primary && (
-                    <span className="absolute top-2 left-2 rounded bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-black uppercase">
-                      Primary
-                    </span>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
+          <ProductModerationGallery
+            images={images}
+            productName={product.name}
+            slug={product.slug}
+            stoneType={product.material_type}
+          />
         </div>
 
         {/* Pricing & Supplier */}

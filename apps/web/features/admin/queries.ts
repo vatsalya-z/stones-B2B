@@ -492,7 +492,7 @@ export async function getAdminProducts(params: GetAdminProductsParams = {}, ctx?
     category: p.category_id ? categoryMap.get(p.category_id) ?? null : null,
     product_images: (imageMap.get(p.id) ?? []).map((img) => ({
       ...img,
-      storage_path: resolveStorageUrl(img.storage_path, "product-images") ?? img.storage_path,
+      storage_path: resolveStorageUrl(img.storage_path, "product-images") || "",
     })),
   }));
 
@@ -571,7 +571,7 @@ export async function getAdminProductDetail(productId: string, ctx?: AdminContex
     specifications: specsRes.data ?? [],
     images: (imagesRes.data ?? []).map((img) => ({
       ...img,
-      storage_path: resolveStorageUrl(img.storage_path, "product-images") ?? img.storage_path,
+      storage_path: resolveStorageUrl(img.storage_path, "product-images") || "",
     })),
     auditHistory,
   };

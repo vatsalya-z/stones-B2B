@@ -8,6 +8,52 @@ import { Button } from "@stone/ui";
 import { ConfirmationModal } from "@/components/admin/confirmation-modal";
 import { bulkModerateProductsAction } from "@/features/admin/actions";
 import { ProductModerationBadge } from "@/components/admin/status-badges";
+import { getProductFallbackImage } from "@/lib/images";
+
+function AdminProductThumbnail({
+  src,
+  alt,
+  slug,
+  stoneType,
+}: {
+  src?: string | null;
+  alt: string;
+  slug?: string;
+  stoneType?: string | null;
+}) {
+  const [error, setError] = useState(false);
+  const fallback = getProductFallbackImage(slug || "", stoneType);
+
+  if (!src || error) {
+    if (fallback) {
+      return (
+        <Image
+          src={fallback}
+          alt={alt}
+          fill
+          className="object-cover opacity-80"
+          unoptimized
+        />
+      );
+    }
+    return (
+      <div className="flex h-full w-full items-center justify-center text-[9px] text-stone-600">
+        No Img
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className="object-cover"
+      onError={() => setError(true)}
+      unoptimized
+    />
+  );
+}
 
 export interface AdminProductRow {
   id: string;
@@ -194,19 +240,12 @@ export function ProductsListClient({ products }: { products: AdminProductRow[] }
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
                           <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg border border-stone-800 bg-stone-950">
-                            {primaryImg ? (
-                              <Image
-                                src={primaryImg.storage_path}
-                                alt={p.name}
-                                fill
-                                className="object-cover"
-                                unoptimized
-                              />
-                            ) : (
-                              <div className="flex h-full w-full items-center justify-center text-[9px] text-stone-600">
-                                No Img
-                              </div>
-                            )}
+                            <AdminProductThumbnail
+                              src={primaryImg?.storage_path}
+                              alt={p.name}
+                              slug={p.slug}
+                              stoneType={p.stone_type}
+                            />
                           </div>
                           <div>
                             <Link
@@ -236,7 +275,9 @@ export function ProductsListClient({ products }: { products: AdminProductRow[] }
                         )}
                       </td>
                       <td className="py-3.5 px-4 font-mono">
-                        ₹{Number(p.price_per_unit).toLocaleString("en-IN")} / {p.unit_of_measure}
+                        {p.price_per_unit != null && !isNaN(Number(p.price_per_unit)) && Number(p.price_per_unit) > 0
+                          ? `₹${Number(p.price_per_unit).toLocaleString("en-IN")} / ${p.unit_of_measure || "sq_ft"}`
+                          : "Price on Request"}
                       </td>
                       <td className="py-3.5 px-4">
                         <ProductModerationBadge status={p.moderation_status} />

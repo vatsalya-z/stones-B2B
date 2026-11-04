@@ -21,13 +21,37 @@ export function resolveStorageUrl(
   path: string | null | undefined,
   bucket: "product-images" | "seller-logos" | "seller-cover-images" | "category-images",
 ): string | null {
-  if (!path) return null;
-  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("/")) {
-    return path;
+  if (!path || typeof path !== "string") return null;
+  const trimmed = path.trim();
+  if (!trimmed) return null;
+
+  // Already a full external URL
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
   }
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  // Local static public assets (e.g. /images/products/...)
+  if (trimmed.startsWith("/images/") || trimmed.startsWith("/icons/") || trimmed.startsWith("/favicon")) {
+    return trimmed;
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "");
   if (!supabaseUrl) return null;
-  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${path}`;
+
+  // Clean path of leading slashes
+  let cleanPath = trimmed.replace(/^\/+/, "");
+
+  // If path already starts with storage/v1/object/public/
+  if (cleanPath.startsWith("storage/v1/object/public/")) {
+    return `${supabaseUrl}/${cleanPath}`;
+  }
+
+  // If path already starts with bucket name (e.g. product-images/...)
+  if (cleanPath.startsWith(`${bucket}/`)) {
+    cleanPath = cleanPath.slice(bucket.length + 1);
+  }
+
+  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${cleanPath}`;
 }
 
 function cleanPublicDescription(raw: string | null | undefined): string | null {
