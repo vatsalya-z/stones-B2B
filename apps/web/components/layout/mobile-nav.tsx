@@ -250,34 +250,37 @@ export function MobileNav({
 
         {/* ── Scrollable Drawer Body ────────────────────────────────── */}
         <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
-          {/* ── 1. Top Quarry Image Header (190–230px) ───────────────── */}
-          <div className="relative h-[215px] sm:h-[225px] w-full flex-shrink-0 overflow-hidden">
+          {/* ── 1. Top Quarry Image Header (210–240px) ───────────────── */}
+          <div
+            className="relative h-[225px] sm:h-[235px] w-full flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/images/backgrounds/stone-quarry-header.jpg')" }}
+          >
             {/* Layer 1: Real Quarry Background Photograph */}
             <Image
               src="/images/backgrounds/stone-quarry-header.jpg"
               alt="Natural Stone Quarry Landscape"
               fill
               priority
-              className="object-cover object-center"
+              className="object-cover object-center pointer-events-none"
               sizes="(max-width: 480px) 100vw, 420px"
               unoptimized
             />
 
-            {/* Layer 2: Dark Translucent Tint for Readability */}
+            {/* Layer 2: Dark Charcoal Translucent Tint for Readability */}
             <div
-              className="absolute inset-0 bg-black/40 z-10"
+              className="absolute inset-0 bg-[#101010]/35 z-10"
               aria-hidden="true"
             />
 
-            {/* Layer 2b: Top Vignette for Logo & Close Button Contrast */}
+            {/* Layer 2b: Subtle Black Gradient from Top to Bottom */}
             <div
-              className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/85 via-black/35 to-transparent z-10"
+              className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/80 via-black/30 to-transparent z-10"
               aria-hidden="true"
             />
 
-            {/* Layer 3: Bottom Seamless Gradient Fading into Drawer Background (#101010) */}
+            {/* Layer 3: Stronger Bottom Gradient Transitioning into Drawer Background (#101010) */}
             <div
-              className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#101010] via-[#101010]/80 to-transparent z-10"
+              className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#101010] via-[#101010]/85 to-transparent z-10"
               aria-hidden="true"
             />
 
