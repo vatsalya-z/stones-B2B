@@ -87,21 +87,64 @@ export function MobileNav({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  // Prevent background body scroll when open and manage focus
+  // Prevent background body scroll when open and manage focus (iOS-safe fixed body lock)
   useEffect(() => {
-    if (open) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      const timer = setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 50);
-      return () => {
-        clearTimeout(timer);
-        document.body.style.overflow = originalOverflow;
-      };
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!open) return;
+
+    // Capture the current scroll position so we can pin body at that exact offset
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+    // Save original styles to restore cleanly on unmount / close
+    const prevBodyPosition = document.body.style.position;
+    const prevBodyTop = document.body.style.top;
+    const prevBodyLeft = document.body.style.left;
+    const prevBodyRight = document.body.style.right;
+    const prevBodyWidth = document.body.style.width;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevBodyOverscroll = document.body.style.overscrollBehavior;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+    const prevHtmlScrollBehavior = document.documentElement.style.scrollBehavior;
+
+    // 1. Lock html root to prevent viewport bouncing & scroll chaining
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+    document.documentElement.style.scrollBehavior = "auto";
+
+    // 2. Lock body with position: fixed at the exact negative scroll offset
+    // This is the industry-standard technique to prevent iOS Safari & mobile Chrome background scroll leaking
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    const timer = setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
+    return () => {
+      clearTimeout(timer);
+
+      // Restore html root styles
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = prevHtmlOverscroll;
+      document.documentElement.style.scrollBehavior = prevHtmlScrollBehavior;
+
+      // Restore body styles
+      document.body.style.position = prevBodyPosition;
+      document.body.style.top = prevBodyTop;
+      document.body.style.left = prevBodyLeft;
+      document.body.style.right = prevBodyRight;
+      document.body.style.width = prevBodyWidth;
+      document.body.style.overflow = prevBodyOverflow;
+      document.body.style.overscrollBehavior = prevBodyOverscroll;
+
+      // Restore exact scroll position without jump or smooth delay
+      window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+    };
   }, [open]);
 
   // Determine navigation menu rows based on authentication and role
@@ -201,10 +244,13 @@ export function MobileNav({
       {/* ── Backdrop Overlay ────────────────────────────────────────── */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm transition-opacity duration-300 lg:hidden touch-none"
           onClick={() => {
             setOpen(false);
             hamburgerRef.current?.focus();
+          }}
+          onTouchMove={(e) => {
+            if (e.cancelable) e.preventDefault();
           }}
           aria-hidden="true"
         />
@@ -218,7 +264,7 @@ export function MobileNav({
           "fixed inset-y-0 right-0 z-50 flex flex-col justify-between overflow-hidden",
           "w-[min(88vw,420px)] h-[100dvh] bg-[#101010] text-[#F7F5F0]",
           "rounded-l-[28px] border-l border-white/[0.12] shadow-[0_0_60px_-15px_rgba(0,0,0,0.95)]",
-          "transition-all duration-300 ease-out lg:hidden",
+          "transition-all duration-300 ease-out lg:hidden overscroll-contain",
           open
             ? "translate-x-0 visible opacity-100 pointer-events-auto"
             : "translate-x-full invisible opacity-0 pointer-events-none",
@@ -249,7 +295,7 @@ export function MobileNav({
         </button>
 
         {/* ── Scrollable Drawer Body ────────────────────────────────── */}
-        <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
+        <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain overscroll-contain [webkit-overflow-scrolling:touch] scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
           {/* ── 1. Top Quarry Image Header (210–240px) ───────────────── */}
           <div
             className="relative h-[225px] sm:h-[235px] w-full flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat"

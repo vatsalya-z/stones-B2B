@@ -129,5 +129,70 @@ test.describe("Luxury Mobile Navigation Drawer Visual & Functional E2E Suite", (
       await expect(drawer).toHaveAttribute("aria-hidden", "true");
       await expect(hamburger).toHaveAttribute("aria-expanded", "false");
     });
+
+    test(`verifies bulletproof background page scroll lock on ${vp.name} (${vp.width}x${vp.height})`, async ({ page }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto("/");
+      await page.waitForLoadState("domcontentloaded");
+
+      const hamburger = page.locator('button[aria-controls="mobile-navigation-drawer"]');
+      await expect(hamburger).toBeVisible();
+
+      // Scroll page down by 300px using instant scroll
+      await page.evaluate(() => {
+        window.scrollTo({ top: 300, behavior: "instant" });
+      });
+      await page.waitForTimeout(50);
+      const preScrollY = await page.evaluate(() => window.scrollY);
+
+      // Open drawer via native DOM element click so Playwright doesn't force-scroll header into view
+      await hamburger.evaluate((el: HTMLElement) => el.click());
+      const drawer = page.locator("#mobile-navigation-drawer");
+      await expect(drawer).toHaveAttribute("aria-hidden", "false");
+
+      // Verify html and body are completely locked
+      const bodyLockState = await page.evaluate(() => {
+        return {
+          bodyPosition: document.body.style.position,
+          bodyTop: document.body.style.top,
+          bodyOverflow: document.body.style.overflow,
+          bodyOverscroll: document.body.style.overscrollBehavior,
+          htmlOverflow: document.documentElement.style.overflow,
+          htmlOverscroll: document.documentElement.style.overscrollBehavior,
+        };
+      });
+
+      expect(bodyLockState.bodyPosition).toBe("fixed");
+      expect(bodyLockState.bodyTop).toBe(`-${preScrollY}px`);
+      expect(bodyLockState.bodyOverflow).toBe("hidden");
+      expect(bodyLockState.htmlOverflow).toBe("hidden");
+      expect(bodyLockState.bodyOverscroll).toBe("none");
+      expect(bodyLockState.htmlOverscroll).toBe("none");
+
+      // Verify drawer container and scrollable child have overscroll containment classes
+      await expect(drawer).toHaveClass(/overscroll-contain/);
+      const scrollableBody = drawer.locator(".overflow-y-auto");
+      await expect(scrollableBody).toHaveClass(/overscroll-y-contain/);
+
+      // Close drawer
+      const closeBtn = drawer.locator('button[aria-label="Close menu"]');
+      await closeBtn.evaluate((el: HTMLElement) => el.click());
+      await expect(drawer).toHaveAttribute("aria-hidden", "true");
+
+      // Verify body lock is cleanly released and scroll position is preserved
+      const releasedState = await page.evaluate(() => {
+        return {
+          bodyPosition: document.body.style.position,
+          bodyTop: document.body.style.top,
+          bodyOverflow: document.body.style.overflow,
+          scrollY: window.scrollY,
+        };
+      });
+
+      expect(releasedState.bodyPosition).toBe("");
+      expect(releasedState.bodyTop).toBe("");
+      expect(releasedState.bodyOverflow).toBe("");
+      expect(releasedState.scrollY).toBe(preScrollY);
+    });
   }
 });
