@@ -33,7 +33,7 @@ const ARCHITECTURAL_APPLICATIONS = [
     title: "Interior & Exterior Wall Cladding",
     subtitle: "Dry-hung ventilated stone facades & bookmatched feature walls",
     recommended: "Makrana Marble · Travertine · Slate · Sandstone",
-    image: "/images/backgrounds/luxury-marble-living-room.jpg",
+    image: "/images/product-gallery/marble-install-living.jpg",
     href: "/products?finish=Honed",
   },
   {

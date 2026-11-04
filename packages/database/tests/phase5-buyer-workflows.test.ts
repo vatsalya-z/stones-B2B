@@ -440,4 +440,144 @@ describe("Phase 5 Buyer Portal & RFQ End-to-End Database & RLS Workflows", () =>
       ),
     ).toEqual([]);
   });
+
+  it("enforces single default buyer address invariants, NULL safety, caller-ownership, and atomic rollback on errors via set_default_buyer_address()", async () => {
+    // 1. Valid own address: Buyer A inserts address 1 and sets it default
+    const addr1 = await w.env.as<{ id: string }>(
+      user(w.buyerA),
+      `insert into public.buyer_addresses
+         (buyer_id, address_type, contact_name, phone, address_line1, city, state, pincode, country, is_default)
+       values ($1, 'billing', 'Vikram Mehta', '+919820144556', 'Plot 101, RIICO Industrial Area', 'Kishangarh', 'Rajasthan', '305801', 'IN', false)
+       returning id`,
+      [w.buyerA],
+    );
+    expect(addr1).toHaveLength(1);
+    const addr1Id = addr1[0]!.id;
+
+    // Buyer A invokes set_default_buyer_address(addr1Id)
+    const setRes1 = await w.env.as<{ set_default_buyer_address: string }>(
+      user(w.buyerA),
+      "select public.set_default_buyer_address($1::uuid) as set_default_buyer_address",
+      [addr1Id],
+    );
+    expect(setRes1[0]?.set_default_buyer_address).toBe(addr1Id);
+
+    const check1 = await w.env.as<{ is_default: boolean }>(
+      user(w.buyerA),
+      "select is_default from public.buyer_addresses where id = $1",
+      [addr1Id],
+    );
+    expect(check1[0]?.is_default).toBe(true);
+
+    // 2. Foreign buyer address: Buyer B creates address 2
+    const addr2 = await w.env.as<{ id: string }>(
+      user(w.buyerB),
+      `insert into public.buyer_addresses
+         (buyer_id, address_type, contact_name, phone, address_line1, city, state, pincode, country, is_default)
+       values ($1, 'shipping', 'Karan Johar', '+919811122233', 'Warehouse 5, Kalamboli', 'Navi Mumbai', 'Maharashtra', '410218', 'IN', false)
+       returning id`,
+      [w.buyerB],
+    );
+    const addr2Id = addr2[0]!.id;
+
+    // Buyer A attempts to set Buyer B's address as default -> rejected with 42501
+    expect(
+      await failure(
+        w.env.as(
+          user(w.buyerA),
+          "select public.set_default_buyer_address($1::uuid)",
+          [addr2Id],
+        ),
+      ),
+    ).toMatch(/42501|Unauthorized to modify this address/);
+
+    // 3. Nonexistent UUID: Buyer A passes random UUID -> rejected with P0002
+    const nonExistentId = randomUUID();
+    expect(
+      await failure(
+        w.env.as(
+          user(w.buyerA),
+          "select public.set_default_buyer_address($1::uuid)",
+          [nonExistentId],
+        ),
+      ),
+    ).toMatch(/P0002|Address not found/);
+
+    // 4. NULL address ID: Buyer A passes NULL -> rejected explicitly with 22004
+    expect(
+      await failure(
+        w.env.as(
+          user(w.buyerA),
+          "select public.set_default_buyer_address(null::uuid)",
+        ),
+      ),
+    ).toMatch(/22004|Address identifier is required/);
+
+    // 5. Inactive buyer: Buyer C (suspended) cannot invoke operation
+    const buyerC = await w.env.signup("buyer-inactive@test.dev", "buyer");
+    await w.env.admin("update public.profiles set account_status = 'suspended' where id = $1", [buyerC]);
+    expect(
+      await failure(
+        w.env.as(
+          user(buyerC),
+          "select public.set_default_buyer_address($1::uuid)",
+          [addr1Id],
+        ),
+      ),
+    ).toMatch(/42501|Account is inactive/);
+
+    // 6. Existing default remains unchanged when requested ID is invalid
+    const checkDefaultIntact = await w.env.as<{ is_default: boolean }>(
+      user(w.buyerA),
+      "select is_default from public.buyer_addresses where id = $1",
+      [addr1Id],
+    );
+    expect(checkDefaultIntact[0]?.is_default).toBe(true);
+
+    // 7. Successful change leaves exactly one default address: Buyer A inserts address 3
+    const addr3 = await w.env.as<{ id: string }>(
+      user(w.buyerA),
+      `insert into public.buyer_addresses
+         (buyer_id, address_type, contact_name, phone, address_line1, city, state, pincode, country, is_default)
+       values ($1, 'billing', 'Vikram Mehta Office', '+919820144556', 'Nariman Point Tower', 'Mumbai', 'Maharashtra', '400021', 'IN', false)
+       returning id`,
+      [w.buyerA],
+    );
+    const addr3Id = addr3[0]!.id;
+
+    // Buyer A promotes addr3 to default
+    await w.env.as(
+      user(w.buyerA),
+      "select public.set_default_buyer_address($1::uuid)",
+      [addr3Id],
+    );
+
+    const buyerADefaults = await w.env.as<{ id: string; is_default: boolean }>(
+      user(w.buyerA),
+      "select id, is_default from public.buyer_addresses where buyer_id = $1 and is_default = true",
+      [w.buyerA],
+    );
+    expect(buyerADefaults).toHaveLength(1);
+    expect(buyerADefaults[0]?.id).toBe(addr3Id);
+
+    const oldAddr1 = await w.env.as<{ is_default: boolean }>(
+      user(w.buyerA),
+      "select is_default from public.buyer_addresses where id = $1",
+      [addr1Id],
+    );
+    expect(oldAddr1[0]?.is_default).toBe(false);
+
+    // 8. Database unique index still enforces the invariant (direct insert of 2nd default fails with 23505)
+    expect(
+      await failure(
+        w.env.as(
+          user(w.buyerA),
+          `insert into public.buyer_addresses
+             (buyer_id, address_type, contact_name, phone, address_line1, city, state, pincode, country, is_default)
+           values ($1, 'shipping', 'Duplicate Default', '+919820144556', 'Another Address', 'Mumbai', 'Maharashtra', '400021', 'IN', true)`,
+          [w.buyerA],
+        ),
+      ),
+    ).toMatch(/23505|buyer_addresses_single_default_idx/);
+  });
 });

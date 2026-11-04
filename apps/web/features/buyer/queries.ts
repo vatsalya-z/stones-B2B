@@ -22,6 +22,7 @@ import {
   analyzeQuotationComparison,
   decodeBuyerAddress,
   decodeRfqDescription,
+  formatMoneyAmount,
   parseQuotationCommercialTerms,
   type ComparableQuotationInput,
   type DecodedBuyerAddress,
@@ -37,6 +38,7 @@ type QuotationRow = Database["public"]["Tables"]["quotations"]["Row"];
 type QuotationItemRow = Database["public"]["Tables"]["quotation_items"]["Row"];
 type NotificationRow = Database["public"]["Tables"]["notifications"]["Row"];
 type PublicSellerRow = Database["public"]["Views"]["public_seller_profiles"]["Row"];
+type OrderRow = Database["public"]["Views"]["orders"]["Row"];
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -311,6 +313,9 @@ async function batchLoadProducts(
 export interface BuyerDashboardMetrics {
   totalEnquiries: number;
   activeEnquiries: number;
+  totalRfqs: number;
+  activeRfqs: number;
+  activeOrders: number;
   pendingResponses: number;
   receivedQuotations: number;
   acceptedQuotations: number;
@@ -366,17 +371,53 @@ export interface BuyerSavedProductItem {
 
 export interface BuyerActivityEntry {
   id: string;
-  kind: "enquiry" | "quotation";
+  kind: "enquiry" | "quotation" | "order";
   title: string;
   subtitle: string;
   timestamp: string;
   href: string;
 }
 
+export interface OrderSellerSnapshot {
+  business_name?: string | null;
+  gst_number?: string | null;
+  business_email?: string | null;
+  phone?: string | null;
+  business_address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  pincode?: string | null;
+  country?: string | null;
+}
+
+export interface BuyerOrderSummary {
+  id: string;
+  orderNumber: string;
+  quotationId: string;
+  enquiryId: string;
+  sellerId: string;
+  sellerBusinessName: string;
+  sellerCity: string | null;
+  sellerState: string | null;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  subtotal: number;
+  taxAmount: number;
+  shippingCharges: number;
+  discountAmount: number;
+  totalAmount: number;
+  currency: string;
+  deliveryLocation: string;
+  itemsCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface BuyerDashboardData {
   metrics: BuyerDashboardMetrics;
   recentEnquiries: BuyerEnquiryListItem[];
   recentQuotations: BuyerQuotationListItem[];
+  recentOrders: BuyerOrderSummary[];
   savedProducts: BuyerSavedProductItem[];
   recentActivity: BuyerActivityEntry[];
 }
@@ -391,12 +432,16 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
   const [
     { count: totalEnquiries },
     { count: activeEnquiries },
+    { count: totalRfqs },
+    { count: activeRfqs },
+    { count: activeOrders },
     { count: pendingResponses },
     { count: rejectedOrClosedEnquiries },
     { count: receivedQuotations },
     { count: acceptedQuotations },
     { data: recentEnquiryRows },
     { data: recentQuotationRows },
+    { data: recentOrderRows },
     savedList,
   ] = await Promise.all([
     supabase
@@ -408,6 +453,22 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
       .select("id", { count: "exact", head: true })
       .eq("buyer_id", buyerId)
       .in("status", ["submitted", "viewed", "responding", "quoted"]),
+    supabase
+      .from("enquiries")
+      .select("id", { count: "exact", head: true })
+      .eq("buyer_id", buyerId)
+      .is("product_id", null),
+    supabase
+      .from("enquiries")
+      .select("id", { count: "exact", head: true })
+      .eq("buyer_id", buyerId)
+      .is("product_id", null)
+      .in("status", ["submitted", "viewed", "responding", "quoted"]),
+    supabase
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("buyer_id", buyerId)
+      .in("status", ["pending_payment", "confirmed", "processing", "dispatched"]),
     supabase
       .from("enquiries")
       .select("id", { count: "exact", head: true })
@@ -439,6 +500,12 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
       .select("*")
       .eq("buyer_id", buyerId)
       .neq("status", "draft")
+      .order("created_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("orders")
+      .select("*")
+      .eq("buyer_id", buyerId)
       .order("created_at", { ascending: false })
       .limit(5),
     getBuyerFavourites(buyerId, 4),
@@ -532,6 +599,43 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
     createdAt: q.created_at,
   }));
 
+  const orderRows = (recentOrderRows ?? []) as OrderRow[];
+  const orderIds = orderRows.map((r) => r.id);
+  const { data: itemRows } =
+    orderIds.length > 0
+      ? await supabase.from("order_items").select("order_id").in("order_id", orderIds)
+      : { data: [] };
+  const countByOrder = new Map<string, number>();
+  (itemRows ?? []).forEach((it) => {
+    countByOrder.set(it.order_id, (countByOrder.get(it.order_id) ?? 0) + 1);
+  });
+
+  const recentOrders: BuyerOrderSummary[] = orderRows.map((row) => {
+    const sellerSnap = (row.seller_snapshot as OrderSellerSnapshot | null) ?? {};
+    return {
+      id: row.id,
+      orderNumber: row.order_number,
+      quotationId: row.quotation_id,
+      enquiryId: row.enquiry_id,
+      sellerId: row.seller_id,
+      sellerBusinessName: sellerSnap.business_name || "Verified Supplier",
+      sellerCity: sellerSnap.city || null,
+      sellerState: sellerSnap.state || null,
+      status: row.status as OrderStatus,
+      paymentStatus: row.payment_status as PaymentStatus,
+      subtotal: Number(row.subtotal),
+      taxAmount: Number(row.tax_amount),
+      shippingCharges: Number(row.shipping_charges),
+      discountAmount: Number(row.discount_amount),
+      totalAmount: Number(row.total_amount),
+      currency: row.currency,
+      deliveryLocation: row.delivery_location,
+      itemsCount: countByOrder.get(row.id) ?? 0,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
+  });
+
   const recentActivity: BuyerActivityEntry[] = [
     ...recentEnquiries.map((e) => ({
       id: `enq-${e.id}`,
@@ -549,6 +653,14 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
       timestamp: q.createdAt,
       href: `/buyer/quotes/${q.id}`,
     })),
+    ...recentOrders.map((o) => ({
+      id: `ord-${o.id}`,
+      kind: "order" as const,
+      title: `Order ${o.orderNumber} (${o.status.replace(/_/g, " ")})`,
+      subtitle: `${o.sellerBusinessName} • ${formatMoneyAmount(o.totalAmount, o.currency)}`,
+      timestamp: o.createdAt,
+      href: `/buyer/orders/${o.id}`,
+    })),
   ]
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 6);
@@ -557,6 +669,9 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
     metrics: {
       totalEnquiries: totalEnquiries ?? 0,
       activeEnquiries: activeEnquiries ?? 0,
+      totalRfqs: totalRfqs ?? 0,
+      activeRfqs: activeRfqs ?? 0,
+      activeOrders: activeOrders ?? 0,
       pendingResponses: pendingResponses ?? 0,
       receivedQuotations: receivedQuotations ?? 0,
       acceptedQuotations: acceptedQuotations ?? 0,
@@ -564,6 +679,7 @@ export async function getBuyerDashboardData(buyerId: string): Promise<BuyerDashb
     },
     recentEnquiries,
     recentQuotations,
+    recentOrders,
     savedProducts: savedList,
     recentActivity,
   };
@@ -1548,29 +1664,6 @@ export interface BuyerOrderStatusHistoryItem {
   createdAt: string;
 }
 
-export interface BuyerOrderSummary {
-  id: string;
-  orderNumber: string;
-  quotationId: string;
-  enquiryId: string;
-  sellerId: string;
-  sellerBusinessName: string;
-  sellerCity: string | null;
-  sellerState: string | null;
-  status: OrderStatus;
-  paymentStatus: PaymentStatus;
-  subtotal: number;
-  taxAmount: number;
-  shippingCharges: number;
-  discountAmount: number;
-  totalAmount: number;
-  currency: string;
-  deliveryLocation: string;
-  itemsCount: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface BuyerOrderDetail extends BuyerOrderSummary {
   buyerSnapshot: {
     fullName?: string;
@@ -1602,18 +1695,6 @@ interface OrderBuyerSnapshot {
   full_name?: string | null;
   email?: string | null;
   phone?: string | null;
-}
-
-interface OrderSellerSnapshot {
-  business_name?: string | null;
-  gst_number?: string | null;
-  business_email?: string | null;
-  phone?: string | null;
-  business_address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  pincode?: string | null;
-  country?: string | null;
 }
 
 export interface BuyerOrdersResult {

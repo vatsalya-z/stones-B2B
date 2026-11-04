@@ -64,12 +64,12 @@ export default async function BuyerOrdersPage({ searchParams }: BuyerOrdersPageP
           />
         </svg>
         <div className="space-y-1">
-          <p className="font-bold text-amber-900">Payment Model B Governance</p>
+          <p className="font-bold text-amber-900">Payment Model B Architecture Notice</p>
           <p className="text-stone-700 leading-relaxed text-[11px]">
-            StoneB2B operates a decoupled B2B direct commercial settlement architecture. Orders
-            remain in <em>Pending Payment</em> until commercial wire settlement is confirmed
-            directly with the verified supplier. No customer escrow or intermediate funds are held
-            by the platform.
+            Platform payment integration is pending. No payment should be made using unverified platform
+            payment instructions. Payment confirmation will become available after the authorized payment
+            provider integration is activated. Commercial settlement will be processed through StoneB2B Payment
+            Model B after the authorized Payment Aggregator integration is activated.
           </p>
         </div>
       </div>

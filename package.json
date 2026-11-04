@@ -11,6 +11,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:e2e": "pnpm --filter @stone/web test:e2e",
     "db:check": "pnpm --filter @stone/database db:check",
     "db:migrate": "pnpm --filter @stone/database db:migrate",
     "format": "prettier --write .",

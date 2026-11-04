@@ -68,7 +68,7 @@ const FAQS = [
   },
   {
     q: "How are payments handled on the platform?",
-    a: "Under our permanent Payment Model B governance, orders initiate in a pending state with itemized commercial terms. Commercial transactions, pro-forma invoicing, and bank transfers (RTGS/NEFT or International Letter of Credit) are settled directly between buyer and seller with full platform audit logging.",
+    a: "Under our permanent Payment Model B governance, orders initiate in a pending state upon quotation acceptance. Platform payment integration is pending. No payment should be made using unverified platform payment instructions. Commercial settlement will be processed through StoneB2B Payment Model B after the authorized Payment Aggregator integration is activated.",
   },
   {
     q: "Can I order custom cut-to-size dimensions or special edge profiles?",

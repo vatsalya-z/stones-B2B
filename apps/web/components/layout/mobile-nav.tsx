@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@stone/ui";
@@ -29,33 +29,55 @@ export function MobileNav({
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Close drawer on route change
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when open
+  // Handle Escape key to close
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        hamburgerRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
+  // Prevent body scroll when open and manage focus
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+      // Allow DOM mount before focusing close button
+      const timer = setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 50);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "";
+      };
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
   }, [open]);
 
   return (
     <>
       {/* Hamburger toggle */}
       <button
+        ref={hamburgerRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className="flex h-10 w-10 items-center justify-center rounded-xl text-stone-700 transition-colors hover:bg-stone-100 lg:hidden"
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
+        aria-controls="mobile-navigation-drawer"
       >
         {open ? (
           // X icon
@@ -94,27 +116,38 @@ export function MobileNav({
       {open && (
         <div
           className="fixed inset-0 z-40 bg-stone-900/30 backdrop-blur-sm lg:hidden"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            hamburgerRef.current?.focus();
+          }}
           aria-hidden="true"
         />
       )}
 
-      {/* Slide-in drawer */}
+      {/* Slide-in drawer with explicit closed visibility & pointer-events isolation */}
       <div
+        id="mobile-navigation-drawer"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 w-72 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:hidden",
-          open ? "translate-x-0" : "translate-x-full",
+          "fixed inset-y-0 right-0 z-50 w-72 bg-white shadow-xl transition-all duration-300 ease-in-out lg:hidden",
+          open
+            ? "translate-x-0 visible opacity-100 pointer-events-auto"
+            : "translate-x-full invisible opacity-0 pointer-events-none",
         )}
         role="dialog"
         aria-modal="true"
+        aria-hidden={!open}
         aria-label="Navigation menu"
       >
         <div className="flex h-20 sm:h-[88px] items-center justify-between border-b border-stone-200 px-5">
           <span className="text-sm font-semibold text-stone-700">Navigation</span>
           <button
+            ref={closeButtonRef}
             type="button"
-            onClick={() => setOpen(false)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:bg-stone-100"
+            onClick={() => {
+              setOpen(false);
+              hamburgerRef.current?.focus();
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:bg-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
             aria-label="Close menu"
           >
             <svg

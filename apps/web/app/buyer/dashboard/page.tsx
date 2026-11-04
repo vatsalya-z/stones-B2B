@@ -6,6 +6,8 @@ import {
   EnquiryStatusBadge,
   formatPriceTypeShort,
   formatShortDate,
+  OrderStatusBadge,
+  PaymentStatusBadge,
   QuotationStatusBadge,
 } from "@/components/seller/status-badges";
 import {
@@ -33,74 +35,155 @@ export default async function BuyerDashboardPage() {
     .filter(Boolean)
     .join(", ");
 
-  const metricCards = [
+  // 1. Pending Actions computation
+  const pendingActions: Array<{
+    id: string;
+    title: string;
+    description: string;
+    href: string;
+    actionLabel: string;
+    severity: "warning" | "info";
+  }> = [];
+
+  const unreviewedQuotesCount = Math.max(
+    0,
+    data.metrics.receivedQuotations - data.metrics.acceptedQuotations,
+  );
+  if (unreviewedQuotesCount > 0) {
+    pendingActions.push({
+      id: "pending-quotes",
+      title: `${unreviewedQuotesCount} Supplier Quotation${unreviewedQuotesCount > 1 ? "s" : ""} Pending Review`,
+      description: "Review formal commercial offers, freight estimates, and validity terms before quotes expire.",
+      href: "/buyer/quotes",
+      actionLabel: "Review Quotes",
+      severity: "warning",
+    });
+  }
+
+  if (!ctx.extendedAddress.companyName || !ctx.profile?.phone) {
+    pendingActions.push({
+      id: "profile-incomplete",
+      title: "Complete Company & Contact Profile",
+      description: "Add your firm name, GSTIN, and direct phone number to accelerate verification from stone processors.",
+      href: "/buyer/profile",
+      actionLabel: "Complete Profile",
+      severity: "info",
+    });
+  }
+
+  if (!ctx.extendedAddress.cleanAddress && !ctx.profile?.address) {
+    pendingActions.push({
+      id: "address-missing",
+      title: "Set Default Delivery / Project Site Address",
+      description: "Save your delivery destination so factories can calculate freight rates accurately in their quotations.",
+      href: "/buyer/addresses",
+      actionLabel: "Add Address",
+      severity: "info",
+    });
+  }
+
+  const pendingPaymentOrders = (data.recentOrders ?? []).filter(
+    (o) => o.status === "pending_payment",
+  );
+  if (pendingPaymentOrders.length > 0) {
+    pendingActions.push({
+      id: "pending-payment-orders",
+      title: `${pendingPaymentOrders.length} Order${pendingPaymentOrders.length > 1 ? "s" : ""} Pending Payment Settlement`,
+      description: "Platform payment integration is pending. Commercial settlement confirmation will activate upon authorized provider onboarding.",
+      href: "/buyer/orders",
+      actionLabel: "View Orders",
+      severity: "warning",
+    });
+  }
+
+  // 2. Summary Cards (Mandatory 4 Core KPIs + Secondary Row)
+  const coreKpiCards = [
     {
-      label: "Total Enquiries",
-      value: data.metrics.totalEnquiries,
-      hint: "All product & custom RFQs",
-      href: "/buyer/enquiries",
+      label: "Total RFQs",
+      value: data.metrics.totalRfqs,
+      hint: "Custom stone & BOQ requests",
+      href: "/buyer/rfqs",
+      accent: "text-amber-700",
     },
     {
-      label: "Active Enquiries",
-      value: data.metrics.activeEnquiries,
-      hint: "Open in procurement pipeline",
-      href: "/buyer/enquiries",
-    },
-    {
-      label: "Pending Responses",
-      value: data.metrics.pendingResponses,
-      hint: "Awaiting supplier quote",
-      href: "/buyer/enquiries?status=submitted",
+      label: "Active RFQs",
+      value: data.metrics.activeRfqs,
+      hint: "Open in supplier pipeline",
+      href: "/buyer/rfqs?status=submitted",
+      accent: "text-blue-700",
     },
     {
       label: "Received Quotations",
       value: data.metrics.receivedQuotations,
       hint: "Formal commercial offers",
       href: "/buyer/quotes",
+      accent: "text-emerald-700",
+    },
+    {
+      label: "Active Orders",
+      value: data.metrics.activeOrders,
+      hint: "Processing & in transit",
+      href: "/buyer/orders",
+      accent: "text-stone-900",
+    },
+  ];
+
+  const secondaryKpiCards = [
+    {
+      label: "Total Enquiries",
+      value: data.metrics.totalEnquiries,
+      hint: "Product leads & inquiries",
+      href: "/buyer/enquiries",
+    },
+    {
+      label: "Awaiting Supplier Quote",
+      value: data.metrics.pendingResponses,
+      hint: "Submitted to factories",
+      href: "/buyer/enquiries?status=submitted",
     },
     {
       label: "Accepted Quotations",
       value: data.metrics.acceptedQuotations,
-      hint: "Approved supplier quotes",
+      hint: "Approved commercial offers",
       href: "/buyer/quotes?status=accepted",
     },
     {
-      label: "Rejected / Closed",
+      label: "Closed / Concluded",
       value: data.metrics.rejectedOrClosedEnquiries,
-      hint: "Concluded or withdrawn",
+      hint: "Completed or withdrawn",
       href: "/buyer/enquiries",
     },
   ];
 
   const quickActions = [
     {
-      label: "Create New RFQ",
-      description: "Send custom stone & BOQ requirements",
+      label: "Create RFQ",
+      description: "Send technical stone dimensions & BOQ",
       href: "/buyer/rfqs/new",
       accent: true,
     },
     {
-      label: "Browse Products",
+      label: "Browse Catalogue",
       description: "Explore verified slabs, tiles & blocks",
       href: "/products",
       accent: false,
     },
     {
-      label: "View Suppliers",
-      description: "Connect with verified Indian factories",
+      label: "Supplier Directory",
+      description: "Connect with verified Indian stone processors",
       href: "/suppliers",
       accent: false,
     },
     {
-      label: "My Enquiries",
-      description: "Track sent enquiries & timelines",
-      href: "/buyer/enquiries",
+      label: "My Orders",
+      description: "Track pro-forma invoices & transit dispatch",
+      href: "/buyer/orders",
       accent: false,
     },
     {
-      label: "Compare Quotations",
-      description: "Side-by-side price & terms review",
-      href: "/buyer/quotes/compare",
+      label: "Delivery Addresses",
+      description: "Manage project sites & billing records",
+      href: "/buyer/addresses",
       accent: false,
     },
   ];
@@ -144,34 +227,190 @@ export default async function BuyerDashboardPage() {
               >
                 Manage Profile
               </Link>
+              <Link
+                href="/buyer/addresses"
+                className="inline-flex items-center justify-center rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 transition-colors hover:bg-stone-50"
+              >
+                Delivery Addresses
+              </Link>
             </div>
           </div>
         </CardBody>
       </Card>
 
-      {/* 6 Real Supabase KPI Metrics */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-6">
-        {metricCards.map((card) => (
+      {/* SECTION B — PENDING ACTIONS (Actionable Procurement Tasks) */}
+      {pendingActions.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-500">
+              Action Required ({pendingActions.length})
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {pendingActions.map((act) => (
+              <div
+                key={act.id}
+                className={`flex items-start justify-between gap-3 rounded-2xl border p-4 transition-all ${
+                  act.severity === "warning"
+                    ? "border-amber-200 bg-amber-50/70"
+                    : "border-sky-200 bg-sky-50/70"
+                }`}
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`h-2 w-2 rounded-full ${
+                        act.severity === "warning" ? "bg-amber-500" : "bg-sky-500"
+                      }`}
+                    />
+                    <h3 className="text-sm font-bold text-stone-900 truncate">{act.title}</h3>
+                  </div>
+                  <p className="mt-1 text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                    {act.description}
+                  </p>
+                </div>
+                <Link
+                  href={act.href}
+                  className="shrink-0 rounded-xl bg-white px-3.5 py-1.5 text-xs font-semibold text-stone-900 border border-stone-200 shadow-2xs hover:bg-stone-50 hover:border-stone-300"
+                >
+                  {act.actionLabel} →
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SECTION C — 4 CORE SUMMARY CARDS (Total RFQs, Active RFQs, Received Quotes, Active Orders) */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {coreKpiCards.map((card) => (
           <Link
             key={card.label}
             href={card.href}
-            className="group rounded-2xl border border-stone-200 bg-white p-4 shadow-xs transition-all hover:border-amber-400/60 hover:shadow-sm"
+            className="group rounded-2xl border border-stone-200 bg-white p-5 shadow-xs transition-all hover:border-amber-400/80 hover:shadow-sm"
           >
-            <p className="text-xs font-medium text-stone-500 group-hover:text-stone-700">
+            <p className="text-xs font-semibold uppercase tracking-wider text-stone-500 group-hover:text-stone-700">
               {card.label}
             </p>
-            <p className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900">
+            <p className={`mt-2 text-3xl font-extrabold tracking-tight ${card.accent}`}>
               {card.value}
             </p>
-            <p className="mt-1 text-[11px] text-stone-400 truncate">{card.hint}</p>
+            <p className="mt-1 text-xs text-stone-400 truncate">{card.hint}</p>
           </Link>
         ))}
       </div>
 
-      {/* SECTION D — QUICK ACTIONS */}
+      {/* SECONDARY PROCUREMENT METRICS ROW */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {secondaryKpiCards.map((card) => (
+          <Link
+            key={card.label}
+            href={card.href}
+            className="rounded-xl border border-stone-100 bg-stone-50/60 p-3.5 transition-colors hover:bg-white hover:border-stone-200"
+          >
+            <p className="text-[11px] font-medium text-stone-500">{card.label}</p>
+            <p className="mt-1 text-xl font-bold text-stone-800">{card.value}</p>
+            <p className="text-[10px] text-stone-400 truncate">{card.hint}</p>
+          </Link>
+        ))}
+      </div>
+
+      {/* SECTION D — ACTIVE PROCUREMENT ORDERS */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between gap-2">
+          <div>
+            <h2 className="text-base font-bold text-stone-900">Active Procurement Orders</h2>
+            <p className="text-xs text-stone-500">
+              Commercial orders currently in pending payment, processing, or freight dispatch
+            </p>
+          </div>
+          <Link
+            href="/buyer/orders"
+            className="text-xs font-semibold text-amber-700 hover:underline"
+          >
+            All Orders ({data.metrics.activeOrders}) →
+          </Link>
+        </CardHeader>
+        <CardBody>
+          {(data.recentOrders ?? []).length === 0 ? (
+            <EmptyState
+              title="No active procurement orders"
+              description="Once you accept formal supplier quotations, created orders, pro-forma invoices, and dispatch timelines will appear here."
+              action={
+                <Link
+                  href="/buyer/quotes"
+                  className="inline-flex rounded-xl bg-stone-900 px-4 py-2 text-xs font-semibold text-white hover:bg-stone-800"
+                >
+                  View Received Quotations
+                </Link>
+              }
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-stone-200 text-stone-500 font-semibold">
+                    <th className="py-2.5 pr-4">Order #</th>
+                    <th className="py-2.5 px-4">Supplier</th>
+                    <th className="py-2.5 px-4">Items / Dest</th>
+                    <th className="py-2.5 px-4">Total Amount</th>
+                    <th className="py-2.5 px-4">Order Status</th>
+                    <th className="py-2.5 px-4">Payment</th>
+                    <th className="py-2.5 pl-4 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100">
+                  {data.recentOrders.map((ord) => (
+                    <tr key={ord.id} className="hover:bg-stone-50/60 transition-colors">
+                      <td className="py-3 pr-4 font-bold text-stone-900">
+                        <Link href={`/buyer/orders/${ord.id}`} className="hover:text-amber-700">
+                          {ord.orderNumber}
+                        </Link>
+                      </td>
+                      <td className="py-3 px-4 text-stone-700 font-medium">
+                        {ord.sellerBusinessName}
+                        {ord.sellerCity && (
+                          <span className="block text-[11px] text-stone-400">
+                            {ord.sellerCity}, {ord.sellerState}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-stone-600">
+                        {ord.itemsCount} item{ord.itemsCount !== 1 ? "s" : ""}
+                        <span className="block text-[11px] text-stone-400 truncate max-w-[140px]">
+                          {ord.deliveryLocation}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 font-extrabold text-stone-900">
+                        {formatMoneyAmount(ord.totalAmount, ord.currency)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <OrderStatusBadge status={ord.status} />
+                      </td>
+                      <td className="py-3 px-4">
+                        <PaymentStatusBadge status={ord.paymentStatus} />
+                      </td>
+                      <td className="py-3 pl-4 text-right">
+                        <Link
+                          href={`/buyer/orders/${ord.id}`}
+                          className="font-semibold text-amber-700 hover:underline"
+                        >
+                          Track →
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      {/* SECTION E — QUICK ACTIONS */}
       <Card>
         <CardHeader>
-          <h2 className="text-base font-bold text-stone-900">Quick Procurement Actions</h2>
+          <h2 className="text-base font-bold text-stone-900">Quick Procurement Shortcuts</h2>
         </CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -193,20 +432,20 @@ export default async function BuyerDashboardPage() {
         </CardBody>
       </Card>
 
-      {/* SECTION B & SECTION C — RECENT ENQUIRIES & RECENT QUOTATIONS */}
+      {/* SECTION F & G — RECENT RFQS & RECENT QUOTATIONS */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        {/* B. My Recent Enquiries */}
+        {/* F. Recent Enquiries & RFQs */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-2">
             <div>
-              <h2 className="text-base font-bold text-stone-900">My Recent Enquiries</h2>
-              <p className="text-xs text-stone-500">Latest product enquiries and custom RFQs</p>
+              <h2 className="text-base font-bold text-stone-900">Recent RFQs &amp; Enquiries</h2>
+              <p className="text-xs text-stone-500">Custom architectural RFQs and product specifications</p>
             </div>
             <Link
-              href="/buyer/enquiries"
+              href="/buyer/rfqs"
               className="text-xs font-semibold text-amber-700 hover:underline"
             >
-              View All →
+              View All RFQs →
             </Link>
           </CardHeader>
           <CardBody>
@@ -268,12 +507,12 @@ export default async function BuyerDashboardPage() {
           </CardBody>
         </Card>
 
-        {/* C. Recent Quotations */}
+        {/* G. Recent Quotations */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-2">
             <div>
               <h2 className="text-base font-bold text-stone-900">Recent Quotations</h2>
-              <p className="text-xs text-stone-500">Latest commercial offers from suppliers</p>
+              <p className="text-xs text-stone-500">Latest formal commercial offers from stone suppliers</p>
             </div>
             <Link
               href="/buyer/quotes"
@@ -346,7 +585,7 @@ export default async function BuyerDashboardPage() {
         </Card>
       </div>
 
-      {/* SECTION E — SAVED PRODUCTS & RECENT ACTIVITY */}
+      {/* SECTION H — SAVED PRODUCTS & RECENT ACTIVITY */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="xl:col-span-7">
           <Card className="h-full">
@@ -485,4 +724,3 @@ export default async function BuyerDashboardPage() {
     </div>
   );
 }
-

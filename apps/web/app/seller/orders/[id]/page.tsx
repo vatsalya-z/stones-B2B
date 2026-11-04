@@ -108,12 +108,13 @@ export default async function SellerOrderDetailPage({ params }: SellerOrderDetai
 
         {/* Model B Supplier Instructions */}
         <div className="border-b border-amber-200 bg-amber-50/80 px-6 py-4 sm:px-8 text-xs text-amber-950">
-          <p className="font-bold text-amber-900">Commercial Pro-Forma Settlement Protocol</p>
+          <p className="font-bold text-amber-900">Payment Model B Architecture Notice</p>
           <p className="text-stone-700 leading-relaxed text-[11px] mt-0.5">
-            Under StoneB2B Payment Model B, please verify direct commercial wire remittance into your
-            bank account. Once verified, click <strong>Confirm Order</strong> below to commit
-            production and cutting at your quarry / factory. When loaded onto freight transport,
-            advance to <strong>Dispatch</strong>.
+            Platform payment integration is pending. No payment should be made using unverified platform
+            payment instructions. Payment confirmation will become available after the authorized payment
+            provider integration is activated. Commercial settlement will be processed through StoneB2B Payment
+            Model B after the authorized Payment Aggregator integration is activated. You may click
+            <strong>Confirm Order</strong> below to commit production, stone cutting, and logistical planning.
           </p>
         </div>
 

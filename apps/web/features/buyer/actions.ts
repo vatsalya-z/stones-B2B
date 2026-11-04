@@ -688,7 +688,7 @@ export async function changeBuyerPasswordAction(
 }
 
 // ---------------------------------------------------------------------------
-// 8. Phase 2: Quotation Acceptance & Order Initiation (/buyer/quotes/[id])
+// 8. Phase 2 & 5: Quotation Acceptance & Order Initiation (/buyer/quotes/[id])
 // ---------------------------------------------------------------------------
 export async function acceptQuotationAction(
   input: BuyerQuotationAcceptanceInput,
@@ -798,6 +798,8 @@ export async function acceptQuotationAction(
   }
 }
 
+export const acceptBuyerQuotationAction = acceptQuotationAction;
+
 // ---------------------------------------------------------------------------
 // 9. Phase 2: Order Status Transition for Buyer (/buyer/orders/[id])
 // ---------------------------------------------------------------------------
@@ -903,11 +905,145 @@ export async function saveBuyerAddressAction(
       return { success: false, error: "Failed to save address." };
     }
 
+    revalidatePath("/buyer/addresses");
     revalidatePath("/buyer/settings");
     revalidatePath("/buyer/orders");
     return { success: true, data: { id: addressRow.id } };
   } catch (err) {
     console.error("[saveBuyerAddressAction] unexpected error:", err);
+    return { success: false, error: "An unexpected error occurred." };
+  }
+}
+
+export async function updateBuyerAddressAction(
+  addressId: string,
+  input: BuyerAddressInput,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const user = await requireBuyer();
+    if (!addressId || !UUID_REGEX.test(addressId)) {
+      return { success: false, error: "Invalid address identifier." };
+    }
+
+    const parsed = buyerAddressSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.errors[0]?.message ?? "Invalid address data.",
+      };
+    }
+
+    const d = parsed.data;
+    const supabase = await getSupabaseServerClient();
+
+    if (d.isDefault) {
+      await supabase
+        .from("buyer_addresses")
+        .update({ is_default: false })
+        .eq("buyer_id", user.id);
+    }
+
+    const { data: addressRow, error } = await supabase
+      .from("buyer_addresses")
+      .update({
+        address_type: d.addressType,
+        contact_name: d.contactName,
+        phone: d.phone,
+        company_name: d.companyName ?? null,
+        gstin: d.gstin ?? null,
+        address_line1: d.addressLine1,
+        address_line2: d.addressLine2 ?? null,
+        city: d.city,
+        state: d.state,
+        pincode: d.pincode,
+        country: d.country,
+        is_default: d.isDefault,
+      })
+      .eq("id", addressId)
+      .eq("buyer_id", user.id)
+      .select("id")
+      .single();
+
+    if (error || !addressRow) {
+      console.error("[updateBuyerAddressAction] error:", error);
+      return { success: false, error: "Failed to update address or address not found." };
+    }
+
+    revalidatePath("/buyer/addresses");
+    revalidatePath("/buyer/settings");
+    revalidatePath("/buyer/orders");
+    return { success: true, data: { id: addressRow.id } };
+  } catch (err) {
+    console.error("[updateBuyerAddressAction] unexpected error:", err);
+    return { success: false, error: "An unexpected error occurred." };
+  }
+}
+
+export async function deleteBuyerAddressAction(
+  addressId: string,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const user = await requireBuyer();
+    if (!addressId || !UUID_REGEX.test(addressId)) {
+      return { success: false, error: "Invalid address identifier." };
+    }
+
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase
+      .from("buyer_addresses")
+      .delete()
+      .eq("id", addressId)
+      .eq("buyer_id", user.id);
+
+    if (error) {
+      console.error("[deleteBuyerAddressAction] error:", error);
+      return { success: false, error: "Failed to delete address." };
+    }
+
+    revalidatePath("/buyer/addresses");
+    revalidatePath("/buyer/settings");
+    revalidatePath("/buyer/orders");
+    return { success: true, data: { id: addressId } };
+  } catch (err) {
+    console.error("[deleteBuyerAddressAction] unexpected error:", err);
+    return { success: false, error: "An unexpected error occurred." };
+  }
+}
+
+export async function setDefaultBuyerAddressAction(
+  addressId: string,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    await requireBuyer();
+    if (!addressId || !UUID_REGEX.test(addressId)) {
+      return { success: false, error: "Invalid address identifier." };
+    }
+
+    const supabase = await getSupabaseServerClient();
+
+    // Invoke atomic RPC ensuring single-transaction default address assignment
+    const rpcCaller = supabase.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>,
+    ) => Promise<{ data?: unknown; error: { message?: string } | null }>;
+    const { error: rpcError } = await rpcCaller("set_default_buyer_address", {
+      _address_id: addressId,
+    });
+
+    if (rpcError) {
+      console.error("[setDefaultBuyerAddressAction] RPC error:", rpcError);
+      return {
+        success: false,
+        error: rpcError.message || "Failed to set default address.",
+      };
+    }
+
+    revalidatePath("/buyer/addresses");
+    revalidatePath("/buyer/settings");
+    revalidatePath("/buyer/orders");
+    return { success: true, data: { id: addressId } };
+  } catch (err) {
+    console.error("[setDefaultBuyerAddressAction] unexpected error:", err);
     return { success: false, error: "An unexpected error occurred." };
   }
 }

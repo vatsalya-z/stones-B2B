@@ -127,7 +127,7 @@ export function ProductEnquiryForm({
             </p>
           )}
           <p className="text-[11px] text-stone-500">
-            Reference: <span className="font-mono font-bold text-stone-800">{state.referenceNumber}</span> • StoneB2B Platform Escrow Protection Enabled
+            Reference: <span className="font-mono font-bold text-stone-800">{state.referenceNumber}</span> • Official StoneB2B Procurement Request
           </p>
         </div>
 

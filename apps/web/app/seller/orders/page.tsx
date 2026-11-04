@@ -64,12 +64,13 @@ export default async function SellerOrdersPage({ searchParams }: SellerOrdersPag
           />
         </svg>
         <div className="space-y-1">
-          <p className="font-bold text-amber-900">Payment Model B Supplier Protocol</p>
+          <p className="font-bold text-amber-900">Payment Model B Architecture Notice</p>
           <p className="text-stone-700 leading-relaxed text-[11px]">
-            Orders are initiated upon quotation acceptance. Please issue your official commercial tax
-            pro-forma invoice directly to the buyer for NEFT/RTGS wire settlement. Once payment is
-            verified on your end, advance the order to <em>Confirmed</em> and initiate factory
-            cutting and packing.
+            Platform payment integration is pending. No payment should be made using unverified platform
+            payment instructions. Payment confirmation will become available after the authorized payment
+            provider integration is activated. Commercial settlement will be processed through StoneB2B Payment
+            Model B after the authorized Payment Aggregator integration is activated. Orders can be advanced to
+            <em>Confirmed</em> to commit production, slab processing, and logistical scheduling.
           </p>
         </div>
       </div>

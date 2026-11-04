@@ -354,13 +354,13 @@ export function BuyerQuoteActions({
                     clipRule="evenodd"
                   />
                 </svg>
-                Payment Model B: Direct B2B Commercial Settlement
+                Payment Model B Architecture Notice
               </p>
               <p className="text-stone-700 leading-relaxed text-[11px]">
-                Upon acceptance, an official StoneB2B Pro-Forma Purchase Order is initiated. You
-                will receive commercial pro-forma invoice and wire transfer settlement instructions
-                directly from <strong>{sellerName}</strong>. No payments are charged to credit cards on
-                this platform.
+                Upon acceptance, an official StoneB2B Pro-Forma Purchase Order is initiated. Platform payment
+                integration is pending. No payment should be made using unverified platform payment instructions.
+                Payment confirmation will become available after the authorized payment provider integration is activated.
+                Commercial settlement will be processed through StoneB2B Payment Model B after the authorized Payment Aggregator integration is activated.
               </p>
             </div>
 

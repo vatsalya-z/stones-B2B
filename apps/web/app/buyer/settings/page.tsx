@@ -92,12 +92,20 @@ export default async function BuyerSettingsPage() {
               Your saved delivery country and contact profile prefill new RFQs automatically.
             </p>
           </div>
-          <Link
-            href="/buyer/profile"
-            className="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-xs font-semibold text-stone-800 hover:bg-stone-50"
-          >
-            Edit Buyer Profile →
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/buyer/addresses"
+              className="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-xs font-semibold text-stone-800 hover:bg-stone-50"
+            >
+              Delivery Addresses →
+            </Link>
+            <Link
+              href="/buyer/profile"
+              className="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-xs font-semibold text-stone-800 hover:bg-stone-50"
+            >
+              Edit Profile →
+            </Link>
+          </div>
         </CardHeader>
         <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-3 text-xs">
           <div>

@@ -82,11 +82,11 @@ export function SellerOrderActions({
             onClick={() =>
               executeTransition(
                 "confirmed",
-                "Pro-forma verified; commercial wire payment confirmed by supplier",
+                "Pro-forma acknowledged; production committed by supplier",
               )
             }
           >
-            Confirm Order (Payment / Pro-Forma Received)
+            Confirm Order (Commit Production)
           </Button>
         )}
 

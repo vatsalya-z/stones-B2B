@@ -122,14 +122,13 @@ export default async function BuyerOrderDetailPage({ params }: BuyerOrderDetailP
             </svg>
             <div className="space-y-0.5">
               <p className="font-bold text-amber-900">
-                Payment Model B Settlement &amp; Fulfillment Protocol
+                Payment Model B Architecture Notice
               </p>
               <p className="text-stone-700 leading-relaxed text-[11px]">
-                This is an official B2B purchase order initiated from an accepted commercial
-                quotation. Settlement is conducted directly between buyer and supplier via wire
-                transfer / NEFT / RTGS against the supplier&apos;s commercial pro-forma invoice.
-                Once settled, the supplier advances the order to <em>Confirmed</em> and begins
-                quarrying, slab processing, or logistics dispatch.
+                Platform payment integration is pending. No payment should be made using unverified platform
+                payment instructions. Payment confirmation will become available after the authorized payment
+                provider integration is activated. Commercial settlement will be processed through StoneB2B Payment
+                Model B after the authorized Payment Aggregator integration is activated.
               </p>
             </div>
           </div>
