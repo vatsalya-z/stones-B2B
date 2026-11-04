@@ -2,6 +2,7 @@ import "server-only";
 import type { OrderStatus, PaymentStatus } from "@stone/types";
 import { getAdminContext, type AdminContext } from "./guard";
 import { sanitizeAdminSearchTerm } from "@stone/validation";
+import { resolveStorageUrl } from "@/lib/db";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -483,9 +484,16 @@ export async function getAdminProducts(params: GetAdminProductsParams = {}, ctx?
 
   const hydratedProducts = products.map((p) => ({
     ...p,
+    price_per_unit: p.price ?? 0,
+    unit_of_measure: p.unit ?? "sq_ft",
+    stone_type: p.material_type ?? null,
+    primary_color: p.colour ?? null,
     seller: sellerMap.get(p.seller_id) ?? null,
     category: p.category_id ? categoryMap.get(p.category_id) ?? null : null,
-    product_images: imageMap.get(p.id) ?? [],
+    product_images: (imageMap.get(p.id) ?? []).map((img) => ({
+      ...img,
+      storage_path: resolveStorageUrl(img.storage_path, "product-images") ?? img.storage_path,
+    })),
   }));
 
   const total = count ?? 0;
@@ -561,7 +569,10 @@ export async function getAdminProductDetail(productId: string, ctx?: AdminContex
     seller: sellerRes.data,
     category: categoryRes.data,
     specifications: specsRes.data ?? [],
-    images: imagesRes.data ?? [],
+    images: (imagesRes.data ?? []).map((img) => ({
+      ...img,
+      storage_path: resolveStorageUrl(img.storage_path, "product-images") ?? img.storage_path,
+    })),
     auditHistory,
   };
 }

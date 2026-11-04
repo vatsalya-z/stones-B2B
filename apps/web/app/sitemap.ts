@@ -57,8 +57,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           .from("products")
           .select("slug, updated_at")
           .eq("moderation_status", "approved")
-          .not("published_at", "is", null),
-        supabase.from("public_seller_profiles").select("slug"),
+          .not("published_at", "is", null)
+          .not("slug", "ilike", "test-%")
+          .not("name", "ilike", "[TEST]%"),
+        supabase
+          .from("public_seller_profiles")
+          .select("slug")
+          .not("slug", "ilike", "%-test")
+          .not("business_name", "ilike", "%[TEST]%"),
       ]);
 
       categories = (catRes.data ?? []) as typeof categories;

@@ -144,6 +144,12 @@ export function ProductCard({
 
           {/* Badges on Top Left */}
           <div className="absolute left-3 top-3 flex flex-wrap gap-1.5 pointer-events-none">
+            {(name.includes("[TEST]") || slug.startsWith("test-")) && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-200 animate-pulse" />
+                PUBLIC QA TEST RECORD
+              </span>
+            )}
             {materialType && (
               <Badge variant="default" className="text-[11px] font-semibold bg-stone-900/90 text-white backdrop-blur-xs shadow-xs">
                 {materialType}

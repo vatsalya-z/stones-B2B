@@ -17,6 +17,21 @@ interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
 
+function isSyntheticTestProduct(product: {
+  slug: string;
+  name: string;
+  sku?: string | null;
+  seller?: { slug: string; business_name: string };
+}): boolean {
+  return (
+    product.slug.startsWith("test-") ||
+    product.name.startsWith("[TEST]") ||
+    Boolean(product.sku?.startsWith("TEST-")) ||
+    Boolean(product.seller?.slug?.endsWith("-test")) ||
+    Boolean(product.seller?.business_name?.includes("[TEST]"))
+  );
+}
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
@@ -25,6 +40,21 @@ export async function generateMetadata({
 
   if (!product) {
     return { title: "Product Not Found | StoneB2B" };
+  }
+
+  const isTest = isSyntheticTestProduct(product);
+  if (isTest) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return {
+        title: "Product Not Found | StoneB2B",
+        robots: { index: false, follow: false },
+      };
+    }
+    return {
+      title: `[QA TEST] ${product.name} | StoneB2B`,
+      robots: { index: false, follow: false, nocache: true },
+    };
   }
 
   const primaryImage =
@@ -77,6 +107,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     product.id.startsWith("prod-") ||
     !product.seller.id ||
     product.seller.id.startsWith("seller-");
+
+  const isTest = isSyntheticTestProduct(product);
 
   const [relatedProducts, favouriteIds, currentUser] = await Promise.all([
     getRelatedProducts(product.category_id, product.id, 3, {
@@ -159,8 +191,32 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           ]}
         />
 
+        {/* Synthetic QA Test Disclaimer Banner */}
+        {isTest && (
+          <div className="rounded-2xl border-2 border-amber-500 bg-amber-50/90 p-4 sm:p-5 shadow-sm" role="alert">
+            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-200 text-amber-900 shadow-xs">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+
+              <div className="min-w-0 flex-1 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-amber-600 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                    PUBLIC QA TEST RECORD
+                  </span>
+                </div>
+                <p className="text-sm font-semibold text-amber-950 leading-relaxed">
+                  PUBLIC QA TEST RECORD — This supplier/product is synthetic test data created for StoneB2B platform verification. It is not a verified commercial offer.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Editorial Showcase Data Trust Disclaimer Banner */}
-        {isShowcase && (
+        {isShowcase && !isTest && (
           <div className="rounded-2xl border border-amber-300/80 bg-gradient-to-r from-amber-50/90 via-amber-50/60 to-stone-50 p-4 sm:p-5 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800 shadow-xs">
@@ -588,9 +644,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 image: product.images.map((i) => i.src),
                 category: product.category?.name,
                 material: product.material_type || undefined,
-                // Only emit commercial Offer if this is a genuine database product with an active seller
+                // Only emit commercial Offer if this is a genuine database product with an active seller (never for showcase seeds or synthetic test records)
                 offers:
-                  !isShowcase && product.price !== null
+                  !isShowcase && !isTest && product.price !== null
                     ? {
                         "@type": "Offer",
                         price: product.price,

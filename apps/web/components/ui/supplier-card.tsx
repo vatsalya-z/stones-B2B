@@ -79,6 +79,12 @@ export function SupplierCard({
               {businessName}
             </Link>
             <div className="mt-1 flex flex-wrap items-center gap-1.5">
+              {(businessName.includes("[TEST]") || slug.includes("test")) && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-200 animate-pulse" />
+                  PUBLIC QA TEST RECORD
+                </span>
+              )}
               {isVerified && <VerifiedBadge label="Verified" />}
               <Badge variant="secondary" className="text-[10px] capitalize font-medium">
                 {formattedType}

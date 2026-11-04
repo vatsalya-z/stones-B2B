@@ -123,7 +123,9 @@ export async function getActiveCategories(parentId?: string | null): Promise<Cat
       .from("products")
       .select("category_id")
       .eq("moderation_status", "approved")
-      .not("published_at", "is", null);
+      .not("published_at", "is", null)
+      .not("slug", "ilike", "test-%")
+      .not("name", "ilike", "[TEST]%");
 
     const counts: Record<string, number> = {};
     if (prods && prods.length > 0) {
@@ -1143,8 +1145,13 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
         { count: "exact" },
       )
       .eq("moderation_status", "approved")
-      .not("published_at", "is", null);
+      .not("published_at", "is", null)
+      .not("slug", "ilike", "test-%")
+      .not("slug", "ilike", "%-test")
+      .not("slug", "ilike", "%-test-%")
+      .not("name", "ilike", "[TEST]%");
 
+    // Allow public visibility of live approved records (including synthetic test products marked with QA disclosures)
     if (params.q?.trim()) {
       query = query.textSearch("search_vector", params.q.trim(), {
         type: "plain",
@@ -1160,7 +1167,9 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
         const { count: liveTotal } = await supabase
           .from("products")
           .select("id", { count: "exact", head: true })
-          .eq("moderation_status", "approved");
+          .eq("moderation_status", "approved")
+          .not("slug", "ilike", "test-%")
+          .not("name", "ilike", "[TEST]%");
         if (!liveTotal || liveTotal === 0) {
           return filterSeedProducts(params);
         }
@@ -1265,7 +1274,9 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       const { count: liveCatalogTotal } = await supabase
         .from("products")
         .select("id", { count: "exact", head: true })
-        .eq("moderation_status", "approved");
+        .eq("moderation_status", "approved")
+        .not("slug", "ilike", "test-%")
+        .not("name", "ilike", "[TEST]%");
       if (!liveCatalogTotal || liveCatalogTotal === 0) {
         return filterSeedProducts(params);
       }
@@ -1606,7 +1617,9 @@ export async function getRelatedProducts(
       )
       .neq("id", excludeId)
       .eq("moderation_status", "approved")
-      .not("published_at", "is", null);
+      .not("published_at", "is", null)
+      .not("slug", "ilike", "test-%")
+      .not("name", "ilike", "[TEST]%");
 
     if (criteria?.materialType) {
       query = query.eq("material_type", criteria.materialType);
@@ -1828,6 +1841,9 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
   const { page, pageSize, from, to } = parsePagination(params.page, params.pageSize ?? DEFAULT_PAGE_SIZE);
 
   if (!isSupabaseConfigured()) {
+    if (params.fallback === false) {
+      return { sellers: [], total: 0, totalPages: 0, page };
+    }
     return filterSeedSellers(params);
   }
 
@@ -1837,6 +1853,18 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
     let query = supabase
       .from("public_seller_profiles")
       .select("*", { count: "exact" });
+
+    try {
+      if (typeof (query as unknown as { not?: unknown }).not === "function") {
+        query = query
+          .not("slug", "ilike", "test-%")
+          .not("slug", "ilike", "%-test")
+          .not("slug", "ilike", "%-test-%")
+          .not("business_name", "ilike", "%[TEST]%");
+      }
+    } catch {
+      // Mock resilience
+    }
 
     if (params.q?.trim()) {
       const cleanQ = params.q.trim().replace(/[%_,]/g, " ");
@@ -1898,12 +1926,22 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
 
     if (sellerIds.length > 0) {
       try {
-        const { data: prodRows } = await supabase
+        let prodQuery = supabase
           .from("products")
           .select("seller_id, material_type")
           .in("seller_id", sellerIds)
           .eq("moderation_status", "approved")
           .not("published_at", "is", null);
+
+        try {
+          if (typeof prodQuery.not === "function") {
+            prodQuery = prodQuery.not("slug", "ilike", "test-%");
+          }
+        } catch {
+          // Mock resilience
+        }
+
+        const { data: prodRows } = await prodQuery;
 
         for (const p of prodRows ?? []) {
           if (p.seller_id) {
@@ -1942,6 +1980,9 @@ export async function getPublicSellers(params: SellerFilterParams = {}): Promise
 
     return { sellers, total, totalPages, page };
   } catch {
+    if (params.fallback === false) {
+      return { sellers: [], total: 0, totalPages: 0, page };
+    }
     return filterSeedSellers(params);
   }
 }

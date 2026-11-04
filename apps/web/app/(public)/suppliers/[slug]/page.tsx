@@ -15,6 +15,14 @@ interface SupplierStorefrontProps {
   params: Promise<{ slug: string }>;
 }
 
+function isSyntheticTestSeller(seller: { slug: string; businessName: string }): boolean {
+  return (
+    seller.slug.endsWith("-test") ||
+    seller.slug.startsWith("test-") ||
+    seller.businessName.includes("[TEST]")
+  );
+}
+
 export async function generateMetadata({
   params,
 }: SupplierStorefrontProps): Promise<Metadata> {
@@ -23,6 +31,21 @@ export async function generateMetadata({
 
   if (!seller) {
     return { title: "Supplier Not Found" };
+  }
+
+  const isTest = isSyntheticTestSeller(seller);
+  if (isTest) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return {
+        title: "Supplier Not Found",
+        robots: { index: false, follow: false },
+      };
+    }
+    return {
+      title: `[QA TEST] ${seller.businessName}`,
+      robots: { index: false, follow: false, nocache: true },
+    };
   }
 
   return {
@@ -58,6 +81,8 @@ export default async function SupplierStorefrontPage({
     getCurrentUserFavouriteIds(),
     getCurrentUser(),
   ]);
+
+  const isTest = isSyntheticTestSeller(seller);
   const location = [seller.city, seller.state, seller.country].filter(Boolean).join(", ");
   const coverImage = seller.coverImageUrl || getSupplierFallbackCover(seller.slug, seller.businessType);
   const logoImage = seller.logoUrl || getSupplierFallbackLogo(seller.slug);
@@ -104,11 +129,13 @@ export default async function SupplierStorefrontPage({
 
   return (
     <div className="bg-stone-50 min-h-screen">
-      {/* Organization Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
+      {/* Organization Structured Data (Suppressed for synthetic test sellers) */}
+      {!isTest && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      )}
       {/* Cover Image / Hero Banner */}
       <div className="relative h-72 sm:h-96 lg:h-[480px] w-full overflow-hidden bg-stone-900 shadow-inner">
         {coverImage ? (
@@ -141,6 +168,30 @@ export default async function SupplierStorefrontPage({
             { label: seller.businessName },
           ]}
         />
+
+        {/* Synthetic QA Test Disclaimer Banner */}
+        {isTest && (
+          <div className="rounded-2xl border-2 border-amber-500 bg-amber-50/90 p-4 sm:p-5 shadow-sm" role="alert">
+            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-200 text-amber-900 shadow-xs">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+
+              <div className="min-w-0 flex-1 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-amber-600 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                    PUBLIC QA TEST RECORD
+                  </span>
+                </div>
+                <p className="text-sm font-semibold text-amber-950 leading-relaxed">
+                  PUBLIC QA TEST RECORD — This supplier/product is synthetic test data created for StoneB2B platform verification. It is not a verified commercial offer.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Profile Card Header */}
         <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8 shadow-sm">
