@@ -234,46 +234,80 @@ export function MobileNav({
           aria-hidden="true"
         />
 
-        {/* ── 1. Drawer Header ──────────────────────────────────────── */}
-        <div className="relative z-10 flex h-20 sm:h-[88px] flex-shrink-0 items-center justify-between border-b border-white/[0.08] bg-[#101010]/95 px-5 pt-[env(safe-area-inset-top)] backdrop-blur-md">
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className="group flex items-center gap-3 transition-opacity hover:opacity-90"
-            id={titleId}
-          >
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#D99A35]/30 bg-gradient-to-br from-[#1c1917] to-[#101010] p-1.5 shadow-inner shadow-black">
-              <StoneLogoIcon />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-extrabold tracking-tight text-[#F7F5F0]">
-                Stones<span className="text-[#D99A35]">Dekho</span>
-              </span>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-[#AAA49B]">
-                India&apos;s Natural Stone B2B
-              </span>
-            </div>
-          </Link>
+        {/* ── Always Accessible Circular Close Button (Upper-Right) ── */}
+        <button
+          ref={closeButtonRef}
+          type="button"
+          onClick={() => {
+            setOpen(false);
+            hamburgerRef.current?.focus();
+          }}
+          className="absolute top-[max(18px,env(safe-area-inset-top))] right-5 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 text-[#F7F5F0] backdrop-blur-md transition-all duration-200 hover:border-[#E8BD78] hover:bg-[#D99A35]/25 hover:text-[#E8BD78] active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#D99A35] shadow-lg shadow-black/60"
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" strokeWidth={1.8} />
+        </button>
 
-          {/* Circular Close Button with Gold Accent Interaction */}
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              hamburgerRef.current?.focus();
-            }}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-[#F7F5F0] transition-all duration-200 hover:border-[#E8BD78] hover:bg-[#D99A35]/15 hover:text-[#E8BD78] active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#D99A35]"
-            aria-label="Close menu"
-          >
-            <X className="h-5 w-5" strokeWidth={1.8} />
-          </button>
-        </div>
+        {/* ── Scrollable Drawer Body ────────────────────────────────── */}
+        <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
+          {/* ── 1. Top Quarry Image Header (190–230px) ───────────────── */}
+          <div className="relative h-[215px] sm:h-[225px] w-full flex-shrink-0 overflow-hidden">
+            {/* Layer 1: Real Quarry Background Photograph */}
+            <Image
+              src="/images/backgrounds/stone-quarry-header.jpg"
+              alt="Natural Stone Quarry Landscape"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="(max-width: 480px) 100vw, 420px"
+              unoptimized
+            />
 
-        {/* ── 2. Scrollable Body Content ────────────────────────────── */}
-        <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden px-5 py-4 space-y-5 scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
-          {/* ── Account Access Section ──────────────────────────────── */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-b from-[#191919] to-[#131313] p-4 shadow-lg shadow-black/40">
+            {/* Layer 2: Dark Translucent Tint for Readability */}
+            <div
+              className="absolute inset-0 bg-black/40 z-10"
+              aria-hidden="true"
+            />
+
+            {/* Layer 2b: Top Vignette for Logo & Close Button Contrast */}
+            <div
+              className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/85 via-black/35 to-transparent z-10"
+              aria-hidden="true"
+            />
+
+            {/* Layer 3: Bottom Seamless Gradient Fading into Drawer Background (#101010) */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#101010] via-[#101010]/80 to-transparent z-10"
+              aria-hidden="true"
+            />
+
+            {/* Upper-Left Brand Logo & Tagline */}
+            <div className="relative z-20 flex items-start px-5 pt-[max(18px,env(safe-area-inset-top))] pr-16">
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="group flex items-center gap-3 transition-opacity hover:opacity-95"
+                id={titleId}
+              >
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#D99A35]/50 bg-gradient-to-br from-[#1c1917]/90 to-[#101010]/95 p-2 shadow-lg shadow-black/70 backdrop-blur-md">
+                  <StoneLogoIcon />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-md">
+                    Stone<span className="text-[#D99A35]">B2B</span>
+                  </span>
+                  <span className="text-[10px] font-medium tracking-tight text-[#E8BD78] drop-shadow-xs leading-tight">
+                    India&apos;s Leading Natural Stone B2B Network
+                  </span>
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* ── 2. Content Body (Overlapping Account Card + Nav + Cards) ── */}
+          <div className="relative z-20 px-5 -mt-7 space-y-5 pb-6">
+            {/* ── Account Access Section ──────────────────────────────── */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#191919] to-[#131313] p-4 shadow-xl shadow-black/50 backdrop-blur-sm">
             {isLoggedIn ? (
               // Authenticated Account View
               <div className="space-y-3.5">
@@ -473,8 +507,9 @@ export function MobileNav({
           </div>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }
 
 // Desktop search icon (client component)
