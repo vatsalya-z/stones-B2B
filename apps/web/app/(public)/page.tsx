@@ -117,15 +117,20 @@ export default async function HomePage() {
           {/* Desktop & Tablet (>= 768px): Ultra-HD Landscape Showroom */}
           <source
             media="(min-width: 768px)"
-            type="image/webp"
-            srcSet={HERO_IMAGES.showroom}
-          />
-          <source
-            media="(min-width: 768px)"
             type="image/jpeg"
             srcSet="/images/hero/hero-desktop.jpg"
           />
+          <source
+            media="(min-width: 768px)"
+            type="image/webp"
+            srcSet={HERO_IMAGES.showroom}
+          />
           {/* Mobile (< 768px): Ultra-HD Portrait Symmetrical Showroom */}
+          <source
+            media="(max-width: 767px)"
+            type="image/jpeg"
+            srcSet="/images/hero/hero-mobile.jpg"
+          />
           <source
             media="(max-width: 767px)"
             type="image/webp"
@@ -140,9 +145,9 @@ export default async function HomePage() {
           />
         </picture>
 
-        {/* Subtle Non-Destructive Scrim: Preserves authentic original colors & bright stone highlights while ensuring text readability */}
+        {/* Subtle Non-Destructive Scrim: Preserves authentic original colors & 100% photographic clarity with zero blur */}
         <div
-          className="absolute inset-0 z-[1] bg-gradient-to-b from-black/40 via-transparent to-black/70 md:bg-gradient-to-r md:from-black/75 md:via-black/30 md:to-transparent"
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/20 to-black/60 md:bg-gradient-to-r md:from-black/70 md:via-black/25 md:to-transparent"
           aria-hidden="true"
         />
 
@@ -150,55 +155,52 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Left Column (7 cols): Headline, Description & CTAs */}
             <div className="lg:col-span-7">
-              {/* Frosted text protection container on mobile, clean inline on tablet/desktop */}
-              <div className="rounded-2xl bg-black/40 backdrop-blur-[3px] p-4 sm:p-0 sm:bg-transparent sm:backdrop-blur-none border border-white/10 sm:border-0 shadow-2xl sm:shadow-none">
-                <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-stone-950/80 px-2.5 sm:px-3 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-400 ring-1 ring-inset ring-amber-500/40 backdrop-blur-md shadow-sm">
-                  India&apos;s Leading Natural Stone B2B Network
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-stone-950/80 px-2.5 sm:px-3 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-400 ring-1 ring-inset ring-amber-500/40 shadow-sm">
+                India&apos;s Leading Natural Stone B2B Network
+              </div>
+
+              <h1 className="mt-2.5 sm:mt-3.5 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight sm:leading-tight max-w-2xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+                Source Premium Natural Stone
+                <span className="hidden sm:inline"> — </span>
+                <span className="block sm:inline text-amber-400 text-lg sm:text-4xl lg:text-5xl font-bold sm:font-extrabold mt-1 sm:mt-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+                  Direct from Verified Quarries & Factories
+                </span>
+              </h1>
+
+              <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-stone-100 leading-normal sm:leading-relaxed font-normal max-w-xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                Connect with leading Indian stone manufacturers, quarry owners, and certified exporters.
+                Discover marble, granite, sandstone, slate, and architectural stone for global projects.
+              </p>
+
+              {/* CTAs */}
+              <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <Link
+                  href="/products"
+                  className="btn-accent px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30"
+                >
+                  Explore Slabs & Tiles
+                </Link>
+                <Link
+                  href="/register/seller"
+                  className="btn-secondary border-stone-600 bg-stone-900/90 text-stone-100 hover:bg-stone-800 hover:border-stone-500 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg"
+                >
+                  List Your Factory
+                </Link>
+              </div>
+
+              {/* B2B Trust Indicators */}
+              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-stone-700/60 flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-1.5 sm:gap-y-2 text-[11px] sm:text-xs text-stone-200">
+                <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
+                  <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-emerald-400 shrink-0 shadow-sm shadow-emerald-400/50" />
+                  <span>100% Verified Indian Factories</span>
                 </div>
-
-                <h1 className="mt-2.5 sm:mt-3.5 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight sm:leading-tight max-w-2xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
-                  Source Premium Natural Stone
-                  <span className="hidden sm:inline"> — </span>
-                  <span className="block sm:inline text-amber-400 text-lg sm:text-4xl lg:text-5xl font-bold sm:font-extrabold mt-1 sm:mt-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
-                    Direct from Verified Quarries & Factories
-                  </span>
-                </h1>
-
-                <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-stone-100 leading-normal sm:leading-relaxed font-normal max-w-xl drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
-                  Connect with leading Indian stone manufacturers, quarry owners, and certified exporters.
-                  Discover marble, granite, sandstone, slate, and architectural stone for global projects.
-                </p>
-
-                {/* CTAs */}
-                <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
-                  <Link
-                    href="/products"
-                    className="btn-accent px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30"
-                  >
-                    Explore Slabs & Tiles
-                  </Link>
-                  <Link
-                    href="/register/seller"
-                    className="btn-secondary border-stone-600 bg-stone-900/90 text-stone-100 hover:bg-stone-800 hover:border-stone-500 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-lg"
-                  >
-                    List Your Factory
-                  </Link>
+                <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
+                  <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-amber-400 shrink-0 shadow-sm shadow-amber-400/50" />
+                  <span>Factory-Direct Wholesale Pricing</span>
                 </div>
-
-                {/* B2B Trust Indicators */}
-                <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-stone-700/60 flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-1.5 sm:gap-y-2 text-[11px] sm:text-xs text-stone-200">
-                  <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-emerald-400 shrink-0 shadow-sm shadow-emerald-400/50" />
-                    <span>100% Verified Indian Factories</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-amber-400 shrink-0 shadow-sm shadow-amber-400/50" />
-                    <span>Factory-Direct Wholesale Pricing</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-400 shrink-0 shadow-sm shadow-blue-400/50" />
-                    <span>Global Port Container Dispatch</span>
-                  </div>
+                <div className="flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
+                  <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-400 shrink-0 shadow-sm shadow-blue-400/50" />
+                  <span>Global Port Container Dispatch</span>
                 </div>
               </div>
             </div>

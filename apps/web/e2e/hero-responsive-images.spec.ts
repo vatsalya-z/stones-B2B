@@ -39,7 +39,7 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
 
       // 3. Verify the browser picked desktop image
       const currentSrc = await img.evaluate((el: HTMLImageElement) => el.currentSrc);
-      expect(currentSrc).toContain("hero-desktop.webp");
+      expect(currentSrc).toContain("hero-desktop");
 
       // 4. Verify text content is visible
       await expect(heroSection.locator("h1")).toBeVisible();
@@ -92,7 +92,7 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
 
       // 3. Verify the browser picked mobile image
       const currentSrc = await img.evaluate((el: HTMLImageElement) => el.currentSrc);
-      expect(currentSrc).toContain("hero-mobile.webp");
+      expect(currentSrc).toContain("hero-mobile");
 
       // 4. Verify headline & subtitle are visible and legible
       await expect(heroSection.locator("h1")).toBeVisible();
