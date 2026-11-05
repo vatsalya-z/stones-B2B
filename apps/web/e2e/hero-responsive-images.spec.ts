@@ -44,7 +44,7 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
       // 4. Verify text content is visible
       await expect(heroSection.locator("h1")).toBeVisible();
       await expect(heroSection.getByText("Source Premium Natural Stone")).toBeVisible();
-      await expect(heroSection.getByText("Direct from Verified Quarries & Factories")).toBeVisible();
+      await expect(heroSection.getByText("Direct from Verified Quarries")).toBeVisible();
 
       // 5. CTAs are visible and have valid links
       const ctaExplore = heroSection.getByRole("link", { name: "Explore Slabs & Tiles" });
@@ -97,7 +97,7 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
       // 4. Verify headline & subtitle are visible and legible
       await expect(heroSection.locator("h1")).toBeVisible();
       await expect(heroSection.getByText("Source Premium Natural Stone")).toBeVisible();
-      await expect(heroSection.getByText("Direct from Verified Quarries & Factories")).toBeVisible();
+      await expect(heroSection.getByText("Direct from Verified Quarries")).toBeVisible();
 
       // 5. CTAs are visible
       const ctaExplore = heroSection.getByRole("link", { name: "Explore Slabs & Tiles" });

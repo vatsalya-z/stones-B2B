@@ -150,20 +150,19 @@ export default async function HomePage() {
             {/* Left Column (7 cols): Headline, Description & CTAs */}
             <div className="lg:col-span-7">
               <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-stone-950/80 px-2.5 sm:px-3 py-0.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-400 ring-1 ring-inset ring-amber-500/40 shadow-sm">
-                India&apos;s Leading Natural Stone B2B Network
+                India&apos;s Natural Stone B2B Network
               </div>
 
               <h1 className="mt-2.5 sm:mt-3.5 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight sm:leading-tight max-w-2xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
                 Source Premium Natural Stone
                 <span className="hidden sm:inline"> — </span>
                 <span className="block sm:inline text-amber-400 text-lg sm:text-4xl lg:text-5xl font-bold sm:font-extrabold mt-1 sm:mt-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-                  Direct from Verified Quarries & Factories
+                  Direct from Verified Quarries
                 </span>
               </h1>
 
               <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-stone-100 leading-normal sm:leading-relaxed font-normal max-w-xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-                Connect with leading Indian stone manufacturers, quarry owners, and certified exporters.
-                Discover marble, granite, sandstone, slate, and architectural stone for global projects.
+                Direct B2B sourcing for marble, granite, and architectural stone.
               </p>
 
               {/* CTAs */}
