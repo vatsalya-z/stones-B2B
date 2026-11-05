@@ -43,8 +43,8 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
 
       // 4. Verify text content is visible
       await expect(heroSection.locator("h1")).toBeVisible();
-      await expect(heroSection.getByText("Source Premium Natural Stone")).toBeVisible();
-      await expect(heroSection.getByText("Direct from Verified Quarries")).toBeVisible();
+      await expect(heroSection.getByText("Source Natural Stone")).toBeVisible();
+      await expect(heroSection.getByText("Direct from Quarries")).toBeVisible();
 
       // 5. CTAs are visible and have valid links
       const ctaExplore = heroSection.getByRole("link", { name: "Explore Slabs & Tiles" });
@@ -96,8 +96,8 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
 
       // 4. Verify headline & subtitle are visible and legible
       await expect(heroSection.locator("h1")).toBeVisible();
-      await expect(heroSection.getByText("Source Premium Natural Stone")).toBeVisible();
-      await expect(heroSection.getByText("Direct from Verified Quarries")).toBeVisible();
+      await expect(heroSection.getByText("Source Natural Stone")).toBeVisible();
+      await expect(heroSection.getByText("Direct from Quarries")).toBeVisible();
 
       // 5. CTAs are visible
       const ctaExplore = heroSection.getByRole("link", { name: "Explore Slabs & Tiles" });
@@ -109,9 +109,9 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
       await expect(heroSection.getByText("Makrana Pure White Marble Slabs")).not.toBeVisible();
 
       // 7. Trust indicators visible
-      await expect(heroSection.getByText("100% Verified Indian Factories")).toBeVisible();
-      await expect(heroSection.getByText("Factory-Direct Wholesale Pricing")).toBeVisible();
-      await expect(heroSection.getByText("Global Port Container Dispatch")).toBeVisible();
+      await expect(heroSection.getByText("Verified Quarries")).toBeVisible();
+      await expect(heroSection.getByText("Wholesale Pricing")).toBeVisible();
+      await expect(heroSection.getByText("Global Port Dispatch")).toBeVisible();
 
       // 8. No horizontal overflow
       const hasHorizontalScroll = await page.evaluate(() => {
