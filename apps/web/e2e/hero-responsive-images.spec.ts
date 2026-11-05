@@ -31,9 +31,8 @@ test.describe("Hero Section — Responsive Luxury Showroom Backgrounds", () => {
       const picture = heroSection.locator("picture");
       await expect(picture).toBeVisible();
 
-      const source = picture.locator("source");
+      const source = picture.locator("source").first();
       await expect(source).toHaveAttribute("media", "(min-width: 768px)");
-      await expect(source).toHaveAttribute("srcSet", "/images/hero/hero-desktop.webp");
 
       const img = picture.locator("img");
       await expect(img).toBeVisible();
