@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SectionHeading, EmptyState } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
 import { SupplierCard } from "@/components/ui/supplier-card";
 import { CategoryCard } from "@/components/ui/category-card";
-import { SearchBar } from "@/components/ui/search-bar";
 import { getFeaturedProducts, getFeaturedSellers, getActiveCategories } from "@/lib/db";
 import { HERO_IMAGES } from "@/lib/images";
 
@@ -152,15 +150,8 @@ export default async function HomePage() {
                 Discover marble, granite, sandstone, slate, and architectural stone for global projects.
               </p>
 
-              {/* Product Search */}
-              <div className="mt-5 max-w-md">
-                <Suspense fallback={<div className="h-12 w-full rounded-xl bg-stone-800 animate-pulse" />}>
-                  <SearchBar variant="hero" defaultValue="" />
-                </Suspense>
-              </div>
-
               {/* CTAs */}
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link
                   href="/products"
                   className="btn-accent px-5 py-2.5 text-sm font-semibold shadow-md shadow-amber-600/20"
