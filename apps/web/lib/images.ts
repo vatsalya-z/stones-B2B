@@ -15,7 +15,8 @@ export const HERO_IMAGES = {
   showroom: "/images/hero/marble-showroom-hero.jpg",
   factory: "/images/hero/stone-factory-hero.jpg",
   texture: "/images/backgrounds/stone-texture.jpg",
-  procurement: "/images/backgrounds/stone-showroom-cta.jpg",
+  procurement: "/images/backgrounds/stone-showroom-cta-desktop.jpg",
+  procurementMobile: "/images/backgrounds/stone-showroom-cta-mobile.jpg",
 } as const;
 
 // ─── Categories ──────────────────────────────────────────────────────────────

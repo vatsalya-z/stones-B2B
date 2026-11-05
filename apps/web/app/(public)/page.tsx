@@ -618,41 +618,61 @@ export default async function HomePage() {
       </section>
 
       {/* 6. Buyer Enquiry CTA */}
-      <section className="relative overflow-hidden py-20 sm:py-24 bg-stone-950 text-white">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={HERO_IMAGES.procurement}
-            alt="Luxury natural stone gangsaw slabs showroom and B2B gallery"
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-            unoptimized
+      <section className="relative overflow-hidden py-16 sm:py-20 md:py-24 bg-stone-950 text-white min-h-[500px] sm:min-h-[380px] md:min-h-[400px] flex items-center">
+        {/* Background Image Layer: Responsive Picture Element */}
+        <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
+          {/* Desktop & Tablet (>= 768px): Ultra-HD Landscape Showroom */}
+          <source
+            media="(min-width: 768px)"
+            srcSet="/images/backgrounds/stone-showroom-cta-desktop.jpg"
           />
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-stone-950/55 via-stone-950/40 to-stone-950/55"
-            aria-hidden="true"
+          {/* Mobile (< 768px): Ultra-HD Portrait Symmetrical Showroom */}
+          <img
+            src="/images/backgrounds/stone-showroom-cta-mobile.jpg"
+            alt="Luxury illuminated natural stone slab showroom"
+            className="h-full w-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
           />
-        </div>
-        <div className="relative z-10 container-narrow text-center">
-          <span className="inline-block rounded-full bg-stone-950/70 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-amber-400 ring-1 ring-amber-400/30 backdrop-blur-sm">
+        </picture>
+
+        {/* Cinematic Multi-Layer Optical Vignette & Dark Tint */}
+        <div
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-stone-950/85 via-stone-950/65 to-stone-950/90 md:bg-gradient-to-r md:from-stone-950/85 md:via-stone-950/60 md:to-stone-950/85"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 z-[1] bg-radial from-transparent via-black/40 to-black/80"
+          aria-hidden="true"
+        />
+
+        {/* Content Container */}
+        <div className="relative z-10 container-narrow text-center px-4 sm:px-6">
+          <span className="inline-block rounded-full bg-stone-950/80 px-3.5 py-1 text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#E8BD78] ring-1 ring-[#D99A35]/40 backdrop-blur-md shadow-md">
             Direct B2B Procurement
           </span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]">
+          <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] max-w-2xl mx-auto leading-tight">
             Have a Specific Architectural or Bulk Requirement?
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-stone-100 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+          <p className="mt-3.5 sm:mt-4 text-xs sm:text-base text-stone-200/95 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
             Send your custom cut-to-size specifications, bill of quantities (BOQ), or project requirements directly to verified suppliers.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/request-quote" className="btn-accent px-8 py-3 text-sm font-semibold shadow-lg shadow-amber-600/30">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto">
+            <Link
+              href="/request-quote"
+              className="btn-accent w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30 transition-transform active:scale-95"
+            >
               Post Custom RFQ
             </Link>
-            <Link href="/products" className="btn-secondary border-stone-600 bg-stone-900/80 text-white hover:bg-stone-800 hover:border-stone-500 backdrop-blur-sm px-8 py-3 text-sm font-semibold">
+            <Link
+              href="/products"
+              className="btn-secondary w-full sm:w-auto border-stone-600/80 bg-stone-900/85 text-stone-100 hover:bg-stone-800 hover:border-[#D99A35]/50 backdrop-blur-md px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-transform active:scale-95"
+            >
               Search Stone Slabs
             </Link>
             <Link
               href="/suppliers"
-              className="btn-secondary border-white/25 bg-stone-950/70 text-white hover:bg-stone-900/90 hover:border-white/40 backdrop-blur-sm px-8 py-3 text-sm font-semibold"
+              className="btn-secondary w-full sm:w-auto border-white/20 bg-stone-950/80 text-stone-100 hover:bg-stone-900 hover:border-[#E8BD78]/50 backdrop-blur-md px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-transform active:scale-95"
             >
               Find Factory Partners
             </Link>
