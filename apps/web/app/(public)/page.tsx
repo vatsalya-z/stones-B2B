@@ -112,33 +112,27 @@ export default async function HomePage() {
       />
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden bg-stone-950 text-white">
-        {/* Photographic Hero Background — Responsive Luxury Architectural Showroom */}
+        {/* Photographic Hero Background — Luxurious Symmetrical Marble Showroom (Desktop) & Gallery (Mobile) */}
         <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
-          {/* Desktop & Tablet (>= 768px): Ultra-HD Landscape Showroom */}
-          <source
-            media="(min-width: 768px)"
-            type="image/jpeg"
-            srcSet="/images/hero/hero-desktop.jpg"
-          />
+          {/* Desktop & Tablet (>= 768px): Luxurious Symmetrical Marble Showroom */}
           <source
             media="(min-width: 768px)"
             type="image/webp"
             srcSet={HERO_IMAGES.showroom}
           />
-          {/* Mobile (< 768px): Ultra-HD Portrait Symmetrical Showroom */}
           <source
-            media="(max-width: 767px)"
-            type="image/jpeg"
-            srcSet="/images/hero/hero-mobile.jpg"
+            media="(min-width: 768px)"
+            srcSet={HERO_IMAGES.symmetricalShowroom}
           />
+          {/* Mobile (< 768px): Luxurious Symmetrical Marble Gallery */}
           <source
             media="(max-width: 767px)"
             type="image/webp"
             srcSet={HERO_IMAGES.showroomMobile}
           />
           <img
-            src="/images/hero/hero-mobile.jpg"
-            alt="Luxury natural stone architectural showroom and bookmatched marble slabs"
+            src={HERO_IMAGES.symmetricalGallery}
+            alt="Luxurious Symmetrical Marble Showroom & Gallery"
             className="h-full w-full object-cover object-center"
             fetchPriority="high"
             decoding="async"

@@ -12,8 +12,14 @@
 
 export const HERO_IMAGES = {
   quarry: "/images/hero/stone-quarry-hero.jpg",
-  showroom: "/images/hero/hero-desktop.webp",
-  showroomMobile: "/images/hero/hero-mobile.webp",
+  showroom: "/images/hero/luxurious-symmetrical-marble-showroom.webp",
+  showroomJpg: "/images/hero/luxurious-symmetrical-marble-showroom.jpg",
+  showroomPng: "/images/hero/luxurious-symmetrical-marble-showroom.png",
+  showroomMobile: "/images/hero/luxurious-symmetrical-marble-gallery.webp",
+  showroomMobileJpg: "/images/hero/luxurious-symmetrical-marble-gallery.jpg",
+  showroomMobilePng: "/images/hero/luxurious-symmetrical-marble-gallery.png",
+  symmetricalShowroom: "/images/hero/luxurious-symmetrical-marble-showroom.jpg",
+  symmetricalGallery: "/images/hero/luxurious-symmetrical-marble-gallery.jpg",
   factory: "/images/hero/stone-factory-hero.jpg",
   texture: "/images/backgrounds/stone-texture.jpg",
   procurement: "/images/backgrounds/stone-showroom-cta-desktop.jpg",
