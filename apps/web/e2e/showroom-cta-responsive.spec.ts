@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import path from "node:path";
-import fs from "node:fs";
 
 const DESKTOP_VIEWPORTS = [
   { name: "desktop-1440", width: 1440, height: 900 },

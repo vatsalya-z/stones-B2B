@@ -12,7 +12,8 @@
 
 export const HERO_IMAGES = {
   quarry: "/images/hero/stone-quarry-hero.jpg",
-  showroom: "/images/hero/marble-showroom-hero.jpg",
+  showroom: "/images/hero/hero-desktop.webp",
+  showroomMobile: "/images/hero/hero-mobile.webp",
   factory: "/images/hero/stone-factory-hero.jpg",
   texture: "/images/backgrounds/stone-texture.jpg",
   procurement: "/images/backgrounds/stone-showroom-cta-desktop.jpg",

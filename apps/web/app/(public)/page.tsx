@@ -112,23 +112,30 @@ export default async function HomePage() {
       />
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden bg-stone-900 text-white">
-        {/* Photographic Hero Background — Luxury Architectural Stone Showroom */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={HERO_IMAGES.showroom}
-            alt="Luxury natural stone architectural showroom and bookmatched marble slabs"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center opacity-45"
-            unoptimized
+        {/* Photographic Hero Background — Responsive Luxury Architectural Showroom */}
+        <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
+          {/* Desktop & Tablet (>= 768px): Ultra-HD Landscape Showroom */}
+          <source
+            media="(min-width: 768px)"
+            srcSet={HERO_IMAGES.showroom}
           />
-        </div>
+          {/* Mobile (< 768px): Ultra-HD Portrait Symmetrical Showroom */}
+          <img
+            src={HERO_IMAGES.showroomMobile}
+            alt="Luxury natural stone architectural showroom and bookmatched marble slabs"
+            className="h-full w-full object-cover object-center opacity-50"
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
 
         {/* Directional Gradient Scrim: dark on left for text legibility, subtle on right to showcase stone */}
-        
         <div
-          className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:24px_24px] opacity-10 z-10"
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-stone-950/85 via-stone-950/65 to-stone-950/90 md:bg-gradient-to-r md:from-stone-950/90 md:via-stone-950/60 md:to-stone-950/20"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:24px_24px] opacity-10 z-[2]"
           aria-hidden="true"
         />
 
