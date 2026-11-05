@@ -111,10 +111,10 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-stone-950 text-white">
+      <section className="relative overflow-hidden bg-stone-950 text-white min-h-[520px] sm:min-h-[460px] lg:min-h-[560px] flex items-center">
         {/* Photographic Hero Background — Luxurious Symmetrical Marble Showroom (Desktop) & Gallery (Mobile) */}
         <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
-          {/* Desktop & Tablet (>= 768px): Luxurious Symmetrical Marble Showroom */}
+          {/* Desktop & Tablet (>= 768px): Luxurious Symmetrical Marble Showroom (Landscape) */}
           <source
             media="(min-width: 768px)"
             type="image/webp"
@@ -122,17 +122,27 @@ export default async function HomePage() {
           />
           <source
             media="(min-width: 768px)"
+            type="image/jpeg"
             srcSet={HERO_IMAGES.symmetricalShowroom}
           />
-          {/* Mobile (< 768px): Luxurious Symmetrical Marble Gallery */}
+          <source
+            media="(min-width: 768px)"
+            srcSet={HERO_IMAGES.symmetricalShowroom}
+          />
+          {/* Mobile (< 768px): Luxurious Symmetrical Marble Gallery (Portrait) */}
           <source
             media="(max-width: 767px)"
             type="image/webp"
             srcSet={HERO_IMAGES.showroomMobile}
           />
+          <source
+            media="(max-width: 767px)"
+            type="image/jpeg"
+            srcSet={HERO_IMAGES.symmetricalGallery}
+          />
           <img
             src={HERO_IMAGES.symmetricalGallery}
-            alt="Luxurious Symmetrical Marble Showroom & Gallery"
+            alt="Luxurious Symmetrical Marble Gallery"
             className="h-full w-full object-cover object-center"
             fetchPriority="high"
             decoding="async"
@@ -145,7 +155,7 @@ export default async function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="relative z-20 container-wide py-6 sm:py-14 lg:py-18">
+        <div className="relative z-20 container-wide py-6 sm:py-14 lg:py-18 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Left Column (7 cols): Headline, Description & CTAs */}
             <div className="lg:col-span-7">
