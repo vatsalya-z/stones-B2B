@@ -158,12 +158,12 @@ export default async function HomePage() {
         <div className="relative z-20 container-wide py-6 sm:py-14 lg:py-18 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Left Column (7 cols): Headline, Description & CTAs */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
               <div className="inline-flex items-center gap-1.5 rounded-full bg-stone-950/80 px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400 ring-1 ring-inset ring-amber-500/40 shadow-sm">
                 B2B Stone Network
               </div>
 
-              <h1 className="mt-2 sm:mt-3 text-xl sm:text-3xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight max-w-xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+              <h1 className="mt-2 sm:mt-3 text-xl sm:text-3xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight max-w-xl mx-auto lg:mx-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
                 Source Natural Stone
                 <span className="hidden sm:inline"> — </span>
                 <span className="block sm:inline text-amber-400 text-lg sm:text-3xl lg:text-5xl font-bold sm:font-extrabold mt-0.5 sm:mt-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
@@ -171,12 +171,12 @@ export default async function HomePage() {
                 </span>
               </h1>
 
-              <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-stone-200 leading-snug sm:leading-relaxed font-normal max-w-md drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+              <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-stone-200 leading-snug sm:leading-relaxed font-normal max-w-md mx-auto lg:mx-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                 Wholesale marble, granite &amp; architectural stone slabs.
               </p>
 
               {/* CTAs */}
-              <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
                 <Link
                   href="/products"
                   className="btn-accent px-3.5 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30"
@@ -192,7 +192,7 @@ export default async function HomePage() {
               </div>
 
               {/* B2B Trust Indicators */}
-              <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3.5 border-t border-stone-700/60 flex flex-wrap items-center gap-x-3.5 sm:gap-x-5 gap-y-1 sm:gap-y-1.5 text-[10px] sm:text-xs text-stone-200">
+              <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3.5 border-t border-stone-700/60 flex flex-wrap items-center justify-center lg:justify-start gap-x-3.5 sm:gap-x-5 gap-y-1 sm:gap-y-1.5 text-[10px] sm:text-xs text-stone-200 w-full max-w-md mx-auto lg:mx-0">
                 <div className="flex items-center gap-1.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0 shadow-sm shadow-emerald-400/50" />
                   <span>Verified Quarries</span>
