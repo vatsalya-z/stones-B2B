@@ -43,7 +43,7 @@ test.describe("Luxury Mobile Navigation Drawer Visual & Functional E2E Suite", (
       // 3. Verify Top Quarry Image Header & Brand Identity
       const quarryHeaderImg = drawer.locator('img[alt="Natural Stone Quarry Landscape"]');
       await expect(quarryHeaderImg).toBeVisible();
-      await expect(drawer.locator("text=StoneB2B")).toBeVisible();
+      await expect(drawer.locator("text=StonesDekho")).toBeVisible();
       await expect(drawer.locator("text=India's Leading Natural Stone B2B Network")).toBeVisible();
       const closeBtn = drawer.locator('button[aria-label="Close menu"]');
       await expect(closeBtn).toBeVisible();

@@ -343,7 +343,7 @@ export function MobileNav({
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-md">
-                    Stone<span className="text-[#D99A35]">B2B</span>
+                    Stones<span className="text-[#D99A35]">Dekho</span>
                   </span>
                   <span className="text-[10px] font-medium tracking-tight text-[#E8BD78] drop-shadow-xs leading-tight">
                     India&apos;s Leading Natural Stone B2B Network
