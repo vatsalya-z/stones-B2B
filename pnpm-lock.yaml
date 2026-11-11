@@ -18,8 +18,315 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  apps/admin:
+    dependencies:
+      '@stone/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@stone/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@stone/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@stone/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.118.0)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.3.1)
+      next:
+        specifier: ^15.1.3
+        version: 15.5.28(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: ^19.0.0
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.1(react@19.3.1)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.3.7(supports-color@7.2.0)
+      '@stone/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.3.0(@types/react@19.3.0)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.6.2(postcss@8.5.32)
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.5(jiti@1.21.7)(supports-color@7.2.0)
+      eslint-config-next:
+        specifier: ^15.1.3
+        version: 15.5.28(eslint@9.39.5(jiti@1.21.7)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.5.32
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.15)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  apps/buyer:
+    dependencies:
+      '@stone/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@stone/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@stone/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@stone/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.118.0)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.3.1)
+      next:
+        specifier: ^15.1.3
+        version: 15.5.28(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: ^19.0.0
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.1(react@19.3.1)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.3.7(supports-color@7.2.0)
+      '@stone/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.3.0(@types/react@19.3.0)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.6.2(postcss@8.5.32)
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.5(jiti@1.21.7)(supports-color@7.2.0)
+      eslint-config-next:
+        specifier: ^15.1.3
+        version: 15.5.28(eslint@9.39.5(jiti@1.21.7)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.5.32
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.15)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  apps/marketplace:
+    dependencies:
+      '@stone/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@stone/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@stone/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@stone/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.118.0)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.3.1)
+      next:
+        specifier: ^15.1.3
+        version: 15.5.28(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: ^19.0.0
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.1(react@19.3.1)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.3.7(supports-color@7.2.0)
+      '@stone/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.3.0(@types/react@19.3.0)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.6.2(postcss@8.5.32)
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.5(jiti@1.21.7)(supports-color@7.2.0)
+      eslint-config-next:
+        specifier: ^15.1.3
+        version: 15.5.28(eslint@9.39.5(jiti@1.21.7)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.5.32
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.15)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  apps/seller:
+    dependencies:
+      '@stone/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@stone/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@stone/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@stone/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.118.0)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.3.1)
+      next:
+        specifier: ^15.1.3
+        version: 15.5.28(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: ^19.0.0
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.1(react@19.3.1)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.3.7(supports-color@7.2.0)
+      '@stone/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.3.0(@types/react@19.3.0)
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.6.2(postcss@8.5.32)
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.5(jiti@1.21.7)(supports-color@7.2.0)
+      eslint-config-next:
+        specifier: ^15.1.3
+        version: 15.5.28(eslint@9.39.5(jiti@1.21.7)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.5.32
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.23.15)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
   apps/web:
     dependencies:
+      '@stone/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@stone/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -122,6 +429,49 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.20.5)(supports-color@7.2.0)
 
+  packages/auth:
+    dependencies:
+      '@stone/database':
+        specifier: workspace:*
+        version: link:../database
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../types
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../validation
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.118.0)
+      '@supabase/supabase-js':
+        specifier: ^2.47.10
+        version: 2.118.0
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+    devDependencies:
+      '@stone/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.2
+        version: 19.3.0
+      eslint:
+        specifier: ^9.17.0
+        version: 9.39.5(jiti@1.21.7)(supports-color@7.2.0)
+      next:
+        specifier: ^15.1.3
+        version: 15.5.28(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: ^19.0.0
+        version: 19.3.1
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
   packages/config:
     dependencies:
       '@eslint/js':
@@ -206,6 +556,12 @@ importers:
 
   packages/ui:
     dependencies:
+      '@stone/types':
+        specifier: workspace:*
+        version: link:../types
+      '@stone/validation':
+        specifier: workspace:*
+        version: link:../validation
       clsx:
         specifier: ^2.1.1
         version: 2.1.1

@@ -9,6 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@stone/types": "workspace:*",
+    "@stone/validation": "workspace:*",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.6.0"
   },

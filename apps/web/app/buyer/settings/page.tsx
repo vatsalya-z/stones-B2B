@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, Card, CardBody, CardHeader, SectionHeading } from "@stone/ui";
-import { formatDateTime } from "@/components/seller/status-badges";
+import { Badge, Card, CardBody, CardHeader, formatDateTime, SectionHeading } from "@stone/ui";
 import { formatCountryName } from "@/features/buyer/buyer-meta";
 import { getBuyerContext } from "@/features/buyer/queries";
 import { BuyerPasswordChangeForm } from "./password-form";

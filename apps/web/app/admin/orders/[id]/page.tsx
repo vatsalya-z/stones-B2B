@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Breadcrumb, Card, CardBody, VerifiedBadge } from "@stone/ui";
 import {
+  Breadcrumb,
+  Card,
+  CardBody,
   formatDateTime,
   OrderStatusBadge,
   PaymentStatusBadge,
-} from "@/components/seller/status-badges";
+  VerifiedBadge,
+} from "@stone/ui";
 import { formatMoneyAmount, formatUnitLabel } from "@/features/buyer/buyer-meta";
 import { getAdminOrderDetail } from "@/features/admin/queries";
 import { AdminOrderActions } from "./admin-order-actions";

@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, Breadcrumb, Card, CardBody, CardHeader, EmptyState, SectionHeading, VerifiedBadge } from "@stone/ui";
 import {
+  Badge,
+  Breadcrumb,
+  Card,
+  CardBody,
+  CardHeader,
+  EmptyState,
   formatShortDate,
   QuotationStatusBadge,
-} from "@/components/seller/status-badges";
+  SectionHeading,
+  VerifiedBadge,
+} from "@stone/ui";
 import {
   formatMoneyAmount,
   formatUnitLabel,

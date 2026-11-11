@@ -39,9 +39,10 @@ async function main() {
 
   console.log("🔄 Connecting to Supabase database (Read-only Verification)...");
 
+  const isLocal = databaseUrl.includes("localhost") || databaseUrl.includes("127.0.0.1");
   const client = new pg.Client({
     connectionString: databaseUrl,
-    ssl: { rejectUnauthorized: false },
+    ssl: isLocal ? false : { rejectUnauthorized: false },
   });
 
   try {
@@ -152,6 +153,67 @@ async function main() {
       console.log(`   [${trgRes.rows[0].tgname}] ${trgRes.rows[0].trigger_def}`);
     } else {
       console.log("   ❌ Trigger 'enquiries_notify_insert_trg' NOT FOUND");
+    }
+
+    // 8. Lead Assignments Catalog Inspection
+    console.log("\n8. Lead Assignments Table Catalog Inspection:");
+    const laTableRes = await client.query(`
+      SELECT column_name, data_type, is_nullable, column_default
+      FROM information_schema.columns
+      WHERE table_schema = 'public' AND table_name = 'lead_assignments'
+      ORDER BY ordinal_position;
+    `);
+    if (laTableRes.rows.length > 0) {
+      console.log("   Columns (Total " + laTableRes.rows.length + "):");
+      for (const col of laTableRes.rows) {
+        console.log(`     - ${col.column_name}: ${col.data_type} (nullable: ${col.is_nullable})`);
+      }
+    } else {
+      console.log("   ❌ Table 'public.lead_assignments' NOT FOUND");
+    }
+
+    // 9. Lead Assignments Constraints & Indexes
+    const laConsRes = await client.query(`
+      SELECT conname, pg_get_constraintdef(c.oid) as def
+      FROM pg_constraint c
+      JOIN pg_class cl ON cl.oid = c.conrelid
+      WHERE cl.relname = 'lead_assignments';
+    `);
+    console.log("\n9. Lead Assignments Constraints:");
+    for (const con of laConsRes.rows) {
+      console.log(`   [${con.conname}] ${con.def}`);
+    }
+
+    // 10. Lead Assignments RLS Policies
+    const laRlsRes = await client.query(`
+      SELECT policyname, cmd, roles, qual, with_check
+      FROM pg_policies
+      WHERE tablename = 'lead_assignments';
+    `);
+    console.log("\n10. Lead Assignments RLS Policies (Total " + laRlsRes.rows.length + "):");
+    for (const p of laRlsRes.rows) {
+      console.log(`   [${p.policyname}] CMD: ${p.cmd}, ROLES: ${p.roles} | USING: ${p.qual}`);
+    }
+
+    // 11. Phase 4 Subscription Engine Catalog Inspection
+    console.log("\n11. Phase 4 Subscription Plans Catalog:");
+    const plansRes = await client.query(`
+      SELECT code, name, max_active_listings, price_monthly, sort_order
+      FROM public.subscription_plans
+      ORDER BY sort_order;
+    `);
+    for (const pl of plansRes.rows) {
+      console.log(`   - [${pl.code}] ${pl.name} (Max Listings: ${pl.max_active_listings ?? "Unlimited"}, Price: ${pl.price_monthly ?? "Preview/Unset"})`);
+    }
+
+    const subTrgRes = await client.query(`
+      SELECT tgname, relname FROM pg_trigger
+      JOIN pg_class ON pg_trigger.tgrelid = pg_class.oid
+      WHERE tgname IN ('trg_check_seller_product_listing_limit', 'trg_enroll_seller_free_subscription');
+    `);
+    console.log("\n12. Subscription Triggers:");
+    for (const t of subTrgRes.rows) {
+      console.log(`   - [${t.tgname}] attached to table '${t.relname}'`);
     }
 
     await client.end();

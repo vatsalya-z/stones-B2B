@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@stone/auth": "workspace:*",
     "@stone/database": "workspace:*",
     "@stone/types": "workspace:*",
     "@stone/ui": "workspace:*",

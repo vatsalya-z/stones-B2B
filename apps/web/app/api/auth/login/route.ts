@@ -1,9 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { loginSchema, sanitizeNextPath } from "@stone/validation";
+import { checkAuthRateLimits, resetAuthRateLimits, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const clientIp = getClientIp(request);
     const body = await request.json();
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
@@ -14,10 +16,34 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, password } = parsed.data;
+    const normalizedEmail = email.toLowerCase().trim();
+    const rateCheck = checkAuthRateLimits(clientIp, normalizedEmail);
+
+    if (!rateCheck.allowed) {
+      const reason =
+        rateCheck.scope === "account"
+          ? "Too many failed attempts for this account. Please wait before trying again."
+          : "Too many login attempts from this network. Please wait before trying again.";
+
+      return NextResponse.json(
+        {
+          error: `${reason} (${rateCheck.retryAfterSeconds}s remaining)`,
+          retryAfterSeconds: rateCheck.retryAfterSeconds,
+          scope: rateCheck.scope,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateCheck.retryAfterSeconds),
+          },
+        },
+      );
+    }
+
     const safeNext = sanitizeNextPath(body.next, "/dashboard");
 
     const supabase = await getSupabaseServerClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
 
     if (error) {
       console.error("[Login Auth Error]:", error.name, error.message);
@@ -32,6 +58,9 @@ export async function POST(request: NextRequest) {
       }
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
+
+    // Reset rate limiters on successful authentication
+    resetAuthRateLimits(clientIp, normalizedEmail);
 
     return NextResponse.json({ success: true, redirectTo: safeNext });
   } catch (err: unknown) {

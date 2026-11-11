@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, Card, CardBody, EmptyState, SectionHeading } from "@stone/ui";
-import { formatDateTime } from "@/components/seller/status-badges";
+import { Badge, Card, CardBody, EmptyState, formatDateTime, SectionHeading } from "@stone/ui";
 import { getBuyerContext, getBuyerNotifications } from "@/features/buyer/queries";
 import {
   MarkAllNotificationsReadButton,

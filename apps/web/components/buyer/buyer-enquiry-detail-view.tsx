@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { EnquiryStatus, QuotationStatus } from "@stone/types";
-import { Badge, Breadcrumb, Card, CardBody, CardHeader, VerifiedBadge } from "@stone/ui";
 import {
+  Badge,
+  Breadcrumb,
+  Card,
+  CardBody,
+  CardHeader,
   EnquiryStatusBadge,
   formatDateTime,
   formatShortDate,
   QuotationStatusBadge,
-} from "@/components/seller/status-badges";
+  VerifiedBadge,
+} from "@stone/ui";
 import {
   formatCountryName,
   formatMoneyAmount,

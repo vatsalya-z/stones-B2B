@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { QuotationStatus } from "@stone/types";
-import { Breadcrumb, Card, CardBody, VerifiedBadge } from "@stone/ui";
 import {
+  Breadcrumb,
+  Card,
+  CardBody,
   formatDateTime,
   formatShortDate,
   QuotationStatusBadge,
-} from "@/components/seller/status-badges";
+  VerifiedBadge,
+} from "@stone/ui";
 import {
   formatMoneyAmount,
   formatUnitLabel,

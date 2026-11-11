@@ -715,10 +715,23 @@ export async function getSellerEnquiries(
   const supabase = await getSupabaseServerClient();
   const { page, pageSize, from, to } = parsePagination(filters.page, filters.pageSize ?? 15);
 
-  const { data: allStatuses } = await supabase
-    .from("enquiries")
-    .select("status")
+  const { data: assignments } = await supabase
+    .from("lead_assignments")
+    .select("enquiry_id")
     .eq("seller_id", sellerId);
+
+  const assignedIds = (assignments ?? [])
+    .map((a: { enquiry_id: string }) => a.enquiry_id)
+    .filter(Boolean);
+
+  let statusQuery = supabase.from("enquiries").select("status");
+  if (assignedIds.length > 0) {
+    statusQuery = statusQuery.or(`seller_id.eq.${sellerId},id.in.(${assignedIds.join(",")})`);
+  } else {
+    statusQuery = statusQuery.eq("seller_id", sellerId);
+  }
+
+  const { data: allStatuses } = await statusQuery;
 
   const statusCounts: Record<string, number> = {
     all: (allStatuses ?? []).length,
@@ -744,8 +757,13 @@ export async function getSellerEnquiries(
       products(id, name, slug)
       `,
       { count: "exact" },
-    )
-    .eq("seller_id", sellerId);
+    );
+
+  if (assignedIds.length > 0) {
+    query = query.or(`seller_id.eq.${sellerId},id.in.(${assignedIds.join(",")})`);
+  } else {
+    query = query.eq("seller_id", sellerId);
+  }
 
   if (
     filters.status &&
@@ -867,7 +885,16 @@ export async function getSellerEnquiryDetail(
 ): Promise<SellerEnquiryDetail | null> {
   const supabase = await getSupabaseServerClient();
 
-  const { data: enquiryData, error } = await supabase
+  const { data: assignment } = await supabase
+    .from("lead_assignments")
+    .select("id")
+    .eq("enquiry_id", enquiryId)
+    .eq("seller_id", sellerId)
+    .maybeSingle();
+
+  const isAssigned = Boolean(assignment);
+
+  let enquiryQuery = supabase
     .from("enquiries")
     .select(
       `
@@ -876,9 +903,13 @@ export async function getSellerEnquiryDetail(
       products(id, name, slug, sku, unit, price, price_type, currency, product_images(storage_path, is_primary, display_order))
       `,
     )
-    .eq("id", enquiryId)
-    .eq("seller_id", sellerId)
-    .maybeSingle();
+    .eq("id", enquiryId);
+
+  if (!isAssigned) {
+    enquiryQuery = enquiryQuery.eq("seller_id", sellerId);
+  }
+
+  const { data: enquiryData, error } = await enquiryQuery.maybeSingle();
 
   if (error || !enquiryData) return null;
 

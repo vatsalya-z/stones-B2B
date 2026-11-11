@@ -956,6 +956,262 @@ export interface Database {
         };
         Relationships: [];
       };
+
+      lead_assignments: {
+        Row: {
+          id: string;
+          enquiry_id: string;
+          seller_id: string;
+          match_score: number;
+          match_reasons: Json;
+          status: "assigned" | "viewed" | "quoted" | "declined" | "expired";
+          notification_status: "pending" | "processing" | "delivered" | "failed" | "abandoned";
+          notification_error: string | null;
+          retry_count: number;
+          assigned_at: string;
+          viewed_at: string | null;
+          quoted_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          enquiry_id: string;
+          seller_id: string;
+          match_score: number;
+          match_reasons?: Json;
+          status?: "assigned" | "viewed" | "quoted" | "declined" | "expired";
+          notification_status?: "pending" | "processing" | "delivered" | "failed" | "abandoned";
+          notification_error?: string | null;
+          retry_count?: number;
+          assigned_at?: string;
+          viewed_at?: string | null;
+          quoted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          status?: "assigned" | "viewed" | "quoted" | "declined" | "expired";
+          notification_status?: "pending" | "processing" | "delivered" | "failed" | "abandoned";
+          notification_error?: string | null;
+          retry_count?: number;
+          viewed_at?: string | null;
+          quoted_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      subscription_plans: {
+        Row: {
+          id: string;
+          code: string;
+          name: string;
+          description: string | null;
+          max_active_listings: number | null;
+          max_monthly_leads: number | null;
+          price_monthly: number | null;
+          currency: string;
+          features: Json;
+          is_active: boolean;
+          is_public: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          name: string;
+          description?: string | null;
+          max_active_listings?: number | null;
+          max_monthly_leads?: number | null;
+          price_monthly?: number | null;
+          currency?: string;
+          features?: Json;
+          is_active?: boolean;
+          is_public?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          code?: string;
+          name?: string;
+          description?: string | null;
+          max_active_listings?: number | null;
+          max_monthly_leads?: number | null;
+          price_monthly?: number | null;
+          currency?: string;
+          features?: Json;
+          is_active?: boolean;
+          is_public?: boolean;
+          sort_order?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      seller_subscriptions: {
+        Row: {
+          id: string;
+          seller_id: string;
+          plan_id: string;
+          status: "active" | "past_due" | "canceled" | "expired" | "trialing" | "suspended";
+          billing_cycle: "monthly" | "yearly" | "lifetime";
+          started_at: string;
+          current_period_start: string;
+          current_period_end: string | null;
+          grace_period_end: string | null;
+          canceled_at: string | null;
+          cancel_at_period_end: boolean;
+          promotional_grant: boolean;
+          previous_status: "active" | "past_due" | "canceled" | "expired" | "trialing" | null;
+          granted_by: string | null;
+          grant_reason: string | null;
+          custom_max_listings: number | null;
+          custom_max_monthly_leads: number | null;
+          billing_provider: "razorpay" | "stripe" | "manual" | "cashfree" | "custom" | null;
+          billing_customer_id: string | null;
+          billing_subscription_id: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          seller_id: string;
+          plan_id: string;
+          status?: "active" | "past_due" | "canceled" | "expired" | "trialing" | "suspended";
+          billing_cycle?: "monthly" | "yearly" | "lifetime";
+          started_at?: string;
+          current_period_start?: string;
+          current_period_end?: string | null;
+          grace_period_end?: string | null;
+          canceled_at?: string | null;
+          cancel_at_period_end?: boolean;
+          promotional_grant?: boolean;
+          previous_status?: "active" | "past_due" | "canceled" | "expired" | "trialing" | null;
+          granted_by?: string | null;
+          grant_reason?: string | null;
+          custom_max_listings?: number | null;
+          custom_max_monthly_leads?: number | null;
+          billing_provider?: "razorpay" | "stripe" | "manual" | "cashfree" | "custom" | null;
+          billing_customer_id?: string | null;
+          billing_subscription_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          plan_id?: string;
+          status?: "active" | "past_due" | "canceled" | "expired" | "trialing" | "suspended";
+          billing_cycle?: "monthly" | "yearly" | "lifetime";
+          current_period_start?: string;
+          current_period_end?: string | null;
+          grace_period_end?: string | null;
+          canceled_at?: string | null;
+          cancel_at_period_end?: boolean;
+          promotional_grant?: boolean;
+          previous_status?: "active" | "past_due" | "canceled" | "expired" | "trialing" | null;
+          granted_by?: string | null;
+          grant_reason?: string | null;
+          custom_max_listings?: number | null;
+          custom_max_monthly_leads?: number | null;
+          billing_provider?: "razorpay" | "stripe" | "manual" | "cashfree" | "custom" | null;
+          billing_customer_id?: string | null;
+          billing_subscription_id?: string | null;
+          metadata?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      subscription_events: {
+        Row: {
+          id: string;
+          subscription_id: string | null;
+          seller_id: string;
+          event_type:
+            | "created"
+            | "upgraded"
+            | "downgraded"
+            | "renewed"
+            | "canceled"
+            | "expired"
+            | "grant_added"
+            | "grant_revoked"
+            | "suspended"
+            | "restored"
+            | "listing_blocked"
+            | "plan_changed";
+          previous_plan_id: string | null;
+          new_plan_id: string | null;
+          triggered_by: "seller" | "admin" | "system";
+          actor_id: string | null;
+          notes: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          subscription_id?: string | null;
+          seller_id: string;
+          event_type:
+            | "created"
+            | "upgraded"
+            | "downgraded"
+            | "renewed"
+            | "canceled"
+            | "expired"
+            | "grant_added"
+            | "grant_revoked"
+            | "suspended"
+            | "restored"
+            | "listing_blocked"
+            | "plan_changed";
+          previous_plan_id?: string | null;
+          new_plan_id?: string | null;
+          triggered_by?: "seller" | "admin" | "system";
+          actor_id?: string | null;
+          notes?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          notes?: string | null;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
+
+      seller_lead_usage: {
+        Row: {
+          id: string;
+          seller_id: string;
+          enquiry_id: string;
+          billing_period_start: string;
+          billing_period_end: string;
+          action: "assigned" | "reversal" | "admin_credit";
+          credits_consumed: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          seller_id: string;
+          enquiry_id: string;
+          billing_period_start: string;
+          billing_period_end: string;
+          action?: "assigned" | "reversal" | "admin_credit";
+          credits_consumed?: number;
+          created_at?: string;
+        };
+        Update: {
+          action?: "assigned" | "reversal" | "admin_credit";
+          credits_consumed?: number;
+        };
+        Relationships: [];
+      };
     };
 
     Functions: {
@@ -1038,6 +1294,49 @@ export interface Database {
       can_access_conversation: {
         Args: { _conversation_id: string };
         Returns: boolean;
+      };
+      get_seller_subscription_entitlements: {
+        Args: { _seller_id: string };
+        Returns: Json;
+      };
+      consume_seller_lead_credit: {
+        Args: { _seller_id: string; _enquiry_id: string };
+        Returns: Json;
+      };
+      assign_rfq_lead_with_credit: {
+        Args: {
+          _enquiry_id: string;
+          _seller_id: string;
+          _match_score?: number;
+          _match_reasons?: Json;
+        };
+        Returns: Json;
+      };
+      admin_suspend_seller_subscription: {
+        Args: {
+          _seller_id: string;
+          _reason: string;
+        };
+        Returns: Json;
+      };
+      admin_restore_seller_subscription: {
+        Args: {
+          _seller_id: string;
+          _reason: string;
+        };
+        Returns: Json;
+      };
+      admin_modify_seller_subscription: {
+        Args: {
+          _seller_id: string;
+          _target_plan_code: string;
+          _reason: string;
+          _is_promotional?: boolean;
+          _custom_max_listings?: number | null;
+          _period_days?: number | null;
+          _custom_max_monthly_leads?: number | null;
+        };
+        Returns: Json;
       };
       get_or_create_conversation: {
         Args: {

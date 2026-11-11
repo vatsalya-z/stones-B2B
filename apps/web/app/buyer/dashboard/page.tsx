@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge, Card, CardBody, CardHeader, EmptyState } from "@stone/ui";
 import {
+  Badge,
+  Card,
+  CardBody,
+  CardHeader,
+  EmptyState,
   EnquiryStatusBadge,
   formatPriceTypeShort,
   formatShortDate,
   OrderStatusBadge,
   PaymentStatusBadge,
   QuotationStatusBadge,
-} from "@/components/seller/status-badges";
+} from "@stone/ui";
 import {
   formatCountryName,
   formatMoneyAmount,

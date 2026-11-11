@@ -4,10 +4,9 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Badge, Card, CardBody, EmptyState, SectionHeading, VerifiedBadge, cn } from "@stone/ui";
+import { Badge, Card, CardBody, EmptyState, SectionHeading, VerifiedBadge, cn, formatDateTime } from "@stone/ui";
 import type { MessageSenderRole } from "@stone/types";
 import type { ConversationInboxTab } from "@stone/validation";
-import { formatDateTime } from "@/components/seller/status-badges";
 import { toggleArchiveConversationAction } from "@/features/messaging/actions";
 import type {
   ConversationInboxResult,

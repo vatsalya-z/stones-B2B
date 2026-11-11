@@ -17,6 +17,7 @@ import {
 } from "@stone/validation";
 import { requireSeller } from "@/lib/auth";
 import { getSupabaseServerClient } from "@/lib/supabase";
+import { assertCanCreateProduct } from "@/features/subscription/entitlements";
 import {
   buildProductSpecificationRows,
   computeQuotationTotals,
@@ -472,6 +473,15 @@ export async function createSellerProductAction(
     };
   }
 
+  // Subscription Entitlement Gate: Enforce active listing capacity on server
+  const entitlementCheck = await assertCanCreateProduct(seller.id);
+  if (!entitlementCheck.allowed) {
+    return {
+      success: false,
+      error: entitlementCheck.reason || "Subscription active listing limit reached.",
+    };
+  }
+
   const effectiveCategoryId = values.subcategoryId || values.categoryId || null;
   const finalSlug = await generateUniqueProductSlug(values.slug || values.name);
   const effectivePrice = values.priceType === "on_request" ? null : values.price;
@@ -587,6 +597,17 @@ export async function updateSellerProductAction(
     };
   }
 
+  // Subscription Entitlement Gate: Only check when unarchiving a previously inactive product
+  if (existing.moderation_status === "archived") {
+    const entitlementCheck = await assertCanCreateProduct(seller.id);
+    if (!entitlementCheck.allowed) {
+      return {
+        success: false,
+        error: entitlementCheck.reason || "Subscription active listing limit reached.",
+      };
+    }
+  }
+
   const effectiveCategoryId = values.subcategoryId || values.categoryId || null;
   const desiredSlug = values.slug || existing.slug || values.name;
   const finalSlug =
@@ -693,13 +714,27 @@ export async function changeProductStatusAction(
 
   const { data: existing } = await supabase
     .from("products")
-    .select("id, slug, seller_id")
+    .select("id, slug, seller_id, moderation_status")
     .eq("id", productId)
     .eq("seller_id", seller.id)
     .maybeSingle();
 
   if (!existing) {
     return { success: false, error: "Product not found or access denied." };
+  }
+
+  // Subscription Entitlement Gate: Enforce active listing limit when activating previously inactive products
+  if (
+    (existing.moderation_status === "archived" || existing.moderation_status === "rejected") &&
+    (newStatus === "draft" || newStatus === "pending_review")
+  ) {
+    const entitlementCheck = await assertCanCreateProduct(seller.id);
+    if (!entitlementCheck.allowed) {
+      return {
+        success: false,
+        error: entitlementCheck.reason || "Subscription active listing limit reached.",
+      };
+    }
   }
 
   const { error } = await supabase
@@ -783,6 +818,15 @@ export async function duplicateSellerProductAction(
   const { supabase, seller } = await getAuthenticatedSellerRow();
   if (!seller) {
     return { success: false, error: "Seller profile not found." };
+  }
+
+  // Subscription Entitlement Gate: Enforce active listing capacity on server
+  const entitlementCheck = await assertCanCreateProduct(seller.id);
+  if (!entitlementCheck.allowed) {
+    return {
+      success: false,
+      error: entitlementCheck.reason || "Subscription active listing limit reached.",
+    };
   }
 
   const { data: source, error: fetchErr } = await supabase
@@ -1060,13 +1104,25 @@ export async function updateEnquiryStatusAction(rawInput: {
     return { success: false, error: "Seller profile not found." };
   }
 
-  // Server-side ownership verification before RPC call
-  const { data: enquiry } = await supabase
-    .from("enquiries")
-    .select("id, seller_id")
-    .eq("id", parsed.data.enquiryId)
+  // Server-side ownership verification before RPC call:
+  // Direct seller OR assigned via lead_assignments
+  const { data: assignment } = await supabase
+    .from("lead_assignments")
+    .select("id")
+    .eq("enquiry_id", parsed.data.enquiryId)
     .eq("seller_id", seller.id)
     .maybeSingle();
+
+  let enquiryQuery = supabase
+    .from("enquiries")
+    .select("id, seller_id")
+    .eq("id", parsed.data.enquiryId);
+
+  if (!assignment) {
+    enquiryQuery = enquiryQuery.eq("seller_id", seller.id);
+  }
+
+  const { data: enquiry } = await enquiryQuery.maybeSingle();
 
   if (!enquiry) {
     return { success: false, error: "Enquiry not found or access denied." };
@@ -1080,6 +1136,26 @@ export async function updateEnquiryStatusAction(rawInput: {
 
   if (error) {
     return { success: false, error: error.message };
+  }
+
+  if (assignment) {
+    const nextLeadStatus =
+      parsed.data.newStatus === "rejected"
+        ? "declined"
+        : parsed.data.newStatus === "viewed"
+          ? "viewed"
+          : undefined;
+
+    if (nextLeadStatus) {
+      await supabase
+        .from("lead_assignments")
+        .update({
+          status: nextLeadStatus,
+          viewed_at: parsed.data.newStatus === "viewed" ? new Date().toISOString() : undefined,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", assignment.id);
+    }
   }
 
   revalidatePath("/seller/enquiries");
@@ -1109,13 +1185,24 @@ export async function saveQuotationAction(
 
   const values = parsed.data;
 
-  // Verify enquiry belongs to this seller and is in a quotable state
-  const { data: enquiry } = await supabase
-    .from("enquiries")
-    .select("id, seller_id, buyer_id, status")
-    .eq("id", values.enquiryId)
+  // Verify enquiry belongs to this seller or is assigned via lead_assignments, and is in a quotable state
+  const { data: assignment } = await supabase
+    .from("lead_assignments")
+    .select("id")
+    .eq("enquiry_id", values.enquiryId)
     .eq("seller_id", seller.id)
     .maybeSingle();
+
+  let enquiryQuery = supabase
+    .from("enquiries")
+    .select("id, seller_id, buyer_id, status")
+    .eq("id", values.enquiryId);
+
+  if (!assignment) {
+    enquiryQuery = enquiryQuery.eq("seller_id", seller.id);
+  }
+
+  const { data: enquiry } = await enquiryQuery.maybeSingle();
 
   if (!enquiry) {
     return { success: false, error: "Authorized enquiry not found." };
@@ -1282,6 +1369,17 @@ export async function saveQuotationAction(
       };
     }
     finalStatus = "sent";
+  }
+
+  if (assignment) {
+    await supabase
+      .from("lead_assignments")
+      .update({
+        status: "quoted",
+        quoted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", assignment.id);
   }
 
   revalidatePath("/seller/quotes");

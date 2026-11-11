@@ -28,6 +28,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: [
+    "@stone/auth",
     "@stone/database",
     "@stone/types",
     "@stone/ui",

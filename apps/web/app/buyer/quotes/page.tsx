@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { QUOTATION_STATUSES } from "@stone/types";
-import { Card, CardBody, EmptyState, SectionHeading, VerifiedBadge } from "@stone/ui";
 import {
+  Card,
+  CardBody,
+  EmptyState,
   formatShortDate,
   QuotationStatusBadge,
-} from "@/components/seller/status-badges";
+  SectionHeading,
+  VerifiedBadge,
+} from "@stone/ui";
 import { QUOTATION_STATUS_LABELS } from "@/features/seller/seller-meta";
 import { formatMoneyAmount, isQuotationExpired } from "@/features/buyer/buyer-meta";
 import { getBuyerContext, getBuyerQuotations } from "@/features/buyer/queries";

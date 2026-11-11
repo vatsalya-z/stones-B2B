@@ -8,6 +8,10 @@ import { isValidCalendarDate } from "@stone/validation";
 import { getCurrentUser, getUserRoles } from "@/lib/auth";
 import { createAdminClient } from "@stone/database/admin";
 import { dispatchTransactionalEmailIfConfigured } from "@/lib/email-notifications";
+import {
+  distributeRfqToSuppliers,
+  type SupabaseMatchClient,
+} from "@/features/matching/supplier-matching";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -318,7 +322,7 @@ export async function submitPublicRfq(
       revalidatePath("/buyer/enquiries");
     }
 
-    // 7. Supplier Notification Dispatch
+    // 7. Supplier Notification & Matching Dispatch
     if (resolvedSellerId) {
       try {
         const { data: sellerRow } = await supabaseAdmin
@@ -339,6 +343,24 @@ export async function submitPublicRfq(
         }
       } catch (notifyErr) {
         console.warn("[submitPublicRfq] Non-fatal notification error:", notifyErr);
+      }
+    } else {
+      // Broad marketplace RFQ: Run supplier matching engine and distribute to relevant verified suppliers
+      try {
+        await distributeRfqToSuppliers(
+          supabaseAdmin as unknown as SupabaseMatchClient,
+          inserted.id,
+          {
+            materialType: data.materialType,
+            stoneVariety: data.stoneVariety,
+            deliveryLocation: data.deliveryLocation,
+            quantity: data.quantity,
+            unit: data.unit,
+            maxMatches: 5,
+          },
+        );
+      } catch (matchErr) {
+        console.warn("[submitPublicRfq] Non-fatal supplier matching distribution error:", matchErr);
       }
     }
 

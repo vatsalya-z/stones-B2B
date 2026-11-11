@@ -1,4 +1,4 @@
--- Supabase local config. Docker is required for `supabase start`.
+# Supabase local config. Docker is required for `supabase start`.
 project_id = "stone-marketplace"
 
 [api]

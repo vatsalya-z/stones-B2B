@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ORDER_STATUSES } from "@stone/types";
-import { Card, CardBody, EmptyState, SectionHeading } from "@stone/ui";
 import {
+  Card,
+  CardBody,
+  EmptyState,
   formatShortDate,
   OrderStatusBadge,
   PaymentStatusBadge,
-} from "@/components/seller/status-badges";
+  SectionHeading,
+} from "@stone/ui";
 import { formatMoneyAmount } from "@/features/buyer/buyer-meta";
 import { getBuyerOrders } from "@/features/buyer/queries";
 

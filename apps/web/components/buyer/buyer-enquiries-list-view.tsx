@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { ENQUIRY_STATUSES } from "@stone/types";
-import { Badge, Card, CardBody, EmptyState, SectionHeading, VerifiedBadge } from "@stone/ui";
 import {
+  Badge,
+  Card,
+  CardBody,
+  EmptyState,
   EnquiryStatusBadge,
   formatShortDate,
-} from "@/components/seller/status-badges";
+  SectionHeading,
+  VerifiedBadge,
+} from "@stone/ui";
 import { ENQUIRY_STATUS_LABELS } from "@/features/seller/seller-meta";
 import { formatUnitLabel } from "@/features/buyer/buyer-meta";
 import type { PaginatedBuyerEnquiries } from "@/features/buyer/queries";

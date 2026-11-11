@@ -14,6 +14,7 @@ import {
   getSellerAnalyticsData,
   getSellerContext,
 } from "@/features/seller/queries";
+import { getSellerEntitlements } from "@/features/subscription/entitlements";
 import {
   SvgDonutChart,
   SvgBarChart,
@@ -27,7 +28,12 @@ export default async function SellerAnalyticsPage() {
   const ctx = await getSellerContext();
   const seller = ctx.sellerProfile;
 
-  const analytics = seller ? await getSellerAnalyticsData(seller.id) : null;
+  const [analytics, entitlements] = await Promise.all([
+    seller ? getSellerAnalyticsData(seller.id) : null,
+    seller ? getSellerEntitlements(seller.id) : null,
+  ]);
+
+  const hasAdvancedAnalytics = entitlements?.features?.analytics === "advanced";
 
   return (
     <div className="space-y-8">
@@ -131,77 +137,95 @@ export default async function SellerAnalyticsPage() {
             <h2 className="text-base font-semibold text-stone-900">
               Performance Visualizations
             </h2>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              {/* Chart 1 — Enquiry Funnel (DonutChart) */}
-              <Card>
-                <CardBody className="p-0">
-                  <SvgDonutChart
-                    title="Enquiry Funnel"
-                    subtitle="Status distribution across all enquiries"
-                    totalLabel="Enquiries"
-                    data={[
-                      { label: "Submitted", total: analytics.enquiryStatusBreakdown.submitted },
-                      { label: "Viewed", total: analytics.enquiryStatusBreakdown.viewed },
-                      { label: "Responding", total: analytics.enquiryStatusBreakdown.responding },
-                      { label: "Quoted", total: analytics.enquiryStatusBreakdown.quoted },
-                      { label: "Accepted", total: analytics.enquiryStatusBreakdown.accepted },
-                      { label: "Closed", total: analytics.enquiryStatusBreakdown.closed },
-                      { label: "Rejected", total: analytics.enquiryStatusBreakdown.rejected },
-                      { label: "Cancelled", total: analytics.enquiryStatusBreakdown.cancelled },
-                    ].filter((seg) => seg.total > 0)}
-                  />
-                </CardBody>
-              </Card>
+            {hasAdvancedAnalytics ? (
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {/* Chart 1 — Enquiry Funnel (DonutChart) */}
+                <Card>
+                  <CardBody className="p-0">
+                    <SvgDonutChart
+                      title="Enquiry Funnel"
+                      subtitle="Status distribution across all enquiries"
+                      totalLabel="Enquiries"
+                      data={[
+                        { label: "Submitted", total: analytics.enquiryStatusBreakdown.submitted },
+                        { label: "Viewed", total: analytics.enquiryStatusBreakdown.viewed },
+                        { label: "Responding", total: analytics.enquiryStatusBreakdown.responding },
+                        { label: "Quoted", total: analytics.enquiryStatusBreakdown.quoted },
+                        { label: "Accepted", total: analytics.enquiryStatusBreakdown.accepted },
+                        { label: "Closed", total: analytics.enquiryStatusBreakdown.closed },
+                        { label: "Rejected", total: analytics.enquiryStatusBreakdown.rejected },
+                        { label: "Cancelled", total: analytics.enquiryStatusBreakdown.cancelled },
+                      ].filter((seg) => seg.total > 0)}
+                    />
+                  </CardBody>
+                </Card>
 
-              {/* Chart 2 — Product Performance Distribution (BarChart) */}
-              <Card>
-                <CardBody className="p-0">
-                  <SvgBarChart
-                    title="Product Status Distribution"
-                    subtitle="Count of products by moderation status"
-                    data={[
-                      { label: "Published", value: analytics.productStatusBreakdown.approved },
-                      { label: "Pending", value: analytics.productStatusBreakdown.pending_review },
-                      { label: "Rejected", value: analytics.productStatusBreakdown.rejected },
-                      { label: "Draft", value: analytics.productStatusBreakdown.draft },
-                      { label: "Archived", value: analytics.productStatusBreakdown.archived },
-                    ]}
-                    barColor="fill-amber-500"
-                    valueFormatter={(v) => v.toLocaleString("en-IN")}
-                  />
-                </CardBody>
-              </Card>
+                {/* Chart 2 — Product Performance Distribution (BarChart) */}
+                <Card>
+                  <CardBody className="p-0">
+                    <SvgBarChart
+                      title="Product Status Distribution"
+                      subtitle="Count of products by moderation status"
+                      data={[
+                        { label: "Published", value: analytics.productStatusBreakdown.approved },
+                        { label: "Pending", value: analytics.productStatusBreakdown.pending_review },
+                        { label: "Rejected", value: analytics.productStatusBreakdown.rejected },
+                        { label: "Draft", value: analytics.productStatusBreakdown.draft },
+                        { label: "Archived", value: analytics.productStatusBreakdown.archived },
+                      ]}
+                      barColor="fill-amber-500"
+                      valueFormatter={(v) => v.toLocaleString("en-IN")}
+                    />
+                  </CardBody>
+                </Card>
 
-              {/* Chart 3 — Quotation Conversion (DonutChart)
-                  Note: The SellerAnalyticsData return type does not include a
-                  per-status quotation breakdown (pending / expired / rejected
-                  counts). Only aggregate totals are available, so we show
-                  Accepted vs Pending (not yet accepted) vs Other. */}
-              <Card>
-                <CardBody className="p-0">
-                  <SvgDonutChart
-                    title="Quotation Conversion"
-                    subtitle="Accepted vs pending formal quotes sent"
-                    totalLabel="Quotes"
-                    data={[
-                      {
-                        label: "Accepted",
-                        total: analytics.totalQuotationsAccepted,
-                        color: "#10b981",
-                      },
-                      {
-                        label: "Other / Pending",
-                        total: Math.max(
-                          0,
-                          analytics.totalQuotationsSent - analytics.totalQuotationsAccepted,
-                        ),
-                        color: "#f59e0b",
-                      },
-                    ].filter((seg) => seg.total > 0)}
-                  />
-                </CardBody>
-              </Card>
-            </div>
+                {/* Chart 3 — Quotation Conversion (DonutChart) */}
+                <Card>
+                  <CardBody className="p-0">
+                    <SvgDonutChart
+                      title="Quotation Conversion"
+                      subtitle="Accepted vs pending formal quotes sent"
+                      totalLabel="Quotes"
+                      data={[
+                        {
+                          label: "Accepted",
+                          total: analytics.totalQuotationsAccepted,
+                          color: "#10b981",
+                        },
+                        {
+                          label: "Other / Pending",
+                          total: Math.max(
+                            0,
+                            analytics.totalQuotationsSent - analytics.totalQuotationsAccepted,
+                          ),
+                          color: "#f59e0b",
+                        },
+                      ].filter((seg) => seg.total > 0)}
+                    />
+                  </CardBody>
+                </Card>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-xs">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-xl text-amber-800">
+                  🔒
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-stone-900">
+                  Deep Performance Analytics Locked
+                </h3>
+                <p className="mx-auto mt-1 max-w-md text-xs text-stone-600">
+                  Enquiry funnel visualizations, catalogue moderation distribution, and quotation conversion analytics require a Pro or Enterprise plan.
+                </p>
+                <div className="mt-4">
+                  <Link
+                    href="/seller/subscription/plans"
+                    className="inline-flex items-center rounded-lg bg-stone-900 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-stone-800"
+                  >
+                    Upgrade to Pro →
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Catalogue Distribution + Enquiry Funnel */}

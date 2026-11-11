@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge, Card, CardBody, EmptyState, SectionHeading, VerifiedBadge } from "@stone/ui";
 import {
+  Badge,
+  Card,
+  CardBody,
+  EmptyState,
   formatSellerPrice,
   formatShortDate,
-} from "@/components/seller/status-badges";
+  SectionHeading,
+  VerifiedBadge,
+} from "@stone/ui";
 import { getBuyerContext, getBuyerFavourites } from "@/features/buyer/queries";
 import { RemoveFavouriteButton } from "./remove-favourite-button";
 
