@@ -16,10 +16,20 @@ export interface CookieAdapter {
  */
 export function createClient(cookies: CookieAdapter): SupabaseClient<Database> {
   const env = parsePublicEnv(process.env);
+  const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined;
+
   return createServerClient<Database>(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
+      cookieOptions: cookieDomain
+        ? {
+            domain: cookieDomain,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+          }
+        : undefined,
       cookies: {
         getAll: () =>
           cookies
