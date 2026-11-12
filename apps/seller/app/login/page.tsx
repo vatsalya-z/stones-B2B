@@ -21,7 +21,7 @@ function SellerLoginForm() {
   const [isPending, setIsPending] = useState(false);
 
   function handleAutofillSeller() {
-    setEmail("qa-marble-seller@stoneb2b.test");
+    setEmail("seller@gmail.com");
     setPassword("Password@123");
     setError(null);
   }
@@ -102,7 +102,7 @@ function SellerLoginForm() {
               </div>
               <div>
                 <div className="text-xs font-bold text-stone-900">Makrana Marble Co. (Verified Supplier)</div>
-                <div className="text-[11px] text-stone-500 font-mono">qa-marble-seller@stoneb2b.test</div>
+                <div className="text-[11px] text-stone-500 font-mono">seller@gmail.com</div>
               </div>
             </div>
             <span className="text-xs font-semibold text-amber-700 group-hover:text-amber-800 flex items-center gap-0.5">

@@ -21,7 +21,7 @@ function BuyerLoginForm() {
   const [isPending, setIsPending] = useState(false);
 
   function handleAutofillBuyer() {
-    setEmail("qa-buyer-2026@stoneb2b.test");
+    setEmail("buyer@gmail.com");
     setPassword("Password@123");
     setError(null);
   }
@@ -102,7 +102,7 @@ function BuyerLoginForm() {
               </div>
               <div>
                 <div className="text-xs font-bold text-stone-900">Commercial Buyer Account</div>
-                <div className="text-[11px] text-stone-500 font-mono">qa-buyer-2026@stoneb2b.test</div>
+                <div className="text-[11px] text-stone-500 font-mono">buyer@gmail.com</div>
               </div>
             </div>
             <span className="text-xs font-semibold text-blue-600 group-hover:text-blue-700 flex items-center gap-0.5">

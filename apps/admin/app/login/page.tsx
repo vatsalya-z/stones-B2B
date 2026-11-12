@@ -18,7 +18,7 @@ function AdminLoginForm() {
   const [isPending, setIsPending] = useState(false);
 
   function handleAutofillAdmin() {
-    setEmail("qa-admin-2026@stoneb2b.test");
+    setEmail("admin@gmail.com");
     setPassword("Password@123");
     setError(null);
   }
@@ -99,7 +99,7 @@ function AdminLoginForm() {
               </div>
               <div>
                 <div className="text-xs font-bold text-white">Super Administrator (Governance)</div>
-                <div className="text-[11px] text-stone-400 font-mono">qa-admin-2026@stoneb2b.test</div>
+                <div className="text-[11px] text-stone-400 font-mono">admin@gmail.com</div>
               </div>
             </div>
             <span className="text-xs font-semibold text-purple-400 group-hover:text-purple-300 flex items-center gap-0.5">
