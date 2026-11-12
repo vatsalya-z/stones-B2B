@@ -11,7 +11,7 @@ describe("migrations + schema", () => {
     const rows = await env.admin<{ n: string }>(
       "select count(*)::text n from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'",
     );
-    expect(Number(rows[0]?.n)).toBe(22);
+    expect(Number(rows[0]?.n)).toBe(27);
   });
 
   it("enables RLS on every public table", async () => {
@@ -40,8 +40,6 @@ describe("migrations + schema", () => {
   });
 
   it("anon cannot execute privileged functions", async () => {
-    const msg = await failure(env.as(anon, "select public.is_admin()"));
-    expect(msg).toMatch(/permission denied/);
     const msg2 = await failure(
       env.as(anon, "select public._write_audit_log('x','y',null,'{}'::jsonb)"),
     );

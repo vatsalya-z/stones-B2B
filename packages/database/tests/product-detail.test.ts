@@ -125,6 +125,12 @@ describe("Product Detail Page & RFQ Integration", () => {
   });
 
   it("queries related products excluding target product and matching by category or material", async () => {
+    // Upgrade sellerA to pro subscription so test can insert additional products beyond free tier quota
+    await w.env.admin(
+      `update public.seller_subscriptions set plan_id = (select id from public.subscription_plans where code = 'pro') where seller_id = $1`,
+      [w.sellerA],
+    );
+
     // Insert related products under the same category
     const [pA] = await w.env.admin<{ id: string }>(
       `insert into public.products (

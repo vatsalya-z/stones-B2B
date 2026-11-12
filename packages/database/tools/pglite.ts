@@ -34,6 +34,16 @@ create function auth.uid() returns uuid language sql stable as $$
     nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub'
   ), '')::uuid
 $$;
+create function auth.role() returns text language sql stable as $$
+  select coalesce(
+    nullif(current_setting('request.jwt.claim.role', true), ''),
+    nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'role',
+    'anon'
+  )::text
+$$;
+create function auth.jwt() returns jsonb language sql stable as $$
+  select coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb, '{}'::jsonb)
+$$;
 
 create schema storage;
 create table storage.buckets (
