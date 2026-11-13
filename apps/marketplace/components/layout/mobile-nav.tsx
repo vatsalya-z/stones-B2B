@@ -160,7 +160,7 @@ export function MobileNav({
     if (!isLoggedIn) {
       // Guest users see the public RFQ entry point
       items.push({
-        label: "RFQ / Request Quote",
+        label: "Get Best Price",
         href: "/request-quote",
         icon: FileText,
       });
@@ -186,7 +186,7 @@ export function MobileNav({
     } else {
       // General authenticated member
       items.push({
-        label: "RFQ / Request Quote",
+        label: "Get Best Price",
         href: "/request-quote",
         icon: FileText,
       });

@@ -5,6 +5,7 @@ import { SectionHeading, EmptyState } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
 import { SupplierCard } from "@/components/ui/supplier-card";
 import { CategoryCard } from "@/components/ui/category-card";
+import { HeroSearchBar } from "@/components/search/hero-search-bar";
 import { getFeaturedProducts, getFeaturedSellers, getActiveCategories } from "@/lib/db";
 import { HERO_IMAGES } from "@/lib/images";
 
@@ -174,6 +175,9 @@ export default async function HomePage() {
               <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-stone-200 leading-snug sm:leading-relaxed font-normal max-w-md mx-auto lg:mx-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                 Wholesale marble, granite &amp; architectural stone slabs.
               </p>
+
+              {/* IndiaMart-Style Search Bar & Lead Capture */}
+              <HeroSearchBar />
 
               {/* CTAs */}
               <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
