@@ -5,7 +5,7 @@ const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://*.supabase.co https://rgmasamasslqintssyrh.supabase.co https://images.unsplash.com",
+  "img-src 'self' data: blob: https://*.supabase.co https://rgmasamasslqintssyrh.supabase.co https://images.unsplash.com http://127.0.0.1:* http://localhost:*",
   "font-src 'self' data: blob: https://fonts.gstatic.com https://fonts.googleapis.com",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
   "frame-src 'self' https://*.supabase.co",
@@ -40,6 +40,8 @@ const nextConfig = {
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
       { protocol: "https", hostname: "rgmasamasslqintssyrh.supabase.co", pathname: "/**" },
       { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "http", hostname: "127.0.0.1", pathname: "/storage/v1/object/public/**" },
+      { protocol: "http", hostname: "localhost", pathname: "/storage/v1/object/public/**" },
     ],
   },
   experimental: {
