@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const safeNext = sanitizeNextPath(body.next, "/dashboard");
+    const safeNext = sanitizeNextPath(body.next, "/seller/dashboard");
 
     const supabase = await getSupabaseServerClient();
     const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
