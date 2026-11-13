@@ -213,11 +213,11 @@ export function SellerShell({
     };
   });
 
-  const renderSidebarContent = (onNavigate?: () => void) => (
-    <div className="flex h-full flex-col justify-between">
-      <div>
-        {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between border-b border-stone-200 px-5">
+  const renderSidebarContent = (onNavigate?: () => void, hideBrandHeader: boolean = false) => (
+    <div className="flex h-full flex-col min-h-0 bg-white">
+      {/* Brand Header - Pinned at Top */}
+      {!hideBrandHeader && (
+        <div className="flex h-16 flex-shrink-0 items-center justify-between border-b border-stone-200 px-5 bg-white">
           <Link href="/seller/dashboard" onClick={onNavigate} className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 font-bold text-white text-sm shadow-xs">
               S
@@ -238,8 +238,10 @@ export function SellerShell({
             Marketplace ↗
           </Link>
         </div>
+      )}
 
-        <div className="space-y-5 p-4">
+      {/* Middle Navigation & Identity Area - Independently Scrollable */}
+      <div className="flex-1 overflow-y-auto min-h-0 space-y-4 p-4 [scrollbar-width:thin] [scrollbar-color:theme(colors.stone.200)_transparent]">
         {/* Seller Identity Card */}
         <div className="rounded-xl border border-stone-200 bg-stone-50/80 p-3.5">
           <div className="flex items-center gap-3">
@@ -335,10 +337,9 @@ export function SellerShell({
           })}
         </nav>
       </div>
-    </div>
 
-      {/* Footer / Account Sign Out */}
-      <div className="border-t border-stone-200 p-4">
+      {/* Footer / Account Sign Out - Pinned at Bottom */}
+      <div className="flex-shrink-0 border-t border-stone-200 p-4 bg-white">
         {userEmail && (
           <p className="mb-2 truncate text-xs text-stone-500" title={userEmail}>
             Signed in as <span className="font-medium text-stone-700">{userEmail}</span>
@@ -432,11 +433,19 @@ export function SellerShell({
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
-          <aside className="relative flex w-80 max-w-[85vw] flex-col bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3.5">
-              <span className="text-sm font-bold tracking-tight text-stone-900">
-                Seller Workspace
-              </span>
+          <aside className="relative flex h-full w-80 max-w-[85vw] flex-col bg-white shadow-xl">
+            <div className="flex h-16 flex-shrink-0 items-center justify-between border-b border-stone-200 px-4">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 font-bold text-white text-sm shadow-xs">
+                  S
+                </span>
+                <div className="flex flex-col">
+                  <span className="font-bold text-sm tracking-tight text-stone-900">StonesDekho</span>
+                  <span className="text-[10px] uppercase font-semibold text-amber-700 tracking-wider">
+                    Seller Portal
+                  </span>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
@@ -448,22 +457,21 @@ export function SellerShell({
                 </svg>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto">
-              {renderSidebarContent(() => setMobileOpen(false))}
+            <div className="flex-1 overflow-y-auto min-h-0">
+              {renderSidebarContent(() => setMobileOpen(false), true)}
             </div>
           </aside>
         </div>
       )}
 
-      {/* Desktop Split Workspace */}
-      <div className="mx-auto flex w-full max-w-8xl">
-        <aside className="hidden w-64 flex-shrink-0 border-r border-stone-200 bg-white lg:block">
-          <div className="sticky top-0 max-h-screen overflow-y-auto">
-            {renderSidebarContent()}
-          </div>
-        </aside>
+      {/* Desktop Fixed Left Sidebar */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 border-r border-stone-200 bg-white">
+        {renderSidebarContent()}
+      </aside>
 
-        <div className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+      {/* Main Content Area - offset by lg:pl-64 to sit right beside the fixed sidebar */}
+      <div className="min-h-screen bg-stone-50 flex flex-col min-w-0 lg:pl-64">
+        <main className="flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
           <div className="mx-auto w-full max-w-6xl space-y-6">
             {/* Desktop Workspace Header Bar (Breadcrumbs + Actions) */}
             <div className="hidden lg:flex items-center justify-between gap-4 rounded-2xl border border-stone-200/80 bg-white px-5 py-3 shadow-xs">
@@ -530,7 +538,7 @@ export function SellerShell({
 
             <div>{children}</div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
