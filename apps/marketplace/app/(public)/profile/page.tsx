@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { getSupabaseServerClient } from "@/lib/supabase";
 import { createAdminClient } from "@stone/database/admin";
 import { ProfileEditor } from "./profile-editor";
 import {
-  User,
   ShieldCheck,
   ClipboardList,
   Layers,

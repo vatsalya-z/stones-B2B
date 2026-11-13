@@ -31,7 +31,7 @@ export async function GET() {
       },
       roles,
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ authenticated: false, user: null });
   }
 }

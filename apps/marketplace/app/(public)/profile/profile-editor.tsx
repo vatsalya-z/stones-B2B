@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, Phone, Mail, Building, MapPin, CheckCircle2, Loader2, Save } from "lucide-react";
+import { User, Phone, Mail, MapPin, CheckCircle2, Loader2, Save } from "lucide-react";
 
 interface ProfileEditorProps {
   initialProfile: {

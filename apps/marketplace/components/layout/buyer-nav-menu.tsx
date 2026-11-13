@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   User,
   ChevronDown,
@@ -30,7 +29,6 @@ export function BuyerNavMenu({
   userEmail: initialUserEmail,
   userName: initialUserName,
 }: BuyerNavMenuProps) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);

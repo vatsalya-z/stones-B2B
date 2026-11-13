@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, Check, MapPin, Compass } from "lucide-react";
+import { Search, Check, MapPin } from "lucide-react";
 
 const POPULAR_INDIAN_CITIES = [
   { name: "All India", state: "Nationwide", isDefault: true },
