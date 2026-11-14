@@ -6,19 +6,19 @@ import { HERO_IMAGES } from "@/lib/images";
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-stone-950 text-white min-h-[560px] sm:min-h-[580px] lg:min-h-[640px] flex items-center">
-      {/* Background Architectural Texture & Subtle Gradient */}
+      {/* Background Architectural Showroom & Directional Scrim */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
           src={HERO_IMAGES.showroomJpg}
-          alt="Luxury Architectural Stone Gallery"
+          alt="Luxury Architectural Stone Showroom"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center opacity-30 mix-blend-luminosity"
+          className="object-cover object-center"
           unoptimized
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/90 to-stone-950/70" />
-        <div className="absolute inset-0 bg-radial from-transparent via-stone-950/50 to-stone-950" />
+        {/* Directional Luxury Scrim: Legibility behind left text, beautifully transparent on right to reveal illuminated architecture */}
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/85 via-stone-950/55 to-stone-950/80 lg:bg-gradient-to-r lg:from-stone-950/85 lg:via-stone-950/45 lg:via-45% lg:to-stone-950/15" />
       </div>
 
       <div className="relative z-10 container-wide py-12 sm:py-16 lg:py-20 w-full">
@@ -32,7 +32,7 @@ export function HeroSection() {
             </div>
 
             {/* Headline matching user reference image */}
-            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight text-white leading-[1.15] drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
               Source Natural Stone{" "}
               <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600">
                 Direct from Verified Suppliers
@@ -40,7 +40,7 @@ export function HeroSection() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-4 text-sm sm:text-base lg:text-lg text-stone-300 leading-relaxed font-normal max-w-xl">
+            <p className="mt-4 text-sm sm:text-base lg:text-lg text-stone-200 leading-relaxed font-normal max-w-xl drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
               A dedicated B2B marketplace for importers, architects, contractors and project buyers.
             </p>
 
