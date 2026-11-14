@@ -1,69 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
-import { SectionHeading, EmptyState } from "@stone/ui";
-import { ProductCard } from "@/components/ui/product-card";
-import { SupplierCard } from "@/components/ui/supplier-card";
-import { CategoryCard } from "@/components/ui/category-card";
-import { HeroSearchBar } from "@/components/search/hero-search-bar";
 import { getFeaturedProducts, getFeaturedSellers, getActiveCategories } from "@/lib/db";
-import { HERO_IMAGES } from "@/lib/images";
+import { HeroSection } from "@/components/home/hero-section";
+import { TrustMetricsStrip } from "@/components/home/trust-metrics-strip";
+import { ProjectRequirementPanel } from "@/components/home/project-requirement-panel";
+import { StoneCategoriesSection } from "@/components/home/stone-categories-section";
+import { FeaturedMaterialsSection } from "@/components/home/featured-materials-section";
+import { VerifiedSuppliersSection } from "@/components/home/verified-suppliers-section";
+import { ArchitecturalApplicationsSection } from "@/components/home/architectural-applications-section";
+import { HowItWorksSection } from "@/components/home/how-it-works-section";
+import { ValuePropositionsSection } from "@/components/home/value-propositions-section";
+import { ProjectCtaSection } from "@/components/home/project-cta-section";
 
 export const metadata: Metadata = {
-  title: "StonesDekho — Premium Natural Stone Marketplace",
+  title: "StonesDekho — Source Natural Stone Direct from Verified Suppliers",
   description:
-    "Source premium natural stone directly from verified Indian manufacturers and exporters. Marble, granite, sandstone, quartzite, limestone and architectural stone.",
+    "A dedicated B2B natural stone sourcing marketplace for architects, builders, developers, and bulk procurement buyers. Verified quarries, bulk pricing, and custom project supply.",
   openGraph: {
-    title: "StonesDekho — Premium Natural Stone Marketplace",
-    description: "Source premium natural stone directly from verified Indian manufacturers on StonesDekho.",
+    title: "StonesDekho — Premium B2B Natural Stone Marketplace",
+    description:
+      "Source premium natural stone directly from verified Indian quarries and manufacturers. Marble, granite, sandstone, limestone, quartzite, and slate.",
     type: "website",
   },
 };
-
-const ARCHITECTURAL_APPLICATIONS = [
-  {
-    title: "Flooring & Large-Format Paving",
-    subtitle: "High-traffic commercial, hotel lobbies & outdoor public plazas",
-    recommended: "Granite · Kota Limestone · Quartzite · Hard Marble",
-    image: "/images/categories/granite.jpg",
-    href: "/products?finish=Polished",
-  },
-  {
-    title: "Interior & Exterior Wall Cladding",
-    subtitle: "Dry-hung ventilated stone facades & bookmatched feature walls",
-    recommended: "Makrana Marble · Travertine · Slate · Sandstone",
-    image: "/images/product-gallery/marble-install-living.jpg",
-    href: "/products?finish=Honed",
-  },
-  {
-    title: "Kitchen Countertops & Vanity Slabs",
-    subtitle: "Scratch & stain-resistant monolithic stone surfaces",
-    recommended: "Black Galaxy Granite · Tan Brown · White Quartzite",
-    image: "/images/products/black-galaxy-granite.jpg",
-    href: "/products?material=Granite",
-  },
-  {
-    title: "Landscaping, Cobbles & Pathways",
-    subtitle: "Weatherproof anti-skid paving, kerbstones & driveways",
-    recommended: "Dholpur Beige · Kota Blue · Natural Cleft Slate",
-    image: "/images/products/dholpur-beige-sandstone.jpg",
-    href: "/products?material=Sandstone",
-  },
-  {
-    title: "Architectural Facades & Cut Panels",
-    subtitle: "CNC-routed stone screens, fluted panels & rain-screen panels",
-    recommended: "Teakwood Sandstone · Rainbow · Travertine",
-    image: "/images/categories/sandstone.jpg",
-    href: "/products?material=Sandstone",
-  },
-  {
-    title: "Heritage Stonecraft & Monuments",
-    subtitle: "Intricate jaalis, columns, hand-chiseled temple architecture",
-    recommended: "Pure Makrana Marble · Pink Sandstone · Limestone",
-    image: "/images/products/makrana-white-marble.jpg",
-    href: "/products?material=Marble",
-  },
-];
 
 export default async function HomePage() {
   const [categories, products, sellers] = await Promise.all([
@@ -101,7 +59,7 @@ export default async function HomePage() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
@@ -111,600 +69,36 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
+
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-stone-950 text-white min-h-[520px] sm:min-h-[460px] lg:min-h-[560px] flex items-center">
-        {/* Photographic Hero Background — Luxurious Symmetrical Marble Showroom (Desktop) & Gallery (Mobile) */}
-        <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
-          {/* Desktop & Tablet (>= 768px): Luxurious Symmetrical Marble Showroom (Landscape) */}
-          <source
-            media="(min-width: 768px)"
-            type="image/webp"
-            srcSet={HERO_IMAGES.showroom}
-          />
-          <source
-            media="(min-width: 768px)"
-            type="image/jpeg"
-            srcSet={HERO_IMAGES.symmetricalShowroom}
-          />
-          <source
-            media="(min-width: 768px)"
-            srcSet={HERO_IMAGES.symmetricalShowroom}
-          />
-          {/* Mobile (< 768px): Luxurious Symmetrical Marble Gallery (Portrait) */}
-          <source
-            media="(max-width: 767px)"
-            type="image/webp"
-            srcSet={HERO_IMAGES.showroomMobile}
-          />
-          <source
-            media="(max-width: 767px)"
-            type="image/jpeg"
-            srcSet={HERO_IMAGES.symmetricalGallery}
-          />
-          <img
-            src={HERO_IMAGES.symmetricalGallery}
-            alt="Luxurious Symmetrical Marble Gallery"
-            className="h-full w-full object-cover object-center"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </picture>
+      <HeroSection />
 
-        {/* Subtle Non-Destructive Scrim: Preserves authentic original colors & 100% photographic clarity with zero blur */}
-        <div
-          className="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-black/20 to-black/60 md:bg-gradient-to-r md:from-black/70 md:via-black/25 md:to-transparent"
-          aria-hidden="true"
-        />
+      {/* 2. Trust Metrics Strip */}
+      <TrustMetricsStrip />
 
-        <div className="relative z-20 container-wide py-6 sm:py-14 lg:py-18 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Left Column (7 cols): Headline, Description & CTAs */}
-            <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-stone-950/80 px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400 ring-1 ring-inset ring-amber-500/40 shadow-sm">
-                B2B Stone Network
-              </div>
+      {/* 3. Floating B2B Requirement Panel */}
+      <ProjectRequirementPanel />
 
-              <h1 className="mt-2 sm:mt-3 text-xl sm:text-3xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight max-w-xl mx-auto lg:mx-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-                Source Natural Stone
-                <span className="hidden sm:inline"> — </span>
-                <span className="block sm:inline text-amber-400 text-lg sm:text-3xl lg:text-5xl font-bold sm:font-extrabold mt-0.5 sm:mt-0 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-                  Direct from Quarries
-                </span>
-              </h1>
+      {/* 4. Browse by Stone Categories */}
+      <StoneCategoriesSection categories={categories} />
 
-              <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-stone-200 leading-snug sm:leading-relaxed font-normal max-w-md mx-auto lg:mx-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-                Wholesale marble, granite &amp; architectural stone slabs.
-              </p>
+      {/* 5. Featured Stone Materials */}
+      <FeaturedMaterialsSection initialProducts={products} />
 
-              {/* IndiaMart-Style Search Bar & Lead Capture */}
-              <HeroSearchBar />
+      {/* 6. Verified Suppliers & Quarries */}
+      <VerifiedSuppliersSection sellers={sellers} />
 
-              {/* CTAs */}
-              <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
-                <Link
-                  href="/products"
-                  className="btn-accent px-3.5 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30"
-                >
-                  Explore Slabs & Tiles
-                </Link>
-                <Link
-                  href="/register/seller"
-                  className="btn-secondary border-stone-600 bg-stone-900/90 text-stone-100 hover:bg-stone-800 hover:border-stone-500 px-3.5 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold shadow-lg"
-                >
-                  List Your Factory
-                </Link>
-              </div>
+      {/* 7. Architectural Project Applications */}
+      <ArchitecturalApplicationsSection />
 
-              {/* B2B Trust Indicators */}
-              <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3.5 border-t border-stone-700/60 flex flex-wrap items-center justify-center lg:justify-start gap-x-3.5 sm:gap-x-5 gap-y-1 sm:gap-y-1.5 text-[10px] sm:text-xs text-stone-200 w-full max-w-md mx-auto lg:mx-0">
-                <div className="flex items-center gap-1.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0 shadow-sm shadow-emerald-400/50" />
-                  <span>Verified Quarries</span>
-                </div>
-                <div className="flex items-center gap-1.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shrink-0 shadow-sm shadow-amber-400/50" />
-                  <span>Wholesale Pricing</span>
-                </div>
-                <div className="flex items-center gap-1.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0 shadow-sm shadow-blue-400/50" />
-                  <span>Global Port Dispatch</span>
-                </div>
-              </div>
-            </div>
+      {/* 8. How StonesDekho Works */}
+      <HowItWorksSection />
 
-            {/* Right Column (5 cols): Featured Premium Natural Stone Showcase Card */}
-            <div className="hidden lg:block lg:col-span-5">
-              <div className="relative rounded-2xl border border-stone-700/70 bg-stone-900/70 p-4 shadow-2xl backdrop-blur-md">
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-stone-800">
-                  <Image
-                    src="/images/products/makrana-white-marble.jpg"
-                    alt="Makrana Pure White Marble Slab"
-                    fill
-                    sizes="(max-width: 1280px) 40vw, 480px"
-                    className="object-cover transition-transform duration-700 hover:scale-105"
-                    priority
-                    unoptimized
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center rounded-full bg-stone-950/80 px-3 py-1 text-xs font-medium text-amber-400 backdrop-blur-sm border border-amber-500/30">
-                      ★ Featured Factory Lot
-                    </span>
-                  </div>
-                  <div className="absolute bottom-3 right-3">
-                    <span className="inline-flex items-center rounded-lg bg-emerald-500/90 px-2.5 py-1 text-xs font-semibold text-stone-950 backdrop-blur-sm">
-                      Verified Exporter
-                    </span>
-                  </div>
-                </div>
+      {/* 9. Built for Importers, Architects & Contractors */}
+      <ValuePropositionsSection />
 
-                <div className="mt-4 space-y-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-base font-bold text-stone-100">
-                        Makrana Pure White Marble Slabs
-                      </h3>
-                      <p className="text-xs text-stone-400">
-                        Origin: Makrana, Rajasthan · 18mm Gangsaw Slabs
-                      </p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-xs text-stone-400">Wholesale</span>
-                      <p className="text-sm font-extrabold text-amber-400">
-                        ₹650 <span className="text-[11px] font-normal text-stone-400">/ sq ft</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Thumbnail Row of other stone varieties */}
-                  <div className="pt-3 border-t border-stone-800/80 flex items-center justify-between text-xs text-stone-400">
-                    <span>Popular Stones:</span>
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href="/products/black-galaxy-granite"
-                        className="group/t relative h-9 w-9 overflow-hidden rounded-lg border border-stone-700 hover:border-amber-500 transition-colors"
-                        title="Black Galaxy Granite"
-                      >
-                        <Image
-                          src="/images/products/black-galaxy-granite.jpg"
-                          alt="Black Galaxy Granite"
-                          fill
-                          sizes="36px"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </Link>
-                      <Link
-                        href="/products/dholpur-beige-sandstone"
-                        className="group/t relative h-9 w-9 overflow-hidden rounded-lg border border-stone-700 hover:border-amber-500 transition-colors"
-                        title="Dholpur Beige Sandstone"
-                      >
-                        <Image
-                          src="/images/products/dholpur-beige-sandstone.jpg"
-                          alt="Dholpur Beige Sandstone"
-                          fill
-                          sizes="36px"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </Link>
-                      <Link
-                        href="/products/rajasthan-green-marble"
-                        className="group/t relative h-9 w-9 overflow-hidden rounded-lg border border-stone-700 hover:border-amber-500 transition-colors"
-                        title="Rajasthan Green Marble"
-                      >
-                        <Image
-                          src="/images/products/rajasthan-green-marble.jpg"
-                          alt="Rajasthan Green Marble"
-                          fill
-                          sizes="36px"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </Link>
-                      <Link
-                        href="/products/classic-travertine-slab"
-                        className="group/t relative h-9 w-9 overflow-hidden rounded-lg border border-stone-700 hover:border-amber-500 transition-colors"
-                        title="Classic Travertine"
-                      >
-                        <Image
-                          src="/images/products/classic-travertine-slab.jpg"
-                          alt="Classic Travertine"
-                          fill
-                          sizes="36px"
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Featured Categories */}
-      <section className="section-pad bg-white">
-        <div className="container-wide">
-          <SectionHeading
-            title="Stone Varieties & Products"
-            subtitle="Explore high-demand natural stone categories sourced directly from key Indian stone belts"
-            action={
-              <Link
-                href="/categories"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-              >
-                View all categories →
-              </Link>
-            }
-          />
-
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {categories.length === 0 ? (
-              <div className="col-span-full">
-                <EmptyState
-                  title="Categories are being curated"
-                  description="New stone categories and catalogues will appear here shortly."
-                />
-              </div>
-            ) : (
-              categories.slice(0, 8).map((cat) => (
-                <CategoryCard
-                  key={cat.id}
-                  name={cat.name}
-                  slug={cat.slug}
-                  description={cat.description}
-                  imageUrl={cat.image_url}
-                />
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Popular Applications & Project-Use Categories */}
-      <section className="section-pad bg-stone-50 border-t border-stone-200/60">
-        <div className="container-wide">
-          <SectionHeading
-            title="Architectural Project Applications"
-            subtitle="Discover calibrated stone slabs, pavers, and carved elements engineered for specific project typologies"
-            action={
-              <Link
-                href="/products"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-              >
-                Browse all specifications →
-              </Link>
-            }
-          />
-
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {ARCHITECTURAL_APPLICATIONS.map((app, i) => (
-              <Link
-                key={i}
-                href={app.href}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-card transition-all hover:border-amber-600/30 hover:shadow-card-hover"
-              >
-                <div className="relative aspect-[16/9] w-full overflow-hidden bg-stone-100">
-                  <Image
-                    src={app.image}
-                    alt={app.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/20 to-transparent" />
-                  <div className="absolute bottom-3 left-4 right-4">
-                    <span className="text-xs font-semibold text-amber-400 drop-shadow-sm">Project Application</span>
-                    <h3 className="text-lg font-bold text-white drop-shadow-md">{app.title}</h3>
-                  </div>
-                </div>
-
-                <div className="flex flex-1 flex-col justify-between p-5">
-                  <p className="text-xs text-stone-600 leading-relaxed">{app.subtitle}</p>
-                  <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
-                    <span className="font-medium text-stone-500">Key Stones:</span>
-                    <span className="font-semibold text-stone-800 text-right">{app.recommended}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Popular Stone Products */}
-      <section className="section-pad bg-white border-y border-stone-200/60">
-        <div className="container-wide">
-          <SectionHeading
-            title="Featured Products"
-            subtitle="Recent approved stone lots, gangsaw slabs, and calibrated tiles from verified suppliers"
-            action={
-              <Link
-                href="/products"
-                className="btn-secondary text-sm font-semibold"
-              >
-                Browse All Products
-              </Link>
-            }
-          />
-
-          <div className="mt-8">
-            {products.length === 0 ? (
-              <div className="rounded-2xl border border-stone-200 bg-white p-12 text-center">
-                <EmptyState
-                  title="No stone products listed yet"
-                  description="Verified manufacturers are currently preparing their factory inventory for display."
-                  action={
-                    <Link href="/register/seller" className="btn-accent text-sm">
-                      Become a Seller
-                    </Link>
-                  }
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {products.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    id={p.id}
-                    slug={p.slug}
-                    name={p.name}
-                    primaryImage={p.primaryImage}
-                    materialType={p.materialType}
-                    colour={p.colour}
-                    finish={p.finish}
-                    priceType={p.priceType}
-                    price={p.price}
-                    currency={p.currency}
-                    unit={p.unit}
-                    sellerName={p.sellerName}
-                    sellerSlug={p.sellerSlug}
-                    isVerifiedSeller={p.isVerifiedSeller}
-                    stoneOrigin={p.stoneOrigin}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. How StonesDekho Works */}
-      <section id="how-it-works" className="section-pad bg-white border-b border-stone-200/60 scroll-mt-20">
-        <div className="container-wide">
-          <SectionHeading
-            title="How StonesDekho Works"
-            subtitle="A transparent, streamlined 4-step procurement process built specifically for natural stone logistics"
-            align="center"
-            action={
-              <Link
-                href="/how-it-works"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center justify-center gap-1 mt-2 sm:mt-0"
-              >
-                Read comprehensive procurement guide →
-              </Link>
-            }
-          />
-
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                step: "01",
-                title: "Direct Factory Discovery",
-                desc: "Search stone by quarry origin, thickness, finish, and gangsaw capacity across verified Indian manufacturers.",
-              },
-              {
-                step: "02",
-                title: "Sample & Slab Inspection",
-                desc: "Inspect live slab lot photographs, crystalline veining, and request physical lab-tested samples for architect approval.",
-              },
-              {
-                step: "03",
-                title: "Custom BOQ & Quotation",
-                desc: "Submit your exact architectural Bill of Quantities. Receive transparent, factory-direct commercial quotations without broker markups.",
-              },
-              {
-                step: "04",
-                title: "Crate Packing & Dispatch",
-                desc: "Sellers pack your slabs in fumigated, seaworthy wooden crates for container loading and port dispatch (Mundra, Pipavav, Chennai).",
-              },
-            ].map((item) => (
-              <div
-                key={item.step}
-                className="relative rounded-2xl border border-stone-200/80 bg-stone-50/60 p-6 transition-all hover:bg-white hover:shadow-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-black text-amber-600/80 tracking-tight">{item.step}</span>
-                  <div className="h-2 w-2 rounded-full bg-amber-500" />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-stone-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-stone-600 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Why Choose StonesDekho */}
-      <section className="section-pad bg-stone-50/50">
-        <div className="container-wide">
-          <SectionHeading
-            title="Built for Stone Importers, Architects & Contractors"
-            subtitle="An enterprise B2B platform designed specifically around stone trade logistics and quality control."
-            align="center"
-          />
-
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: (
-                  <svg className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                ),
-                title: "Strict Factory Verification",
-                desc: "Every seller's GST, factory location, processing machinery, and past exports are rigorously verified.",
-              },
-              {
-                icon: (
-                  <svg className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
-                title: "Factory-Direct Pricing",
-                desc: "Cut out middlemen and brokers. Direct communication with quarry owners and processing units.",
-              },
-              {
-                icon: (
-                  <svg className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                  </svg>
-                ),
-                title: "Detailed Architectural Specs",
-                desc: "Search stone by exact thickness (mm), surface finish (polished, flamed, leathered), and quarry origin.",
-              },
-              {
-                icon: (
-                  <svg className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
-                title: "Export & Domestic Logistics",
-                desc: "Suppliers experienced in international seaworthy wooden crate packaging and port dispatch.",
-              },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-stone-200/80 bg-stone-50/50 p-6 transition-all hover:border-stone-300 hover:bg-stone-50"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 ring-1 ring-amber-600/20">
-                  {feature.icon}
-                </div>
-                <h3 className="mt-4 text-base font-semibold text-stone-900">{feature.title}</h3>
-                <p className="mt-2 text-sm text-stone-600 leading-relaxed">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Featured Suppliers */}
-      <section className="section-pad bg-stone-50 border-t border-stone-200/60">
-        <div className="container-wide">
-          <SectionHeading
-            title="Verified Suppliers & Exporters"
-            subtitle="Connect with certified stone processing companies from Rajasthan, Gujarat, Andhra Pradesh, and Karnataka"
-            action={
-              <Link
-                href="/suppliers"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-              >
-                View all suppliers →
-              </Link>
-            }
-          />
-
-          <div className="mt-8">
-            {sellers.length === 0 ? (
-              <div className="rounded-2xl border border-stone-200 bg-white p-12 text-center">
-                <EmptyState
-                  title="Suppliers directory updating"
-                  description="Verified manufacturers will be featured here."
-                  action={
-                    <Link href="/register/seller" className="btn-accent text-sm">
-                      Register as Supplier
-                    </Link>
-                  }
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {sellers.map((s) => (
-                  <SupplierCard
-                    key={s.id}
-                    id={s.id}
-                    slug={s.slug}
-                    businessName={s.businessName}
-                    businessType={s.businessType}
-                    logoUrl={s.logoUrl}
-                    city={s.city}
-                    state={s.state}
-                    description={s.description}
-                    yearsInBusiness={s.yearsInBusiness}
-                    verifiedAt={s.verifiedAt}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Buyer Enquiry CTA */}
-      <section className="relative overflow-hidden py-16 sm:py-20 md:py-24 bg-stone-950 text-white min-h-[500px] sm:min-h-[380px] md:min-h-[400px] flex items-center">
-        {/* Background Image Layer: Responsive Picture Element */}
-        <picture className="absolute inset-0 z-0 block h-full w-full pointer-events-none">
-          {/* Desktop & Tablet (>= 768px): Ultra-HD Landscape Showroom */}
-          <source
-            media="(min-width: 768px)"
-            srcSet="/images/backgrounds/stone-showroom-cta-desktop.jpg"
-          />
-          {/* Mobile (< 768px): Ultra-HD Portrait Symmetrical Showroom */}
-          <img
-            src="/images/backgrounds/stone-showroom-cta-mobile.jpg"
-            alt="Luxury illuminated natural stone slab showroom"
-            className="h-full w-full object-cover object-center"
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
-
-        {/* Cinematic Multi-Layer Optical Vignette & Dark Tint */}
-        <div
-          className="absolute inset-0 z-[1] bg-gradient-to-b from-stone-950/85 via-stone-950/65 to-stone-950/90 md:bg-gradient-to-r md:from-stone-950/85 md:via-stone-950/60 md:to-stone-950/85"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0 z-[1] bg-radial from-transparent via-black/40 to-black/80"
-          aria-hidden="true"
-        />
-
-        {/* Content Container */}
-        <div className="relative z-10 container-narrow text-center px-4 sm:px-6">
-          <span className="inline-block rounded-full bg-stone-950/80 px-3.5 py-1 text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#E8BD78] ring-1 ring-[#D99A35]/40 backdrop-blur-md shadow-md">
-            Direct B2B Procurement
-          </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] max-w-2xl mx-auto leading-tight">
-            Have a Specific Architectural or Bulk Requirement?
-          </h2>
-          <p className="mt-3.5 sm:mt-4 text-xs sm:text-base text-stone-200/95 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
-            Send your custom cut-to-size specifications, bill of quantities (BOQ), or project requirements directly to verified suppliers.
-          </p>
-          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto">
-            <Link
-              href="/request-quote"
-              className="btn-accent w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-600/30 transition-transform active:scale-95"
-            >
-              Post Custom RFQ
-            </Link>
-            <Link
-              href="/products"
-              className="btn-secondary w-full sm:w-auto border-stone-600/80 bg-stone-900/85 text-stone-100 hover:bg-stone-800 hover:border-[#D99A35]/50 backdrop-blur-md px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-transform active:scale-95"
-            >
-              Search Stone Slabs
-            </Link>
-            <Link
-              href="/suppliers"
-              className="btn-secondary w-full sm:w-auto border-white/20 bg-stone-950/80 text-stone-100 hover:bg-stone-900 hover:border-[#E8BD78]/50 backdrop-blur-md px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-transform active:scale-95"
-            >
-              Find Factory Partners
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 10. Final Project Requirement CTA */}
+      <ProjectCtaSection />
     </div>
   );
 }
