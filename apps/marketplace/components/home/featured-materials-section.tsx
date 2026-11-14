@@ -288,3 +288,4 @@ export function FeaturedMaterialsSection({ initialProducts = [] }: FeaturedMater
     </section>
   );
 }
+

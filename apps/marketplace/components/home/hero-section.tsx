@@ -1,24 +1,23 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { HERO_IMAGES } from "@/lib/images";
 
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-stone-950 text-white min-h-[560px] sm:min-h-[580px] lg:min-h-[640px] flex items-center">
-      {/* Background Architectural Showroom & Directional Scrim */}
+      {/* Original Luxurious Symmetrical Marble Showroom Background with Enhanced Brightness & Lighting */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
-          src={HERO_IMAGES.showroomJpg}
-          alt="Luxury Architectural Stone Showroom"
+          src="/images/hero/luxurious-symmetrical-marble-showroom.jpg"
+          alt="Luxurious Symmetrical Marble Showroom"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-center filter brightness-110 contrast-105"
           unoptimized
         />
-        {/* Directional Luxury Scrim: Legibility behind left text, beautifully transparent on right to reveal illuminated architecture */}
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/85 via-stone-950/55 to-stone-950/80 lg:bg-gradient-to-r lg:from-stone-950/85 lg:via-stone-950/45 lg:via-45% lg:to-stone-950/15" />
+        {/* Soft Directional Scrim: Dark on left for text legibility, transparent on right to let original showroom lighting shine */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 via-50% to-black/20 lg:bg-gradient-to-r lg:from-black/65 lg:via-black/25 lg:via-40% lg:to-transparent" />
       </div>
 
       <div className="relative z-10 container-wide py-12 sm:py-16 lg:py-20 w-full">

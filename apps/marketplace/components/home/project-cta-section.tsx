@@ -8,17 +8,17 @@ export function ProjectCtaSection() {
       {/* Background Architectural Showroom with Balanced Visibility Scrim */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
-          src="/images/backgrounds/stone-showroom-cta-desktop.jpg"
+          src="/images/hero/luxurious-symmetrical-marble-showroom.jpg"
           alt="Natural stone architectural showroom"
           fill
-          priority={false}
+          priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-center filter brightness-110 contrast-105"
           unoptimized
         />
-        {/* Balanced Architectural Scrim: 35-45% central opacity reveals illuminated showroom and maintains text legibility */}
-        <div className="absolute inset-0 bg-stone-950/35" />
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-stone-950/70" />
+        {/* Soft Ambient Scrim: Highly luminous original showroom background with crisp text contrast */}
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-stone-950/45" />
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
