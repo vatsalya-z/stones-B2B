@@ -57,7 +57,7 @@ const config = {
       },
       fontFamily: {
         sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
-        serif: ["Georgia", "Cambria", "Times New Roman", "serif"],
+        serif: ['"Playfair Display"', "Georgia", "Cambria", "Times New Roman", "serif"],
       },
       fontSize: {
         "2xs": ["0.625rem", { lineHeight: "0.875rem" }],

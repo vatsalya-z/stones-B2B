@@ -41,6 +41,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en-IN" className="h-full">
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/PlayfairDisplay-Bold.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/PlayfairDisplay-ExtraBold.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={cn("min-h-full bg-stone-50 text-stone-900 antialiased")}>
         {children}
       </body>

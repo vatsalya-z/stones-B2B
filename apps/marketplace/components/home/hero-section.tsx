@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { HeroRequestQuoteButton } from "./hero-request-quote-button";
 
 export function HeroSection() {
   return (
@@ -67,12 +68,7 @@ export function HeroSection() {
 
             {/* Action Buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href="/request-quote"
-                className="inline-flex items-center justify-center rounded-xl bg-amber-600 hover:bg-amber-500 text-white px-7 py-3.5 text-sm sm:text-base font-semibold shadow-xl shadow-amber-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Request a Quote
-              </Link>
+              <HeroRequestQuoteButton />
               <Link
                 href="#categories"
                 className="inline-flex items-center justify-center rounded-xl border border-stone-700 bg-stone-900/90 hover:bg-stone-800 text-stone-200 hover:text-white px-7 py-3.5 text-sm sm:text-base font-semibold transition-all"

@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { RfqModalWrapper } from "@/features/rfq/rfq-modal-wrapper";
 
 /**
  * Public Marketplace Layout
@@ -19,10 +20,12 @@ import { SiteFooter } from "@/components/layout/site-footer";
  */
 export default function PublicMarketplaceLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900 overflow-x-hidden">
-      <SiteHeader />
-      <main className="flex-1 overflow-x-hidden">{children}</main>
-      <SiteFooter />
-    </div>
+    <RfqModalWrapper>
+      <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900 overflow-x-hidden">
+        <SiteHeader />
+        <main className="flex-1 overflow-x-hidden">{children}</main>
+        <SiteFooter />
+      </div>
+    </RfqModalWrapper>
   );
 }

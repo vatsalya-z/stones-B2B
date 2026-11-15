@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, PhoneCall, ShieldCheck } from 'lucide-react';
+import { PhoneCall, ShieldCheck } from 'lucide-react';
+import { ProjectCtaQuoteButton } from './project-cta-quote-button';
 
 export function ProjectCtaSection() {
   return (
@@ -40,13 +41,7 @@ export function ProjectCtaSection() {
 
         {/* Action Buttons */}
         <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/rfq"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-sm sm:text-base shadow-xl shadow-black/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span>Request a Project Quote</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <ProjectCtaQuoteButton />
 
           <Link
             href="/contact"

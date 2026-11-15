@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRfqModal } from "@/features/rfq/rfq-modal-context";
 
 const STONE_TYPES = [
   { label: "Marble", value: "Marble" },
@@ -255,6 +256,7 @@ function ExactArchitecturalIllustration() {
 
 export function ProjectRequirementPanel() {
   const router = useRouter();
+  const { openRfqModal } = useRfqModal();
   const [activeTab, setActiveTab] = useState<"rfq" | "browse">("rfq");
   const [stoneType, setStoneType] = useState("");
   const [application, setApplication] = useState("");
@@ -270,12 +272,21 @@ export function ProjectRequirementPanel() {
       return;
     }
 
-    const params = new URLSearchParams();
-    if (stoneType) params.set("material", stoneType);
-    if (application) params.set("application", application);
-    if (quantity) params.set("quantity", quantity);
-    if (location) params.set("city", location);
-    router.push(`/request-quote?${params.toString()}`);
+    let parsedQuantity: number | null = null;
+    if (quantity) {
+      const numMatch = quantity.match(/\d[\d,]*/);
+      if (numMatch) {
+        parsedQuantity = parseInt(numMatch[0].replace(/,/g, ""), 10);
+      }
+    }
+
+    // Opens the Premium RFQ Modal directly on current page with prefilled values
+    openRfqModal({
+      materialType: stoneType || null,
+      quantity: parsedQuantity,
+      deliveryLocation: location || null,
+      projectNotes: application ? `Application: ${application}. Commercial natural stone requirement.` : null,
+    });
   };
 
   return (

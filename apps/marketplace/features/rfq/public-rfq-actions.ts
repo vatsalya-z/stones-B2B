@@ -259,6 +259,16 @@ export async function submitPublicRfq(
       target_supplier_slug: data.supplierSlug,
     };
 
+    const validUnit = (() => {
+      const u = (data.unit || "").toLowerCase();
+      if (u.includes("ft") || u === "sq_ft") return "sq_ft";
+      if (u.includes("m") || u.includes("metre") || u === "sq_m") return "sq_m";
+      if (u.includes("slab")) return "slab";
+      if (u.includes("metric") || u === "metric_ton") return "metric_ton";
+      if (u.includes("ton")) return "ton";
+      return "sq_ft";
+    })();
+
     const { data: inserted, error: insertError } = await supabaseAdmin
       .from("enquiries")
       .insert({
@@ -267,7 +277,7 @@ export async function submitPublicRfq(
         enquiry_title: enquiryTitle,
         description: data.projectNotes,
         quantity: data.quantity,
-        unit: data.unit,
+        unit: validUnit,
         delivery_location: data.deliveryLocation,
         required_delivery_date: data.requiredDeliveryDate || null,
         client_request_id: finalClientRequestId,

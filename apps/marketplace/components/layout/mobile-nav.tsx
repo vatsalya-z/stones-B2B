@@ -23,6 +23,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@stone/ui";
+import { useRfqModal } from "@/features/rfq/rfq-modal-context";
 
 interface MobileNavProps {
   isLoggedIn: boolean;
@@ -64,6 +65,7 @@ export function MobileNav({
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { openRfqModal } = useRfqModal();
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -454,7 +456,15 @@ export function MobileNav({
                 <div key={item.href} className="first:pt-0 pt-1">
                   <Link
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      setOpen(false);
+                      if (item.href === "/request-quote") {
+                        if (!e.metaKey && !e.ctrlKey && !e.shiftKey) {
+                          e.preventDefault();
+                          openRfqModal();
+                        }
+                      }
+                    }}
                     className={cn(
                       "group flex min-h-[48px] items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200",
                       isActive
