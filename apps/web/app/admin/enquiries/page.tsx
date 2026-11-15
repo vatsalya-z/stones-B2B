@@ -96,34 +96,50 @@ export default async function AdminEnquiriesPage({ searchParams }: EnquiriesPage
                 enquiries.map((enq) => {
                   const isRfq = !enq.product_id;
                   const quotesCount = enq.quotes_count;
+                  const specs = (enq.specifications as Record<string, any>) || {};
+                  const productName = isRfq
+                    ? specs.product_name || specs.material_type || specs.stone_variety || "Custom Stone RFQ"
+                    : enq.product?.name || "Product Enquiry";
+                  const buyerName = enq.buyer?.full_name || enq.guest_name || specs.buyer_name || "Stone Buyer";
+                  const buyerLocation =
+                    enq.delivery_location ||
+                    specs.delivery_location ||
+                    [enq.buyer?.city, enq.buyer?.state].filter(Boolean).join(", ") ||
+                    "India";
+                  const buyerPhone =
+                    enq.guest_phone ||
+                    specs.buyer_phone ||
+                    specs.contact_phone ||
+                    null;
 
                   return (
                     <tr key={enq.id} className="hover:bg-stone-800/40 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-white">
-                            {isRfq ? "Custom Architectural RFQ" : enq.product?.name || "Product Enquiry"}
+                          <span className="font-semibold text-white">
+                            {productName}
                           </span>
                           <span
                             className={`rounded px-1.5 py-0.2 text-[9px] font-bold uppercase font-mono ${
                               isRfq
-                                ? "bg-purple-500/10 text-purple-400 border border-purple-500/30"
+                                ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
                                 : "bg-stone-800 text-stone-400"
                             }`}
                           >
                             {isRfq ? "RFQ" : "Product"}
                           </span>
                         </div>
-                        <p className="mt-0.5 line-clamp-1 max-w-xs text-[11px] text-stone-500">
-                          {enq.description}
+                        <p className="mt-0.5 line-clamp-1 max-w-xs text-[11px] text-stone-400 font-mono">
+                          {specs.product_name ? `Requirement: ${specs.product_name}` : enq.description}
                         </p>
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-medium text-stone-200">
-                          {enq.buyer?.full_name || "Buyer"}
+                          {buyerName}
                         </div>
                         <div className="text-[11px] text-stone-500">
-                          {[enq.buyer?.city, enq.buyer?.state].filter(Boolean).join(", ") || "Direct Buyer"}
+                          {buyerLocation}
+                          {buyerPhone && <span className="ml-1 text-amber-400/90 font-mono">({buyerPhone})</span>}
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-stone-300">

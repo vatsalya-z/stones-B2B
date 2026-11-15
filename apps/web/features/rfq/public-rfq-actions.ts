@@ -39,45 +39,56 @@ function checkRateLimit(key: string): boolean {
 const rfqSchema = z.object({
   supplierSlug: z.string().trim().optional().nullable(),
   supplierId: z.string().trim().optional().nullable(),
-  materialType: z.string().trim().min(2, "Please select or enter the stone material").max(100),
+  materialType: z.string().trim().min(2, "Please enter the stone or product name you are looking for").max(100),
   stoneVariety: z.string().trim().max(120).optional().nullable(),
   quantity: z
     .number({ invalid_type_error: "Quantity must be a valid number" })
-    .positive("Quantity must be greater than zero"),
+    .positive("Quantity must be greater than zero")
+    .optional()
+    .default(1),
   unit: z.string().default("sq_ft"),
-  thickness: z.string().default("18mm"),
-  finish: z.string().default("Polished"),
+  thickness: z.string().default("Standard"),
+  finish: z.string().default("Standard"),
   dimensions: z.string().trim().max(150).optional().nullable(),
-  deliveryLocation: z.string().trim().min(2, "Please provide the project delivery city or sea port").max(200),
+  deliveryLocation: z.string().trim().min(2, "Please provide your project delivery location (City / State)").max(200),
   requiredDeliveryDate: z
     .string()
     .trim()
     .optional()
-    .nullable()
-    .refine(
-      (val) => !val || isValidCalendarDate(val),
-      "Please provide delivery date in valid YYYY-MM-DD calendar format",
-    ),
+    .nullable(),
   projectNotes: z
     .string()
     .trim()
-    .min(10, "Please provide at least 10 characters describing your project requirements")
-    .max(3000, "Notes cannot exceed 3000 characters"),
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+    .max(3000)
+    .optional()
+    .nullable(),
+  name: z
+    .string()
+    .trim()
+    .max(100)
+    .optional()
+    .nullable()
+    .transform((val) => (val && val.trim().length > 0 ? val.trim() : "Stone Buyer")),
   companyName: z.string().trim().max(120).optional().nullable(),
-  email: z.string().trim().email("Please enter a valid business email").max(120),
+  email: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .nullable()
+    .transform((val) => (val && val.trim().length > 0 ? val.trim().toLowerCase() : null)),
   phone: z
     .string()
     .trim()
-    .min(7, "Please enter a valid phone number with country code")
+    .min(7, "Please enter a valid mobile number with country code")
     .max(25)
-    .regex(PHONE_REGEX, "Please enter a valid phone format, e.g. +91 98765 43210")
+    .regex(PHONE_REGEX, "Please enter a valid mobile number format, e.g. +91 98765 43210")
     .refine(
       (v) => {
         const digits = v.replace(/\D/g, "");
         return digits.length >= 7 && digits.length <= 15;
       },
-      "Phone number must contain between 7 and 15 digits",
+      "Mobile number must contain between 7 and 15 digits",
     ),
   clientRequestId: z.string().trim().optional().nullable(),
   honeypot: z.string().max(0, "Spam detected").optional().nullable(),
@@ -142,24 +153,34 @@ export async function submitPublicRfq(
 ): Promise<RfqActionResult> {
   try {
     const rawQuantity = formData.get("quantity");
-    const numQuantity = rawQuantity !== null && rawQuantity !== "" ? Number(rawQuantity) : NaN;
+    const numQuantity = rawQuantity !== null && rawQuantity !== "" ? Number(rawQuantity) : 1;
+
+    const rawMaterial =
+      (formData.get("product_name") as string | null)?.trim() ||
+      (formData.get("material_type") as string | null)?.trim() ||
+      "";
+
+    const rawLocation =
+      ((formData.get("delivery_location") || formData.get("deliveryLocation")) as string | null)?.trim() ?? "";
 
     const raw = {
       supplierSlug: (formData.get("supplier_slug") as string | null)?.trim() || null,
       supplierId: (formData.get("supplier_id") as string | null)?.trim() || null,
-      materialType: (formData.get("material_type") as string | null)?.trim() ?? "",
+      materialType: rawMaterial,
       stoneVariety: (formData.get("stone_variety") as string | null)?.trim() || null,
-      quantity: numQuantity,
+      quantity: isNaN(numQuantity) || numQuantity <= 0 ? 1 : numQuantity,
       unit: ((formData.get("unit") as string | null)?.trim() || "sq_ft"),
-      thickness: ((formData.get("thickness") as string | null)?.trim() || "18mm"),
-      finish: ((formData.get("finish") as string | null)?.trim() || "Polished"),
+      thickness: ((formData.get("thickness") as string | null)?.trim() || "Standard"),
+      finish: ((formData.get("finish") as string | null)?.trim() || "Standard"),
       dimensions: (formData.get("dimensions") as string | null)?.trim() || null,
-      deliveryLocation: ((formData.get("delivery_location") || formData.get("deliveryLocation")) as string | null)?.trim() ?? "",
+      deliveryLocation: rawLocation,
       requiredDeliveryDate: ((formData.get("required_delivery_date") || formData.get("requiredDeliveryDate")) as string | null)?.trim() || null,
-      projectNotes: ((formData.get("project_notes") || formData.get("projectNotes")) as string | null)?.trim() ?? "",
-      name: (formData.get("name") as string | null)?.trim() ?? "",
+      projectNotes:
+        ((formData.get("project_notes") || formData.get("projectNotes")) as string | null)?.trim() ||
+        `Direct custom stone quotation requested for ${rawMaterial}. Delivery destination: ${rawLocation || "India"}.`,
+      name: (formData.get("name") as string | null)?.trim() || "",
       companyName: (formData.get("company_name") as string | null)?.trim() || null,
-      email: (formData.get("email") as string | null)?.trim().toLowerCase() ?? "",
+      email: (formData.get("email") as string | null)?.trim().toLowerCase() || "",
       phone: (formData.get("phone") as string | null)?.trim() ?? "",
       clientRequestId: (formData.get("client_request_id") as string | null)?.trim() || null,
       honeypot: (formData.get("hp_project_url") as string | null)?.trim() || null,
@@ -192,7 +213,7 @@ export async function submitPublicRfq(
     } catch {
       // outside request context
     }
-    const rateLimitKey = `rfq:${clientIp}:${data.email}`;
+    const rateLimitKey = `rfq:${clientIp}:${data.email || data.phone || "guest"}`;
     if (!checkRateLimit(rateLimitKey)) {
       return {
         success: false,
@@ -217,14 +238,14 @@ export async function submitPublicRfq(
     let finalClientRequestId = clientRequestId;
     const { data: existing } = await supabaseAdmin
       .from("enquiries")
-      .select("id, buyer_id, guest_email")
+      .select("id, buyer_id, guest_email, guest_phone")
       .eq("client_request_id", clientRequestId)
       .maybeSingle();
 
     if (existing) {
       const isOwner = isBuyer
         ? existing.buyer_id === user?.id
-        : existing.guest_email === data.email;
+        : (data.email && existing.guest_email === data.email) || (data.phone && existing.guest_phone === data.phone);
 
       if (isOwner) {
         return {
@@ -244,20 +265,42 @@ export async function submitPublicRfq(
       data.supplierSlug,
     );
 
-    const enquiryTitle = `Architectural RFQ: ${data.materialType}${data.stoneVariety ? ` (${data.stoneVariety})` : ""}`.slice(0, 200);
+    const enquiryTitle = `RFQ: ${data.materialType}${data.stoneVariety ? ` (${data.stoneVariety})` : ""}`.slice(0, 200);
+
+    const finalBuyerName =
+      data.name && data.name !== "Stone Buyer"
+        ? data.name
+        : (user?.user_metadata?.full_name as string | undefined) || "Stone Buyer";
+
+    const finalBuyerEmail = data.email || user?.email || null;
 
     // 6. Permanent Database Persistence with Structured Specifications
     const specificationsPayload = {
+      product_name: data.materialType,
       material_type: data.materialType,
       stone_variety: data.stoneVariety,
       thickness: data.thickness,
       finish: data.finish,
       dimensions: data.dimensions,
       delivery_location: data.deliveryLocation,
+      buyer_name: finalBuyerName,
+      buyer_phone: data.phone,
+      contact_phone: data.phone,
+      buyer_email: finalBuyerEmail,
       required_delivery_date: data.requiredDeliveryDate,
       project_notes: data.projectNotes,
       target_supplier_slug: data.supplierSlug,
     };
+
+    const validUnit = (() => {
+      const u = (data.unit || "").toLowerCase();
+      if (u.includes("ft") || u === "sq_ft") return "sq_ft";
+      if (u.includes("m") || u.includes("metre") || u === "sq_m") return "sq_m";
+      if (u.includes("slab")) return "slab";
+      if (u.includes("metric") || u === "metric_ton") return "metric_ton";
+      if (u.includes("ton")) return "ton";
+      return "sq_ft";
+    })();
 
     const { data: inserted, error: insertError } = await supabaseAdmin
       .from("enquiries")
@@ -265,17 +308,17 @@ export async function submitPublicRfq(
         buyer_id: isBuyer && user ? user.id : null,
         seller_id: resolvedSellerId,
         enquiry_title: enquiryTitle,
-        description: data.projectNotes,
-        quantity: data.quantity,
-        unit: data.unit,
+        description: data.projectNotes || `Quotation requested for ${data.materialType}`,
+        quantity: data.quantity || 1,
+        unit: validUnit,
         delivery_location: data.deliveryLocation,
         required_delivery_date: data.requiredDeliveryDate || null,
         client_request_id: finalClientRequestId,
         currency: "INR",
-        guest_name: isBuyer ? null : data.name,
-        guest_email: isBuyer ? null : data.email,
+        guest_name: finalBuyerName,
+        guest_email: finalBuyerEmail,
         guest_phone: data.phone,
-        guest_company: isBuyer ? null : data.companyName,
+        guest_company: data.companyName,
         enquiry_type: "rfq",
         specifications: specificationsPayload,
       })
@@ -313,15 +356,20 @@ export async function submitPublicRfq(
       };
     }
 
-    // Sync phone number into buyer profile if authenticated
-    if (isBuyer && user?.id && data.phone) {
+    // Sync contact info into buyer profile if authenticated
+    if (isBuyer && user?.id) {
       try {
-        await supabaseAdmin
-          .from("profiles")
-          .update({ phone: data.phone })
-          .eq("id", user.id);
+        const updatePayload: { phone?: string; full_name?: string } = {};
+        if (data.phone) updatePayload.phone = data.phone;
+        if (data.name && data.name !== "Stone Buyer") updatePayload.full_name = data.name;
+        if (Object.keys(updatePayload).length > 0) {
+          await supabaseAdmin
+            .from("profiles")
+            .update(updatePayload)
+            .eq("id", user.id);
+        }
       } catch (profErr) {
-        console.warn("[submitPublicRfq] Non-fatal profile phone update error:", profErr);
+        console.warn("[submitPublicRfq] Non-fatal profile update error:", profErr);
       }
     }
 

@@ -1,5 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  Search,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Sparkles,
+  ArrowRight,
+  FileText,
+  Paperclip,
+} from "lucide-react";
 import { getAdminContext } from "@/features/admin/guard";
 import { getAdminEnquiryDetail } from "@/features/admin/queries";
 import { EnquiryStatusBadge, QuotationStatusBadge } from "@/components/admin/status-badges";
@@ -35,25 +46,58 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
   const specs = (enquiry.specifications as Record<string, any>) || {};
   const unitLabel = (typeof enquiry.unit === "string" && UNIT_LABELS[enquiry.unit]) || enquiry.unit?.replace(/_/g, " ") || "units";
 
+  const productName =
+    specs.product_name ||
+    specs.material_type ||
+    specs.stone_variety ||
+    enquiry.enquiry_title ||
+    product?.name ||
+    "Natural Stone";
+
+  const buyerName =
+    buyer?.full_name ||
+    enquiry.guest_name ||
+    specs.buyer_name ||
+    "Stone Buyer";
+
+  const buyerPhone =
+    buyer?.phone ||
+    enquiry.guest_phone ||
+    specs.buyer_phone ||
+    specs.contact_phone ||
+    "—";
+
+  const buyerEmail =
+    buyer?.email ||
+    enquiry.guest_email ||
+    specs.buyer_email ||
+    "—";
+
+  const deliveryLocation =
+    enquiry.delivery_location ||
+    specs.delivery_location ||
+    [buyer?.city, buyer?.state].filter(Boolean).join(", ") ||
+    "—";
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <Link
           href="/admin/enquiries"
           className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-white transition-colors"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to Enquiries
         </Link>
 
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-2.5">
+        <div className="mt-2.5 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider font-mono ${
+                className={`rounded-full px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider font-mono ${
                   isRfq
                     ? "bg-amber-500/15 text-amber-400 border border-amber-500/30"
                     : "bg-stone-800 text-stone-400 border border-stone-700"
@@ -64,195 +108,177 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
               <EnquiryStatusBadge status={enquiry.status} />
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
               {isRfq ? "Request Custom Stone Quotation" : `Direct Enquiry: ${product?.name || "Product"}`}
             </h1>
 
-            <p className="text-xs sm:text-sm text-stone-400">
+            <p className="text-xs text-stone-400">
               {isRfq
                 ? "Share your stone requirements and get competitive quotes from verified suppliers."
                 : "Direct manufacturer stone requirement submitted from product catalogue."}
             </p>
 
-            <p className="text-[11px] text-stone-500 font-mono pt-0.5">
+            <p className="text-[10.5px] text-stone-500 font-mono pt-0.5">
               Enquiry ID: {enquiry.id} • Created {new Date(enquiry.created_at).toLocaleString("en-IN")}
             </p>
           </div>
 
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-300 font-medium">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-xs text-amber-300 font-medium">
             Read-Only Audit Mode
           </div>
         </div>
       </div>
 
-      {/* Buyer Information Card */}
-      <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-5">
-        <div className="flex items-center justify-between pb-3 border-b border-stone-800">
-          <h2 className="text-sm font-semibold text-white">Buyer Information</h2>
-          {buyer && buyer.id !== "guest" && (
-            <Link
-              href={`/admin/buyers/${buyer.id}`}
-              className="text-xs text-amber-500 hover:text-amber-400"
-            >
-              Inspect Buyer Profile →
-            </Link>
-          )}
-        </div>
-        <dl className="mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+      {/* RFQ Core Specifications Card */}
+      <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-stone-800 gap-2">
           <div>
-            <dt className="text-stone-500">Buyer Name</dt>
-            <dd className="mt-0.5 font-medium text-stone-200">{buyer?.full_name || "—"}</dd>
-          </div>
-          <div>
-            <dt className="text-stone-500">Location</dt>
-            <dd className="mt-0.5 font-medium text-stone-200">
-              {[buyer?.city, buyer?.state].filter(Boolean).join(", ") || enquiry.delivery_location || "India"}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-stone-500">Email Address</dt>
-            <dd className="mt-0.5 font-mono text-stone-200">{buyer?.email || enquiry.guest_email || "—"}</dd>
-          </div>
-          <div>
-            <dt className="text-stone-500">Contact Phone</dt>
-            <dd className="mt-0.5 font-mono text-stone-200">
-              {buyer?.phone ||
-                enquiry.guest_phone ||
-                (enquiry.specifications as Record<string, any>)?.buyer_phone ||
-                (enquiry.specifications as Record<string, any>)?.contact_phone ||
-                "—"}
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      {/* Stone & Quantity Specifications Card */}
-      <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-5 sm:p-6">
-        <div className="flex items-center justify-between pb-3.5 border-b border-stone-800">
-          <div>
-            <h2 className="text-sm sm:text-base font-semibold text-white">
-              Stone &amp; Quantity Specifications
+            <h2 className="text-sm sm:text-base font-semibold text-white flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              <span>
+                {isRfq
+                  ? "Custom Stone Quotation Requirements"
+                  : "Product Direct Enquiry Requirements"}
+              </span>
             </h2>
-            <p className="text-xs text-stone-400 mt-0.5">
-              Provide exact architectural BOQ requirements
+            <p className="text-[11px] text-stone-400 mt-0.5">
+              {isRfq
+                ? "Core specifications submitted by buyer via Request Custom Stone Quotation"
+                : "Direct quotation request for catalog item"}
             </p>
           </div>
-          {isRfq && (
-            <span className="rounded bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-[11px] font-medium text-amber-400">
-              Architectural BOQ
-            </span>
-          )}
-        </div>
 
-        <div className="mt-5 space-y-4 text-xs">
-          {/* Specifications Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Stone Material Category</span>
-              <p className="mt-1 text-sm font-semibold text-white">
-                {specs.material_type || (isRfq ? "Natural Stone" : product?.name || "—")}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Stone Variety / Colour / Code</span>
-              <p className="mt-1 text-sm font-semibold text-stone-200">
-                {specs.stone_variety || "Standard Variety / Open"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Required Quantity</span>
-              <p className="mt-1 text-sm font-bold font-mono text-white">
-                {Number(enquiry.quantity).toLocaleString("en-IN")} {unitLabel}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Slab Thickness</span>
-              <p className="mt-1 text-sm font-medium text-stone-200">
-                {specs.thickness || "Standard (18mm - 20mm)"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Surface Finish</span>
-              <p className="mt-1 text-sm font-medium text-stone-200">
-                {specs.finish || "Mirror Polished"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Dimensions / Cut-to-Size Formats</span>
-              <p className="mt-1 text-sm font-medium text-stone-200">
-                {specs.dimensions || "Gangsaw Jumbo Slabs / Standard Formats"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Delivery Location</span>
-              <p className="mt-1 text-sm font-medium text-stone-200">
-                {enquiry.delivery_location || specs.delivery_location || "To be discussed"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Buyer Mobile Number</span>
-              <p className="mt-1 text-sm font-mono font-semibold text-amber-400">
-                {buyer?.phone || enquiry.guest_phone || specs.buyer_phone || specs.contact_phone || "—"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-stone-800/80 bg-stone-950/60 p-3">
-              <span className="text-stone-500 text-[11px] block">Target Delivery Date</span>
-              <p className="mt-1 text-sm font-medium text-stone-200">
-                {enquiry.required_delivery_date
-                  ? new Date(enquiry.required_delivery_date).toLocaleDateString("en-IN")
-                  : specs.required_delivery_date
-                    ? new Date(specs.required_delivery_date).toLocaleDateString("en-IN")
-                    : "Flexible / As Per Project"}
-              </p>
-            </div>
-          </div>
-
-          {/* Project Notes & BOQ Description */}
-          <div>
-            <span className="text-stone-500 text-[11px] block mb-1">
-              Project Description, Veining Preferences &amp; BOQ Notes
-            </span>
-            <div className="whitespace-pre-wrap rounded-lg border border-stone-800 bg-stone-950 p-4 font-mono text-[11px] leading-relaxed text-stone-300">
-              {enquiry.description || specs.project_notes || "Commercial natural stone requirement with standard architectural BOQ specifications."}
-            </div>
-          </div>
-
-          {/* Attachments */}
-          {attachments.length > 0 && (
-            <div>
-              <span className="text-stone-500 text-[11px] block mb-2">
-                Buyer Uploaded Drawings / BOQ Files
+          <div className="flex items-center gap-2">
+            {buyer && buyer.id !== "guest" ? (
+              <Link
+                href={`/admin/buyers/${buyer.id}`}
+                className="inline-flex items-center gap-1 text-xs text-amber-500 hover:text-amber-400 font-medium"
+              >
+                <span>Inspect Buyer Profile</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded bg-stone-800 px-2 py-0.5 text-[10.5px] font-medium text-stone-300">
+                Guest Buyer Submission
               </span>
-              <div className="flex flex-wrap gap-2">
-                {attachments.map((att) => (
-                  <a
-                    key={att.id}
-                    href={att.signedUrl || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-stone-700 bg-stone-800 px-3 py-1.5 text-xs text-stone-200 hover:border-amber-500 hover:text-white"
-                  >
-                    <svg className="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                    </svg>
-                    <span>{att.file_name}</span>
-                    <span className="text-[10px] text-stone-500 font-mono">
-                      ({(att.file_size / 1024).toFixed(0)} KB)
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+
+        {/* Core Fields Display Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {/* Field 1: Product / Stone Name */}
+          <div className="sm:col-span-2 lg:col-span-2 rounded-xl border border-amber-500/30 bg-stone-950/80 p-3.5 relative overflow-hidden">
+            <div className="flex items-center gap-1.5 text-amber-400 text-[11px] font-semibold mb-1">
+              <Search className="h-3.5 w-3.5" />
+              <span>1. Product / Stone Name</span>
+            </div>
+            <p className="text-base sm:text-lg font-bold text-white tracking-tight">
+              {productName}
+            </p>
+            <p className="text-[10.5px] text-stone-400 mt-0.5">
+              Searched &amp; entered stone requirement
+            </p>
+          </div>
+
+          {/* Field 2: Delivery Location */}
+          <div className="rounded-xl border border-stone-800/80 bg-stone-950/80 p-3.5">
+            <div className="flex items-center gap-1.5 text-stone-400 text-[11px] font-semibold mb-1">
+              <MapPin className="h-3.5 w-3.5 text-amber-500" />
+              <span>2. Delivery Location</span>
+            </div>
+            <p className="text-sm sm:text-base font-semibold text-stone-100">
+              {deliveryLocation}
+            </p>
+            <p className="text-[10.5px] text-stone-500 mt-0.5">
+              Target delivery city or state
+            </p>
+          </div>
+
+          {/* Field 3: Mobile Number (Clickable tel:) */}
+          <div className="rounded-xl border border-stone-800/80 bg-stone-950/80 p-3.5">
+            <div className="flex items-center gap-1.5 text-stone-400 text-[11px] font-semibold mb-1">
+              <Phone className="h-3.5 w-3.5 text-amber-500" />
+              <span>3. Mobile Number</span>
+            </div>
+            {buyerPhone !== "—" ? (
+              <a
+                href={`tel:${buyerPhone.replace(/\s+/g, "")}`}
+                className="text-sm sm:text-base font-mono font-bold text-amber-400 hover:text-amber-300 hover:underline block"
+              >
+                {buyerPhone}
+              </a>
+            ) : (
+              <p className="text-sm font-mono text-stone-500">—</p>
+            )}
+            <p className="text-[10.5px] text-stone-500 mt-0.5">
+              Direct phone contact for quotations
+            </p>
+          </div>
+
+          {/* Requester Identity / Email */}
+          <div className="rounded-xl border border-stone-800/80 bg-stone-950/80 p-3.5">
+            <div className="flex items-center gap-1.5 text-stone-400 text-[11px] font-semibold mb-1">
+              <User className="h-3.5 w-3.5 text-amber-500" />
+              <span>Buyer Details</span>
+            </div>
+            <p className="text-sm font-semibold text-white">
+              {buyerName}
+            </p>
+            {buyerEmail !== "—" ? (
+              <a
+                href={`mailto:${buyerEmail}`}
+                className="text-xs font-mono text-stone-300 hover:text-white hover:underline truncate block mt-0.5"
+              >
+                {buyerEmail}
+              </a>
+            ) : (
+              <p className="text-[10.5px] text-stone-500 mt-0.5">
+                {buyer && buyer.id !== "guest" ? "Verified Buyer" : "Guest Buyer (Quick RFQ)"}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Project Notes (Only if custom remarks exist) */}
+        {(enquiry.description || specs.project_notes) && (
+          <div className="border-t border-stone-800/80 pt-4">
+            <span className="text-stone-400 text-xs font-semibold flex items-center gap-1.5 mb-2">
+              <FileText className="h-3.5 w-3.5 text-amber-500" />
+              <span>Requirement Notes &amp; Specifications</span>
+            </span>
+            <div className="whitespace-pre-wrap rounded-lg border border-stone-800 bg-stone-950 p-3.5 font-mono text-[11px] leading-relaxed text-stone-300">
+              {enquiry.description || specs.project_notes}
+            </div>
+          </div>
+        )}
+
+        {/* Attachments (If any uploaded) */}
+        {attachments.length > 0 && (
+          <div className="border-t border-stone-800/80 pt-4">
+            <span className="text-stone-400 text-xs font-semibold flex items-center gap-1.5 mb-2">
+              <Paperclip className="h-3.5 w-3.5 text-amber-500" />
+              <span>Buyer Uploaded Documents / BOQ</span>
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {attachments.map((att) => (
+                <a
+                  key={att.id}
+                  href={att.signedUrl || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-700 bg-stone-800 px-3 py-1.5 text-xs text-stone-200 hover:border-amber-500 hover:text-white transition-colors"
+                >
+                  <Paperclip className="h-3.5 w-3.5 text-amber-500" />
+                  <span>{att.file_name}</span>
+                  <span className="text-[10px] text-stone-500 font-mono">
+                    ({(att.file_size / 1024).toFixed(0)} KB)
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Generated Quotations */}

@@ -172,148 +172,148 @@ export function RFQModal() {
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/65 backdrop-blur-[2px] animate-in fade-in duration-200 overscroll-contain"
       onClick={handleBackdropClick}
     >
-      {/* Modal Container: Matches Image 2 Dimensions & Proportions Exactly */}
+      {/* Modal Container: Compact & smaller size for high visual comfort */}
       <div
         ref={modalContentRef}
-        className="relative w-[95vw] sm:w-[92vw] md:w-[92vw] lg:w-[74vw] max-w-[1240px] max-h-[735px] h-[94vh] sm:h-[90vh] md:h-[86vh] lg:h-[78vh] flex flex-col md:flex-row rounded-[20px] bg-[#FAF8F5] shadow-2xl overflow-hidden border border-[#EFE9DF] animate-in zoom-in-95 duration-200"
+        className="relative w-[94vw] sm:w-[88vw] md:w-[80vw] lg:w-[60vw] max-w-[760px] max-h-[88vh] flex flex-col md:flex-row rounded-[16px] bg-[#FAF8F5] shadow-2xl overflow-hidden border border-[#EFE9DF] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Floating Close Button (top-right circular button from Image 2) */}
+        {/* Floating Close Button */}
         <button
           ref={closeButtonRef}
           type="button"
           onClick={handleRequestClose}
-          className="absolute right-3.5 top-3.5 sm:right-6 sm:top-5 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-[#F1ECE6] hover:bg-[#E7E0D7] text-[#221E1B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D95F18]"
+          className="absolute right-3 top-3 sm:right-4 sm:top-3.5 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-[#F1ECE6] hover:bg-[#E7E0D7] text-[#221E1B] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D95F18]"
           aria-label="Close Request a Quote modal"
         >
-          <X className="h-4 w-4 stroke-[2.2]" />
+          <X className="h-3.5 w-3.5 stroke-[2.2]" />
         </button>
 
         {/* ========================================================================= */}
-        {/* LEFT PANEL (approx 25%): Exact 1:1 Match to Image 2 Reference             */}
+        {/* LEFT PANEL: Compact & Sleek                                               */}
         {/* ========================================================================= */}
-        <div className="relative w-full md:w-[28%] lg:w-[25.5%] md:min-w-[240px] lg:min-w-[255px] lg:max-w-[290px] hidden md:flex flex-col justify-between overflow-hidden bg-[#FAF7F2] border-r border-[#EFE8DD] text-stone-900 shrink-0 select-none">
-          {/* Authentic Top-Right Golden Marble Vein Texture (Pure vector SVG, no text artifacts) */}
+        <div className="relative w-full md:w-[35%] lg:w-[33%] md:min-w-[195px] lg:max-w-[230px] hidden md:flex flex-col justify-between overflow-hidden bg-[#FAF7F2] border-r border-[#EFE8DD] text-stone-900 shrink-0 select-none">
+          {/* Authentic Top-Right Golden Marble Vein Texture */}
           <GoldenVeinTopRight />
 
           {/* Upper Section: Logo & Full-Bleed Showroom Photograph */}
           <div className="relative z-10 flex-1 flex flex-col justify-between">
-            {/* Logo - clean background with zero ghost text */}
-            <div className="flex items-center gap-2 pt-3.5 sm:pt-4 px-4 sm:px-5">
+            {/* Logo */}
+            <div className="flex items-center gap-1.5 pt-2.5 px-3 sm:px-3.5">
               <StoneLogoIcon />
-              <span className="font-extrabold text-lg sm:text-[19px] tracking-tight text-[#1C1815]">
+              <span className="font-extrabold text-[15px] sm:text-[16px] tracking-tight text-[#1C1815]">
                 Stones<span className="text-[#D95F18]">Dekho</span>
               </span>
             </div>
 
-            {/* Showroom Photograph: Exactly matches Image 2 (Full-width, natural floor blend) */}
-            <div className="relative w-full aspect-[760/641] mt-1.5 overflow-hidden bg-[#FAF7F2] shrink-0">
+            {/* Showroom Photograph */}
+            <div className="relative w-full aspect-[16/10] mt-1 overflow-hidden bg-[#FAF7F2] shrink-0">
               <Image
                 src="/images/rfq/stonesdekho-rfq-showroom.webp"
                 alt="Luxury Natural Stone Showroom"
                 fill
                 priority
-                sizes="(max-width: 1024px) 270px, 300px"
+                sizes="(max-width: 1024px) 210px, 230px"
                 className="object-cover object-top"
               />
             </div>
 
             {/* Heading in Elegant Display Serif Typography (Playfair Display) */}
-            <div className="px-4 sm:px-5 pt-1.5 pb-0.5">
-              <h2 className="font-serif text-[17px] sm:text-[18px] lg:text-[19px] font-bold text-[#141211] leading-[1.2] tracking-tight">
+            <div className="px-3 sm:px-3.5 pt-1 pb-0.5">
+              <h2 className="font-serif text-[13.5px] sm:text-[14px] font-bold text-[#141211] leading-[1.2] tracking-tight">
                 Get the Best Stone<br className="hidden sm:inline" /> Price for Your Project
               </h2>
             </div>
 
-            {/* Three Benefit Rows from Image 2 */}
-            <div className="px-4 sm:px-5 pt-1.5 pb-1 space-y-2.5 sm:space-y-3 relative z-10">
+            {/* Three Benefit Rows */}
+            <div className="px-3 sm:px-3.5 pt-0.5 pb-1 space-y-1.5 relative z-10">
               {/* 1. Verified Suppliers */}
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
-                  <ShieldCheck className="h-4.5 w-4.5 stroke-[2.2]" />
+              <div className="flex items-start gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
+                  <ShieldCheck className="h-3.5 w-3.5 stroke-[2.2]" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-[12.5px] font-bold text-[#1C1815] leading-tight">Verified Suppliers</p>
-                  <p className="text-[10.5px] sm:text-[11px] text-[#59514A] leading-snug mt-0.5">
-                    Connect with trusted and quality stone suppliers.
+                  <p className="text-[11px] font-bold text-[#1C1815] leading-tight">Verified Suppliers</p>
+                  <p className="text-[9.5px] text-[#59514A] leading-tight mt-0.5">
+                    Connect with trusted quality suppliers.
                   </p>
                 </div>
               </div>
 
               {/* 2. Competitive Pricing */}
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
-                  <Layers className="h-4.5 w-4.5 stroke-[2.2]" />
+              <div className="flex items-start gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
+                  <Layers className="h-3.5 w-3.5 stroke-[2.2]" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-[12.5px] font-bold text-[#1C1815] leading-tight">Competitive Pricing</p>
-                  <p className="text-[10.5px] sm:text-[11px] text-[#59514A] leading-snug mt-0.5">
-                    Get project-based and bulk quantity quotes.
+                  <p className="text-[11px] font-bold text-[#1C1815] leading-tight">Competitive Pricing</p>
+                  <p className="text-[9.5px] text-[#59514A] leading-tight mt-0.5">
+                    Project-based bulk quantity rates.
                   </p>
                 </div>
               </div>
 
               {/* 3. Pan India & Export */}
-              <div className="flex items-start gap-2.5 sm:gap-3">
-                <div className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-xl bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
-                  <Truck className="h-4.5 w-4.5 stroke-[2.2]" />
+              <div className="flex items-start gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#FFEFE3] text-[#D95F18] shrink-0 mt-0.5">
+                  <Truck className="h-3.5 w-3.5 stroke-[2.2]" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-[12.5px] font-bold text-[#1C1815] leading-tight">Pan India & Export</p>
-                  <p className="text-[10.5px] sm:text-[11px] text-[#59514A] leading-snug mt-0.5">
-                    Domestic and international delivery support.
+                  <p className="text-[11px] font-bold text-[#1C1815] leading-tight">Pan India & Export</p>
+                  <p className="text-[9.5px] text-[#59514A] leading-tight mt-0.5">
+                    Domestic and global delivery support.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Authentic Bottom Sweeping Golden Ribbon Veins (Pure vector SVG, no text artifacts) */}
-          <div className="relative w-full h-14 pointer-events-none overflow-hidden z-0 mt-auto">
+          {/* Authentic Bottom Sweeping Golden Ribbon Veins */}
+          <div className="relative w-full h-8 pointer-events-none overflow-hidden z-0 mt-auto">
             <GoldenRibbonBottom />
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT PANEL (approx 75%): Header, Specifications Card & Bottom Submit Area */}
+        {/* RIGHT PANEL: Compact Header & Form Area                                  */}
         {/* ========================================================================= */}
-        <div className="w-full md:w-[72%] lg:w-[74.5%] flex-1 flex flex-col justify-between overflow-y-auto overscroll-contain p-4 sm:p-5 lg:p-6 xl:p-7 bg-[#FAF8F5]">
+        <div className="w-full md:w-[65%] lg:w-[67%] flex-1 flex flex-col justify-between overflow-y-auto overscroll-contain p-3.5 sm:p-4 md:p-4.5 bg-[#FAF8F5]">
           {/* Mobile Top Branding (< md only) */}
-          <div className="md:hidden mb-2 pb-2 border-b border-stone-100 flex items-center justify-between pr-8">
+          <div className="md:hidden mb-1.5 pb-1.5 border-b border-stone-100 flex items-center justify-between pr-7">
             <div className="flex items-center gap-1.5">
               <StoneLogoIcon />
-              <span className="font-extrabold text-lg text-stone-900 tracking-tight">
+              <span className="font-extrabold text-[15px] text-stone-900 tracking-tight">
                 Stones<span className="text-[#D95F18]">Dekho</span>
               </span>
             </div>
-            <span className="text-[10px] font-bold text-[#A14309] bg-[#FFE6D3] px-2.5 py-0.5 rounded-full">
+            <span className="text-[9px] font-bold text-[#A14309] bg-[#FFE6D3] px-2 py-0.5 rounded-full">
               RFQ MODAL
             </span>
           </div>
 
-          {/* Top Header from Image 2 (Exact styling & colors matching ref_crop_header.png) */}
-          <div className="pr-8">
+          {/* Top Header */}
+          <div className="pr-6">
             {/* Small Orange Capsule Pill Badge */}
-            <div className="inline-flex items-center rounded-full bg-[#FFE6D3] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#993D06] mb-2 shadow-2xs">
+            <div className="inline-flex items-center rounded-full bg-[#FFE6D3] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#993D06] mb-1 shadow-2xs">
               REQUEST A QUOTATION (RFQ)
             </div>
 
-            {/* Elegant Display Serif Heading (Playfair Display) */}
+            {/* Elegant Display Serif Heading */}
             <h1
               id="rfq-modal-title"
-              className="font-serif text-2xl sm:text-[27px] lg:text-[29px] font-bold text-[#141211] tracking-tight leading-[1.18]"
+              className="font-serif text-lg sm:text-[19px] lg:text-[20px] font-bold text-[#141211] tracking-tight leading-[1.2]"
             >
               Request Custom Stone Quotation
             </h1>
 
-            {/* Subtitle from Image 2 */}
-            <p id="rfq-modal-description" className="text-xs sm:text-[13px] text-[#4A433D] mt-1.5 leading-relaxed">
+            {/* Subtitle */}
+            <p id="rfq-modal-description" className="text-[11px] text-[#554E48] mt-0.5 leading-normal">
               Share your stone requirements and get competitive quotes from verified suppliers.
             </p>
           </div>
 
-          {/* Form Content: SharedRfqForm with Exact Card & Field Grid from Image 2 */}
-          <div className="flex-1 my-2">
+          {/* Form Content: SharedRfqForm */}
+          <div className="flex-1 my-1.5">
             <SharedRfqForm
               isModal={true}
               initialData={prefilledData}
