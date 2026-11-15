@@ -115,7 +115,7 @@ export function RFQModal() {
     };
   }, [isOpen, handleRequestClose]);
 
-  // Focus management & Background scroll lock
+  // Focus management & Background scroll lock (locks both html and body to prevent background scrolling)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -123,10 +123,12 @@ export function RFQModal() {
       previousActiveElementRef.current = document.activeElement as HTMLElement;
     }
 
-    const originalOverflow = document.body.style.overflow;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
@@ -140,7 +142,8 @@ export function RFQModal() {
 
     return () => {
       clearTimeout(timer);
-      document.body.style.overflow = originalOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.overflow = originalBodyOverflow;
       document.body.style.paddingRight = originalPaddingRight;
       if (previousActiveElementRef.current && typeof previousActiveElementRef.current.focus === "function") {
         previousActiveElementRef.current.focus();
@@ -166,7 +169,7 @@ export function RFQModal() {
       aria-modal="true"
       aria-labelledby="rfq-modal-title"
       aria-describedby="rfq-modal-description"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/65 backdrop-blur-[2px] animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/65 backdrop-blur-[2px] animate-in fade-in duration-200 overscroll-contain"
       onClick={handleBackdropClick}
     >
       {/* Modal Container: Matches Image 2 Dimensions & Proportions Exactly */}
@@ -274,7 +277,7 @@ export function RFQModal() {
         {/* ========================================================================= */}
         {/* RIGHT PANEL (approx 75%): Header, Specifications Card & Bottom Submit Area */}
         {/* ========================================================================= */}
-        <div className="w-full md:w-[72%] lg:w-[74.5%] flex-1 flex flex-col justify-between overflow-y-auto p-4 sm:p-5 lg:p-6 xl:p-7 bg-[#FAF8F5]">
+        <div className="w-full md:w-[72%] lg:w-[74.5%] flex-1 flex flex-col justify-between overflow-y-auto overscroll-contain p-4 sm:p-5 lg:p-6 xl:p-7 bg-[#FAF8F5]">
           {/* Mobile Top Branding (< md only) */}
           <div className="md:hidden mb-2 pb-2 border-b border-stone-100 flex items-center justify-between pr-8">
             <div className="flex items-center gap-1.5">
