@@ -264,15 +264,15 @@ export function SharedRfqForm({
       )}
 
       {/* Streamlined Quotation Request Card (Compact 3 Core Fields) */}
-      <div className="rounded-xl border border-[#EDE6DC] bg-white p-3 sm:p-3.5 shadow-2xs space-y-2">
+      <div className="rounded-xl border border-[#EDE6DC] bg-white p-3.5 sm:p-4 shadow-2xs space-y-3">
         {/* Field 1: Product / Stone Name (Search / Input with Suggestions) */}
         <div>
-          <label className="block text-[10px] font-semibold text-stone-800 mb-0.5">
+          <label className="block text-xs font-semibold text-stone-800 mb-1">
             Product / Stone Name <span className="text-[#E04F16]">*</span>
           </label>
           <div className="relative">
-            <div className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#D95F18]">
-              <Search className="h-3 w-3" />
+            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#D95F18]">
+              <Search className="h-4 w-4" />
             </div>
             <input
               type="text"
@@ -290,12 +290,12 @@ export function SharedRfqForm({
               placeholder="Search or enter stone name (e.g. Makrana White Marble, Black Galaxy)..."
               required
               autoComplete="off"
-              className="w-full h-8 rounded-lg border border-[#DCD5CB] bg-white pl-7.5 pr-2.5 text-[11.5px] text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors font-medium"
+              className="w-full h-9 rounded-lg border border-[#DCD5CB] bg-white pl-10 pr-3 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors font-medium"
             />
 
             {/* Dropdown Suggestions */}
             {showSuggestions && filteredSuggestions.length > 0 && (
-              <div className="absolute z-20 left-0 right-0 top-full mt-1 max-h-40 overflow-y-auto rounded-lg border border-stone-200 bg-white py-1 shadow-lg text-xs">
+              <div className="absolute z-20 left-0 right-0 top-full mt-1 max-h-44 overflow-y-auto rounded-lg border border-stone-200 bg-white py-1 shadow-lg text-xs">
                 {filteredSuggestions.map((stone) => (
                   <button
                     key={stone}
@@ -316,14 +316,14 @@ export function SharedRfqForm({
           </div>
 
           {/* Quick Click Chips */}
-          <div className="mt-1 flex flex-wrap items-center gap-1">
-            <span className="text-[9px] text-stone-500 font-medium">Popular:</span>
+          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] text-stone-500 font-medium">Popular:</span>
             {POPULAR_STONES.slice(0, 5).map((stone) => (
               <button
                 key={stone}
                 type="button"
                 onClick={() => setProductQuery(stone)}
-                className="inline-flex items-center rounded bg-[#FAF5EE] hover:bg-[#F3EADF] border border-[#E9DFD2] px-1.5 py-0.5 text-[9px] text-stone-700 hover:text-[#C85D26] transition-colors"
+                className="inline-flex items-center rounded-md bg-[#FAF5EE] hover:bg-[#F3EADF] border border-[#E9DFD2] px-2 py-0.5 text-[10px] text-stone-700 hover:text-[#C85D26] transition-colors"
               >
                 {stone}
               </button>
@@ -332,15 +332,15 @@ export function SharedRfqForm({
         </div>
 
         {/* Row 2: Mobile Number & Delivery Location */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
           {/* Mobile Number */}
           <div>
-            <label className="block text-[10px] font-semibold text-stone-800 mb-0.5">
+            <label className="block text-xs font-semibold text-stone-800 mb-1">
               Mobile Number <span className="text-[#E04F16]">*</span>
             </label>
             <div className="relative">
-              <div className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400">
-                <Phone className="h-3 w-3" />
+              <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">
+                <Phone className="h-4 w-4" />
               </div>
               <input
                 type="tel"
@@ -348,22 +348,22 @@ export function SharedRfqForm({
                 defaultValue={effectiveUserPhone}
                 placeholder="e.g. +91 98765 43210"
                 required
-                className="w-full h-8 rounded-lg border border-[#DCD5CB] bg-white pl-7.5 pr-2.5 text-[11.5px] text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                className="w-full h-9 rounded-lg border border-[#DCD5CB] bg-white pl-10 pr-3 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
               />
             </div>
             {state.fieldErrors?.phone && (
-              <p className="mt-0.5 text-[9.5px] text-red-600">{state.fieldErrors.phone}</p>
+              <p className="mt-1 text-[10px] text-red-600">{state.fieldErrors.phone}</p>
             )}
           </div>
 
           {/* Delivery Location */}
           <div>
-            <label className="block text-[10px] font-semibold text-stone-800 mb-0.5">
+            <label className="block text-xs font-semibold text-stone-800 mb-1">
               Delivery Location <span className="text-[#E04F16]">*</span>
             </label>
             <div className="relative">
-              <div className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400">
-                <MapPin className="h-3 w-3" />
+              <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">
+                <MapPin className="h-4 w-4" />
               </div>
               <input
                 type="text"
@@ -371,11 +371,11 @@ export function SharedRfqForm({
                 defaultValue={prefilledLocation}
                 placeholder="e.g. Delhi NCR, Jaipur, Mumbai"
                 required
-                className="w-full h-8 rounded-lg border border-[#DCD5CB] bg-white pl-7.5 pr-2.5 text-[11.5px] text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                className="w-full h-9 rounded-lg border border-[#DCD5CB] bg-white pl-10 pr-3 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
               />
             </div>
             {state.fieldErrors?.deliveryLocation && (
-              <p className="mt-0.5 text-[9.5px] text-red-600">{state.fieldErrors.deliveryLocation}</p>
+              <p className="mt-1 text-[10px] text-red-600">{state.fieldErrors.deliveryLocation}</p>
             )}
           </div>
         </div>
@@ -386,8 +386,8 @@ export function SharedRfqForm({
 
         {/* Authenticated Buyer Badge */}
         {authData.authenticated && authData.user && (
-          <div className="flex items-center gap-1.5 text-[10.5px] text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-2 py-0.5">
-            <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
+          <div className="flex items-center gap-2 text-xs text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-2.5 py-1.5">
+            <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
             <span>
               Verified Account: <strong className="text-emerald-950">{effectiveUserName}</strong>
             </span>
