@@ -63,21 +63,29 @@ const rfqSchema = z.object({
     .trim()
     .min(10, "Please provide at least 10 characters describing your project requirements")
     .max(3000, "Notes cannot exceed 3000 characters"),
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  name: z.string().trim().max(100).optional().default("Stone Buyer"),
   companyName: z.string().trim().max(120).optional().nullable(),
-  email: z.string().trim().email("Please enter a valid business email").max(120),
+  email: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .nullable()
+    .refine((val) => !val || z.string().email().safeParse(val).success, {
+      message: "Please enter a valid email address",
+    }),
   phone: z
     .string()
     .trim()
-    .min(7, "Please enter a valid phone number with country code")
+    .min(7, "Please enter a valid mobile number with country code")
     .max(25)
-    .regex(PHONE_REGEX, "Please enter a valid phone format, e.g. +91 98765 43210")
+    .regex(PHONE_REGEX, "Please enter a valid mobile number format, e.g. +91 98765 43210")
     .refine(
       (v) => {
         const digits = v.replace(/\D/g, "");
         return digits.length >= 7 && digits.length <= 15;
       },
-      "Phone number must contain between 7 and 15 digits",
+      "Mobile number must contain between 7 and 15 digits",
     ),
   clientRequestId: z.string().trim().optional().nullable(),
   honeypot: z.string().max(0, "Spam detected").optional().nullable(),
@@ -157,9 +165,9 @@ export async function submitPublicRfq(
       deliveryLocation: ((formData.get("delivery_location") || formData.get("deliveryLocation")) as string | null)?.trim() ?? "",
       requiredDeliveryDate: ((formData.get("required_delivery_date") || formData.get("requiredDeliveryDate")) as string | null)?.trim() || null,
       projectNotes: ((formData.get("project_notes") || formData.get("projectNotes")) as string | null)?.trim() ?? "",
-      name: (formData.get("name") as string | null)?.trim() ?? "",
+      name: (formData.get("name") as string | null)?.trim() || "Stone Buyer",
       companyName: (formData.get("company_name") as string | null)?.trim() || null,
-      email: (formData.get("email") as string | null)?.trim().toLowerCase() ?? "",
+      email: (formData.get("email") as string | null)?.trim().toLowerCase() || null,
       phone: (formData.get("phone") as string | null)?.trim() ?? "",
       clientRequestId: (formData.get("client_request_id") as string | null)?.trim() || null,
       honeypot: (formData.get("hp_project_url") as string | null)?.trim() || null,
@@ -192,7 +200,7 @@ export async function submitPublicRfq(
     } catch {
       // outside request context
     }
-    const rateLimitKey = `rfq:${clientIp}:${data.email}`;
+    const rateLimitKey = `rfq:${clientIp}:${data.email || data.phone || "guest"}`;
     if (!checkRateLimit(rateLimitKey)) {
       return {
         success: false,
@@ -217,14 +225,14 @@ export async function submitPublicRfq(
     let finalClientRequestId = clientRequestId;
     const { data: existing } = await supabaseAdmin
       .from("enquiries")
-      .select("id, buyer_id, guest_email")
+      .select("id, buyer_id, guest_email, guest_phone")
       .eq("client_request_id", clientRequestId)
       .maybeSingle();
 
     if (existing) {
       const isOwner = isBuyer
         ? existing.buyer_id === user?.id
-        : existing.guest_email === data.email;
+        : (data.email && existing.guest_email === data.email) || (data.phone && existing.guest_phone === data.phone);
 
       if (isOwner) {
         return {
@@ -254,6 +262,8 @@ export async function submitPublicRfq(
       finish: data.finish,
       dimensions: data.dimensions,
       delivery_location: data.deliveryLocation,
+      buyer_phone: data.phone,
+      contact_phone: data.phone,
       required_delivery_date: data.requiredDeliveryDate,
       project_notes: data.projectNotes,
       target_supplier_slug: data.supplierSlug,

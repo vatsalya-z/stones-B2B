@@ -10,6 +10,7 @@ import {
   Lock,
   Layers,
   MapPin,
+  Phone,
   Send,
   ChevronDown,
   ArrowLeft,
@@ -241,14 +242,15 @@ export function SharedRfqForm({
   const effectiveUserEmail = authData.user?.email || initialUserEmail || "";
   const effectiveUserPhone = authData.user?.phone || initialUserPhone || "";
 
-  // Handle clicking "Get Supplier Quotes →" on Step 1
+  // Handle clicking "Get Supplier Quotes →"
   const handlePrimaryButtonClick = () => {
     if (!formRef.current) return;
 
-    // Check HTML5 validity for step 1 inputs
+    // Check HTML5 validity for inputs
     const materialSelect = formRef.current.querySelector<HTMLSelectElement>('select[name="material_type"]');
     const quantityInput = formRef.current.querySelector<HTMLInputElement>('input[name="quantity"]');
     const locationInput = formRef.current.querySelector<HTMLInputElement>('input[name="delivery_location"]');
+    const phoneInput = formRef.current.querySelector<HTMLInputElement>('input[name="phone"]');
 
     if (materialSelect && !materialSelect.checkValidity()) {
       materialSelect.reportValidity();
@@ -262,15 +264,13 @@ export function SharedRfqForm({
       locationInput.reportValidity();
       return;
     }
-
-    // If authenticated as buyer, we already have their full profile; submit immediately!
-    if (authData.authenticated && authData.user) {
-      formRef.current.requestSubmit();
+    if (phoneInput && !phoneInput.checkValidity()) {
+      phoneInput.reportValidity();
       return;
     }
 
-    // If guest user, proceed to Step 2 for contact information
-    setStep(2);
+    // Submit form immediately
+    formRef.current.requestSubmit();
   };
 
   return (
@@ -294,12 +294,11 @@ export function SharedRfqForm({
         <input type="text" name="hp_project_url" tabIndex={-1} autoComplete="off" />
       </div>
 
-      {/* Authenticated user hidden fields */}
+      {/* Authenticated user hidden fields (phone is visibly editable below) */}
       {authData.authenticated && authData.user && (
         <>
           <input type="hidden" name="name" value={effectiveUserName || "Verified Buyer"} />
           <input type="hidden" name="email" value={effectiveUserEmail} />
-          <input type="hidden" name="phone" value={effectiveUserPhone || "+919876543210"} />
         </>
       )}
 
@@ -461,26 +460,50 @@ export function SharedRfqForm({
             </div>
           </div>
 
-          {/* Row 4: Highlighted Delivery Location Strip matching Image 2 */}
-          <div className="rounded-xl bg-[#FFF9F3] border border-[#FEDCC4] p-2.5 sm:p-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFEDE1] text-[#D95F18]">
-                <MapPin className="h-4 w-4 stroke-[2.2]" />
+          {/* Row 4: Delivery Location * & Buyer Mobile Number * */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+            {/* Delivery Location */}
+            <div className="rounded-xl bg-[#FFF9F3] border border-[#FEDCC4] p-2 sm:p-2.5 flex items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFEDE1] text-[#D95F18]">
+                  <MapPin className="h-4 w-4 stroke-[2.2]" />
+                </div>
+                <label className="text-xs font-bold text-stone-900 whitespace-nowrap">
+                  Delivery Location <span className="text-[#E04F16]">*</span>
+                </label>
               </div>
-              <label className="text-xs font-bold text-stone-900 whitespace-nowrap">
-                Delivery Location <span className="text-[#E04F16]">*</span>
-              </label>
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="text"
+                  name="delivery_location"
+                  defaultValue={prefilledLocation}
+                  placeholder="City / State"
+                  required
+                  className="w-full h-8 sm:h-9 rounded-lg border border-[#DCD5CB] bg-white px-2.5 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                />
+              </div>
             </div>
-            <div className="relative flex-1">
-              <input
-                type="text"
-                name="delivery_location"
-                defaultValue={prefilledLocation}
-                placeholder="Select delivery location (City / State)"
-                required
-                className="w-full h-9 rounded-lg border border-[#DCD5CB] bg-white px-3 pr-7 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs"
-              />
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-500" />
+
+            {/* Buyer Mobile Number */}
+            <div className="rounded-xl bg-[#FFF9F3] border border-[#FEDCC4] p-2 sm:p-2.5 flex items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FFEDE1] text-[#D95F18]">
+                  <Phone className="h-4 w-4 stroke-[2.2]" />
+                </div>
+                <label className="text-xs font-bold text-stone-900 whitespace-nowrap">
+                  Mobile Number <span className="text-[#E04F16]">*</span>
+                </label>
+              </div>
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="tel"
+                  name="phone"
+                  defaultValue={effectiveUserPhone}
+                  placeholder="e.g. +91 98765 43210"
+                  required
+                  className="w-full h-8 sm:h-9 rounded-lg border border-[#DCD5CB] bg-white px-2.5 text-xs text-stone-900 placeholder-stone-400 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                />
+              </div>
             </div>
           </div>
 
