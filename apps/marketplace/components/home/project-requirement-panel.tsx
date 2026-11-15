@@ -46,127 +46,208 @@ const LOCATIONS = [
 ];
 
 /**
- * Architectural Building Blueprint / Perspective Wireframe
- * Precisely placed in the bottom-left corner of the section card.
+ * Exact Architectural Building Illustration (Faithful Reference Recreation)
+ * - Exact front-corner perspective with prominent central vertical building corner
+ * - Multi-storey rectangular glass windows & vertical structural divisions
+ * - Roof peak wireframe box with architectural step-down on left facade
+ * - Single-storey colonnade pavilion extension on the right
+ * - Architectural scale entourage human figures standing near corner plinth
+ * - Ground & sky perspective construction rays
  */
-function ArchitecturalBuildingWireframe() {
+function ExactArchitecturalIllustration() {
   return (
     <svg
-      viewBox="0 0 420 300"
+      viewBox="0 0 600 540"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-[280px] sm:w-[340px] lg:w-[400px] h-auto pointer-events-none select-none opacity-25 sm:opacity-75 lg:opacity-85"
+      className="w-[125px] sm:w-[145px] md:w-[155px] lg:w-[165px] xl:w-[180px] h-auto pointer-events-none select-none"
       aria-hidden="true"
     >
-      {/* Ground Perspective Vanishing Lines (fanning across towards the right) */}
-      <g stroke="#C6B094" strokeWidth="0.8" opacity="0.55">
-        <line x1="-30" y1="285" x2="440" y2="246" />
-        <line x1="-30" y1="272" x2="440" y2="244" />
-        <line x1="-30" y1="260" x2="440" y2="242" />
-        <line x1="20" y1="258" x2="440" y2="240" />
-        <line x1="80" y1="260" x2="440" y2="238" />
-        <line x1="150" y1="262" x2="440" y2="236" />
+      {/* Perspective Construction Lines (Sky & Horizon Rays) */}
+      <g stroke="#C4AA8E" strokeWidth={0.75} opacity={0.55}>
+        {/* Ray extending straight up from top roof peak */}
+        <line x1="306" y1="46" x2="306" y2="0" />
 
-        {/* Transverse Pavement / Site Perspective Rays */}
-        <line x1="-20" y1="298" x2="70" y2="245" />
-        <line x1="30" y1="298" x2="125" y2="242" />
-        <line x1="85" y1="298" x2="180" y2="240" />
-        <line x1="150" y1="298" x2="245" y2="238" />
-        <line x1="225" y1="298" x2="310" y2="236" />
-        <line x1="305" y1="298" x2="375" y2="235" />
+        {/* Rays from peak towards right horizon */}
+        <line x1="306" y1="46" x2="600" y2="185" />
+        <line x1="422" y1="102" x2="600" y2="185" />
+        <line x1="306" y1="134" x2="600" y2="280" />
+
+        {/* Secondary sky construction rays */}
+        <line x1="306" y1="88" x2="600" y2="230" />
+        <line x1="306" y1="46" x2="0" y2="175" />
       </g>
 
-      {/* Main Structural Building Wireframe */}
-      <g stroke="#B89B7A" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        {/* Left Corner Column (Foreground) */}
-        <line x1="16" y1="264" x2="16" y2="48" strokeWidth="1.5" />
-        <line x1="20" y1="263" x2="20" y2="50" strokeWidth="0.8" opacity="0.6" />
+      {/* Ground Perspective Grid Lines */}
+      <g stroke="#C4AA8E" strokeWidth={0.8} opacity={0.6}>
+        {/* Longitudinal ground perspective lines receding towards right vanishing point */}
+        <line x1="-30" y1="468" x2="600" y2="438" />
+        <line x1="-30" y1="488" x2="600" y2="442" />
+        <line x1="-30" y1="510" x2="600" y2="446" />
+        <line x1="-30" y1="535" x2="600" y2="450" />
 
-        {/* Primary Roof Parapet / Fascia Line */}
-        <line x1="16" y1="48" x2="225" y2="92" strokeWidth="1.6" />
-        <line x1="16" y1="54" x2="225" y2="97" strokeWidth="0.9" opacity="0.75" />
-        <line x1="16" y1="42" x2="225" y2="86" strokeWidth="0.6" strokeDasharray="4 2" opacity="0.45" />
+        {/* Transverse pavement lines angling across the ground */}
+        <line x1="75" y1="540" x2="235" y2="450" />
+        <line x1="175" y1="540" x2="325" y2="446" />
+        <line x1="275" y1="540" x2="415" y2="444" />
+        <line x1="385" y1="540" x2="505" y2="442" />
 
-        {/* Rear Volume / Architectural Mass Profile */}
-        <line x1="225" y1="92" x2="280" y2="108" strokeWidth="1" opacity="0.6" />
-        <line x1="280" y1="108" x2="280" y2="236" strokeWidth="1" opacity="0.6" />
-        <line x1="225" y1="239" x2="280" y2="236" strokeWidth="0.8" opacity="0.6" />
+        {/* Far-right vertical site markers / posts */}
+        <line x1="545" y1="412" x2="545" y2="454" strokeWidth={0.9} />
+        <line x1="568" y1="422" x2="568" y2="454" strokeWidth={0.9} />
+      </g>
 
-        {/* Right Corner of Main Front Facade */}
-        <line x1="225" y1="92" x2="225" y2="239" strokeWidth="1.4" />
+      {/* Top Parapet Box / Upper Volume Wireframe */}
+      <g stroke="#8A6848" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round">
+        {/* Parapet Roof Peak Corner */}
+        <line x1="306" y1="46" x2="306" y2="134" strokeWidth={1.5} />
 
-        {/* Ground Foundation Plinth Line */}
-        <line x1="16" y1="264" x2="225" y2="239" strokeWidth="1.5" />
-        <line x1="16" y1="268" x2="225" y2="242" strokeWidth="0.9" opacity="0.75" />
+        {/* Top Parapet Roofline down-left to horizon */}
+        <line x1="306" y1="46" x2="0" y2="222" strokeWidth={1.4} />
+        <line x1="306" y1="88" x2="0" y2="258" strokeWidth={0.9} opacity={0.75} />
 
-        {/* Intermediate Floor Slab / Spandrel Beam */}
-        <line x1="16" y1="156" x2="225" y2="166" strokeWidth="1.4" />
-        <line x1="16" y1="161" x2="225" y2="170" strokeWidth="0.9" opacity="0.7" />
+        {/* Top Parapet Roofline down-right */}
+        <line x1="306" y1="46" x2="422" y2="102" strokeWidth={1.4} />
+        <line x1="422" y1="102" x2="422" y2="188" strokeWidth={1.3} />
+        <line x1="306" y1="88" x2="422" y2="142" strokeWidth={0.9} opacity={0.75} />
+      </g>
 
-        {/* Vertical Stone Columns / Curtain Wall Mullions */}
+      {/* Main Two-Storey Building Cornice and Architectural Step */}
+      <g stroke="#7D5B3A" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+        {/* Right Cornice Line */}
+        <line x1="306" y1="134" x2="412" y2="188" strokeWidth={1.8} />
+        <line x1="306" y1="142" x2="412" y2="195" strokeWidth={1.1} opacity={0.85} />
+
+        {/* Left Cornice Line (with Architectural Step-Down) */}
+        <line x1="306" y1="134" x2="152" y2="228" strokeWidth={1.8} />
+        <line x1="306" y1="142" x2="152" y2="235" strokeWidth={1.1} opacity={0.85} />
+        {/* Step-down vertical drop */}
+        <line x1="152" y1="228" x2="152" y2="248" strokeWidth={1.5} />
+        {/* Lower parapet continuing to left edge */}
+        <line x1="152" y1="248" x2="0" y2="310" strokeWidth={1.5} />
+        <line x1="152" y1="254" x2="0" y2="315" strokeWidth={1} opacity={0.75} />
+      </g>
+
+      {/* Central Vertical Corner Pillar (Key Focal Element) */}
+      <g stroke="#6B4B2B" strokeWidth={1.4} strokeLinecap="round">
+        <line x1="302" y1="142" x2="302" y2="442" strokeWidth={1.1} opacity={0.75} />
+        <line x1="306" y1="134" x2="306" y2="442" strokeWidth={2} />
+        <line x1="310" y1="142" x2="310" y2="442" strokeWidth={1.1} opacity={0.75} />
+      </g>
+
+      {/* Right Facade (Two Storeys + Single Storey Low Wing) */}
+      <g stroke="#8A6848" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round">
+        {/* Right Corner Column of Main Block */}
+        <line x1="408" y1="195" x2="408" y2="444" strokeWidth={1} opacity={0.75} />
+        <line x1="412" y1="188" x2="412" y2="444" strokeWidth={1.8} />
+
+        {/* Intermediate Column on Right Facade */}
+        <line x1="358" y1="160" x2="358" y2="443" strokeWidth={1.3} />
+        <line x1="362" y1="160" x2="362" y2="443" strokeWidth={0.9} opacity={0.65} />
+
+        {/* Horizontal Floor Spandrel Band (Between Ground and Upper Floor) */}
+        <line x1="306" y1="334" x2="412" y2="356" strokeWidth={1.2} />
+        <line x1="306" y1="342" x2="412" y2="362" strokeWidth={1.6} />
+        <line x1="306" y1="348" x2="412" y2="368" strokeWidth={1} opacity={0.8} />
+
+        {/* Upper Floor Window Transom and Sills */}
+        <line x1="306" y1="168" x2="412" y2="218" strokeWidth={0.9} opacity={0.8} />
+        {/* Upper Floor Glazing Mullions */}
         {/* Bay 1 */}
-        <line x1="58" y1="57" x2="58" y2="259" strokeWidth="1.1" />
-        <line x1="61" y1="57" x2="61" y2="259" strokeWidth="0.6" opacity="0.5" />
+        <line x1="326" y1="168" x2="326" y2="334" strokeWidth={0.9} />
+        <line x1="342" y1="168" x2="342" y2="334" strokeWidth={0.9} />
         {/* Bay 2 */}
-        <line x1="102" y1="66" x2="102" y2="254" strokeWidth="1.1" />
-        <line x1="105" y1="66" x2="105" y2="254" strokeWidth="0.6" opacity="0.5" />
-        {/* Bay 3 */}
-        <line x1="148" y1="75" x2="148" y2="249" strokeWidth="1.1" />
-        <line x1="151" y1="75" x2="151" y2="249" strokeWidth="0.6" opacity="0.5" />
-        {/* Bay 4 */}
-        <line x1="190" y1="84" x2="190" y2="244" strokeWidth="1.1" />
-        <line x1="193" y1="84" x2="193" y2="244" strokeWidth="0.6" opacity="0.5" />
+        <line x1="378" y1="198" x2="378" y2="344" strokeWidth={0.9} />
+        <line x1="394" y1="208" x2="394" y2="350" strokeWidth={0.9} />
 
-        {/* Upper Floor Window Horizontal Paneling */}
-        <line x1="16" y1="102" x2="225" y2="130" strokeWidth="0.7" opacity="0.6" />
-        <line x1="16" y1="128" x2="225" y2="148" strokeWidth="0.7" opacity="0.6" />
+        {/* Lower Floor Storefront Transom and Mullions */}
+        <line x1="306" y1="368" x2="412" y2="385" strokeWidth={0.9} />
+        <line x1="326" y1="368" x2="326" y2="442" strokeWidth={0.9} />
+        <line x1="342" y1="368" x2="342" y2="442" strokeWidth={0.9} />
+        <line x1="378" y1="378" x2="378" y2="443" strokeWidth={0.9} />
+        <line x1="394" y1="382" x2="394" y2="443" strokeWidth={0.9} />
 
-        {/* Lower Floor Glazing Transom */}
-        <line x1="16" y1="202" x2="225" y2="206" strokeWidth="0.7" opacity="0.6" />
+        {/* Base Plinth / Foundation */}
+        <line x1="306" y1="442" x2="412" y2="444" strokeWidth={1.5} />
+        <line x1="306" y1="450" x2="412" y2="450" strokeWidth={1} opacity={0.7} />
 
-        {/* Architectural Glass Reflection Accents */}
-        <line x1="24" y1="148" x2="52" y2="68" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.3" />
-        <line x1="68" y1="152" x2="96" y2="76" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.3" />
-        <line x1="112" y1="158" x2="142" y2="86" strokeWidth="0.5" strokeDasharray="3 3" opacity="0.3" />
+        {/* Single-Storey Right Wing / Colonnade Pavilion */}
+        <line x1="412" y1="368" x2="505" y2="388" strokeWidth={1.4} />
+        <line x1="412" y1="375" x2="505" y2="394" strokeWidth={0.9} opacity={0.8} />
+
+        {/* Wing Vertical Colonnade Posts */}
+        <line x1="432" y1="372" x2="432" y2="446" strokeWidth={1.2} />
+        <line x1="468" y1="378" x2="468" y2="448" strokeWidth={1.2} />
+        <line x1="505" y1="388" x2="505" y2="450" strokeWidth={1.4} />
+
+        {/* Wing Storefront Detail */}
+        <rect x="442" y="394" width="16" height="52" stroke="#8A6848" strokeWidth={0.8} fill="none" />
+        <line x1="505" y1="388" x2="530" y2="398" strokeWidth={0.8} opacity={0.6} />
+        <line x1="505" y1="450" x2="530" y2="452" strokeWidth={0.8} opacity={0.6} />
       </g>
 
-      {/* Modern Entrance Pavilion / Projecting Stone Canopy */}
-      <g stroke="#A88A68" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round">
-        {/* Canopy Top Slab in Perspective */}
-        <polygon
-          points="88,198 174,192 160,216 74,222"
-          fill="#FAF6F0"
-          fillOpacity="0.9"
-          stroke="#A88A68"
-          strokeWidth="1.2"
-        />
-        {/* Canopy Thickness Edge */}
-        <line x1="74" y1="222" x2="74" y2="226" strokeWidth="1.2" />
-        <line x1="160" y1="216" x2="160" y2="220" strokeWidth="1.2" />
-        <line x1="74" y1="226" x2="160" y2="220" strokeWidth="1.2" />
+      {/* Left Facade (Multi-Storey Extended Glass and Stone Facade) */}
+      <g stroke="#8A6848" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round">
+        {/* Structural Columns on Left Facade */}
+        {/* Column at step */}
+        <line x1="152" y1="248" x2="152" y2="458" strokeWidth={1.4} />
+        {/* Intermediate columns */}
+        <line x1="228" y1="180" x2="228" y2="448" strokeWidth={1.3} />
+        <line x1="104" y1="275" x2="104" y2="464" strokeWidth={1.2} />
+        <line x1="54" y1="300" x2="54" y2="472" strokeWidth={1.1} />
+        <line x1="16" y1="318" x2="16" y2="478" strokeWidth={1.1} />
 
-        {/* Canopy Support Columns to Ground */}
-        <line x1="80" y1="225" x2="80" y2="257" strokeWidth="1.1" />
-        <line x1="154" y1="219" x2="154" y2="249" strokeWidth="1.1" />
+        {/* Horizontal Floor Spandrel Band across Left Facade */}
+        <line x1="306" y1="334" x2="0" y2="395" strokeWidth={1.2} />
+        <line x1="306" y1="342" x2="0" y2="400" strokeWidth={1.6} />
+        <line x1="306" y1="348" x2="0" y2="405" strokeWidth={1} opacity={0.8} />
 
-        {/* Double Entrance Glass Door Frame */}
-        <rect x="102" y="204" width="34" height="48" stroke="#B89B7A" strokeWidth="0.9" fill="none" />
-        <line x1="119" y1="204" x2="119" y2="252" stroke="#B89B7A" strokeWidth="0.7" />
+        {/* Upper Floor Window Transoms */}
+        <line x1="306" y1="168" x2="0" y2="330" strokeWidth={0.9} opacity={0.8} />
+        <line x1="306" y1="240" x2="0" y2="360" strokeWidth={0.8} opacity={0.6} />
+
+        {/* Upper Floor Glazing Mullions */}
+        {/* Bay between 228 and 302 */}
+        <line x1="254" y1="195" x2="254" y2="340" strokeWidth={0.9} />
+        <line x1="278" y1="182" x2="278" y2="338" strokeWidth={0.9} />
+        {/* Bay between 152 and 228 */}
+        <line x1="178" y1="238" x2="178" y2="356" strokeWidth={0.9} />
+        <line x1="202" y1="224" x2="202" y2="350" strokeWidth={0.9} />
+        {/* Bay between 104 and 152 */}
+        <line x1="128" y1="270" x2="128" y2="370" strokeWidth={0.8} />
+        {/* Bay between 54 and 104 */}
+        <line x1="78" y1="295" x2="78" y2="384" strokeWidth={0.8} />
+        {/* Bay between 16 and 54 */}
+        <line x1="34" y1="315" x2="34" y2="394" strokeWidth={0.8} />
+
+        {/* Lower Floor Storefront Transom and Vertical Mullions */}
+        <line x1="306" y1="368" x2="0" y2="418" strokeWidth={0.9} />
+        <line x1="278" y1="368" x2="278" y2="444" strokeWidth={0.9} />
+        <line x1="254" y1="368" x2="254" y2="445" strokeWidth={0.9} />
+        <line x1="202" y1="375" x2="202" y2="450" strokeWidth={0.8} />
+        <line x1="178" y1="380" x2="178" y2="453" strokeWidth={0.8} />
+        <line x1="128" y1="390" x2="128" y2="460" strokeWidth={0.8} />
+        <line x1="78" y1="400" x2="78" y2="468" strokeWidth={0.8} />
+        <line x1="34" y1="410" x2="34" y2="475" strokeWidth={0.8} />
+
+        {/* Base Plinth / Stepped Foundation along Left Facade */}
+        <line x1="306" y1="442" x2="0" y2="475" strokeWidth={1.5} />
+        <line x1="306" y1="450" x2="0" y2="483" strokeWidth={1} opacity={0.75} />
       </g>
 
-      {/* Architectural Scale Human Silhouettes */}
-      <g stroke="#9C7F60" strokeWidth="1" fill="#9C7F60" opacity="0.75">
-        {/* Person 1 (Entrance) */}
-        <circle cx="125" cy="229" r="2" />
-        <line x1="125" y1="231" x2="125" y2="243" strokeWidth="1.2" />
-        <line x1="125" y1="243" x2="123" y2="252" strokeWidth="1" />
-        <line x1="125" y1="243" x2="127" y2="252" strokeWidth="1" />
+      {/* Architectural Entourage Figures (Two Scale People Standing near Corner) */}
+      <g stroke="#6B4D30" strokeWidth={1.1} fill="#6B4D30" opacity={0.85}>
+        {/* Person 1 (Facing front-right) */}
+        <circle cx="248" cy="410" r="2.8" />
+        <line x1="248" y1="413" x2="248" y2="427" strokeWidth={1.4} />
+        <line x1="248" y1="427" x2="246" y2="442" strokeWidth={1.1} />
+        <line x1="248" y1="427" x2="250" y2="442" strokeWidth={1.1} />
 
-        {/* Person 2 (Visitor beside Column) */}
-        <circle cx="134" cy="230" r="1.8" />
-        <line x1="134" y1="232" x2="134" y2="242" strokeWidth="1.1" />
-        <line x1="134" y1="242" x2="132" y2="251" strokeWidth="0.9" />
-        <line x1="134" y1="242" x2="136" y2="251" strokeWidth="0.9" />
+        {/* Person 2 (Beside) */}
+        <circle cx="256" cy="412" r="2.5" />
+        <line x1="256" y1="415" x2="256" y2="427" strokeWidth={1.3} />
+        <line x1="256" y1="427" x2="254" y2="442" strokeWidth={1} />
+        <line x1="256" y1="427" x2="258" y2="442" strokeWidth={1} />
       </g>
     </svg>
   );
@@ -201,45 +282,48 @@ export function ProjectRequirementPanel() {
     <section className="py-6 sm:py-10 bg-white">
       <div className="container-wide">
         {/* Main Card with Warm Sandstone Background & Subtle Border */}
-        <div className="relative overflow-hidden rounded-[24px] sm:rounded-[30px] lg:rounded-[32px] bg-[#FAF6F0] border border-[#EAE2D5] px-6 py-8 sm:p-10 lg:p-12 shadow-sm min-h-[360px] flex flex-col justify-center">
-          {/* Architectural Wireframe Sketch (Anchored at Bottom-Left of the Main Card) */}
-          <div className="hidden sm:block absolute bottom-0 -left-4 sm:left-0 pointer-events-none select-none z-0">
-            <ArchitecturalBuildingWireframe />
-          </div>
-
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Left Column (5 Cols): Eyebrow, Editorial Serif Headline, Subtitle */}
-            <div className="lg:col-span-5 relative flex flex-col justify-center">
-              {/* Eyebrow: Orange Dash + Uppercase Tag */}
-              <div className="flex items-center gap-2.5 mb-3 sm:mb-4">
-                <span className="w-5 sm:w-6 h-[2.5px] bg-[#D95F18] inline-block rounded-full" />
-                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#D95F18]">
-                  GET QUOTES FROM VERIFIED SUPPLIERS
-                </span>
+        <div className="relative overflow-hidden rounded-[24px] sm:rounded-[30px] lg:rounded-[32px] bg-[#FAF6F0] border border-[#EAE2D5] px-5 py-7 sm:p-7 lg:p-8 xl:p-9 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-6 xl:gap-8 items-center">
+            {/* Left Section (6 Cols): Building Illustration + Text side-by-side with ZERO overlap */}
+            <div className="lg:col-span-6 flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-5 lg:gap-6">
+              {/* Architectural Building Illustration (Positioned on the Left) */}
+              <div className="shrink-0 self-center sm:self-end">
+                <ExactArchitecturalIllustration />
               </div>
 
-              {/* Main Headline: Editorial Serif Font */}
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-[40px] font-bold text-stone-900 tracking-tight leading-[1.18] sm:leading-[1.15]">
-                Source Stones for Your <br className="hidden sm:inline" />
-                Project Requirement
-              </h2>
+              {/* Text Block (Positioned to the Right of the Illustration — Zero Overlap) */}
+              <div className="flex flex-col justify-center min-w-0 flex-1 sm:pb-1">
+                {/* Eyebrow: Orange Dash + Uppercase Tag */}
+                <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
+                  <span className="w-5 sm:w-6 h-[2.5px] bg-[#D95F18] inline-block rounded-full" />
+                  <span className="text-[10px] sm:text-[11px] lg:text-xs font-bold uppercase tracking-wider text-[#D95F18]">
+                    GET QUOTES FROM VERIFIED SUPPLIERS
+                  </span>
+                </div>
 
-              {/* Subtitle */}
-              <p className="mt-3 sm:mt-4 text-xs sm:text-sm lg:text-[15px] text-stone-600 leading-relaxed max-w-md">
-                Share your project details and receive competitive quotes directly from verified suppliers.
-              </p>
+                {/* Main Headline: Editorial Serif Font (Clean 2-line break) */}
+                <h2 className="font-serif text-xl sm:text-2xl lg:text-[25px] xl:text-[29px] font-bold text-stone-900 tracking-tight leading-[1.18] sm:leading-[1.15]">
+                  Source Stones for Your <br className="hidden sm:inline" />
+                  Project Requirement
+                </h2>
+
+                {/* Subtitle */}
+                <p className="mt-2 sm:mt-2.5 text-xs sm:text-[13px] lg:text-sm text-stone-600 leading-relaxed max-w-sm">
+                  Share your project details and receive competitive quotes directly from verified suppliers.
+                </p>
+              </div>
             </div>
 
-            {/* Right Column (7 Cols): Elevated White Card with Segmented Tabs & Requirement Form */}
-            <div className="lg:col-span-7">
-              <div className="rounded-2xl sm:rounded-[24px] bg-white p-5 sm:p-7 lg:p-8 shadow-[0_10px_35px_rgba(0,0,0,0.05)] border border-stone-200/80">
+            {/* Right Column (6 Cols): Elevated White Card with Segmented Tabs & Requirement Form */}
+            <div className="lg:col-span-6">
+              <div className="rounded-2xl sm:rounded-[24px] bg-white p-5 sm:p-6 shadow-[0_10px_35px_rgba(0,0,0,0.05)] border border-stone-200/80">
                 {/* Segmented Control Tabs */}
-                <div className="grid grid-cols-2 sm:inline-flex items-center p-1 rounded-xl bg-stone-100/70 border border-stone-200/60 mb-6 max-w-full">
+                <div className="grid grid-cols-2 sm:inline-flex items-center p-1 rounded-xl bg-stone-100/80 border border-stone-200/60 mb-4 sm:mb-5 max-w-full">
                   {/* Tab 1: Project Requirement */}
                   <button
                     type="button"
                     onClick={() => setActiveTab("rfq")}
-                    className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 lg:px-5 py-2 sm:py-2.5 rounded-lg text-[11px] sm:text-xs lg:text-sm font-semibold transition-all whitespace-nowrap ${
+                    className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 lg:px-4 py-2 sm:py-2 rounded-lg text-[11px] sm:text-xs lg:text-[13px] font-semibold transition-all whitespace-nowrap ${
                       activeTab === "rfq"
                         ? "bg-[#2D1B11] text-white shadow-xs"
                         : "text-stone-700 hover:text-stone-950 hover:bg-stone-200/50"
@@ -266,7 +350,7 @@ export function ProjectRequirementPanel() {
                   <button
                     type="button"
                     onClick={() => setActiveTab("browse")}
-                    className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 lg:px-5 py-2 sm:py-2.5 rounded-lg text-[11px] sm:text-xs lg:text-sm font-semibold transition-all whitespace-nowrap ${
+                    className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 lg:px-4 py-2 sm:py-2 rounded-lg text-[11px] sm:text-xs lg:text-[13px] font-semibold transition-all whitespace-nowrap ${
                       activeTab === "browse"
                         ? "bg-[#2D1B11] text-white shadow-xs"
                         : "text-stone-700 hover:text-stone-950 hover:bg-stone-200/50"
@@ -292,9 +376,9 @@ export function ProjectRequirementPanel() {
                 </div>
 
                 {/* Form Elements */}
-                <form onSubmit={handleGetQuotes} className="space-y-4">
+                <form onSubmit={handleGetQuotes} className="space-y-3.5 sm:space-y-4">
                   {/* Row 1: Stone Type, Application, Quantity */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                     {/* Field 1: Stone Type */}
                     <div>
                       <label className="block text-xs font-bold text-stone-900 mb-1.5">
@@ -304,7 +388,7 @@ export function ProjectRequirementPanel() {
                         <select
                           value={stoneType}
                           onChange={(e) => setStoneType(e.target.value)}
-                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 pr-8 text-xs sm:text-sm text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-2.5 py-2 sm:py-2.5 pr-7 text-xs sm:text-[13px] text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
                         >
                           <option value="">Select stone type</option>
                           {STONE_TYPES.map((t) => (
@@ -315,7 +399,7 @@ export function ProjectRequirementPanel() {
                         </select>
                         {/* Downward Chevron */}
                         <svg
-                          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
+                          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -335,7 +419,7 @@ export function ProjectRequirementPanel() {
                         <select
                           value={application}
                           onChange={(e) => setApplication(e.target.value)}
-                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 pr-8 text-xs sm:text-sm text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-2.5 py-2 sm:py-2.5 pr-7 text-xs sm:text-[13px] text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
                         >
                           <option value="">Select application</option>
                           {APPLICATIONS.map((a) => (
@@ -345,7 +429,7 @@ export function ProjectRequirementPanel() {
                           ))}
                         </select>
                         <svg
-                          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
+                          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -365,7 +449,7 @@ export function ProjectRequirementPanel() {
                         <select
                           value={quantity}
                           onChange={(e) => setQuantity(e.target.value)}
-                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 pr-8 text-xs sm:text-sm text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-2.5 py-2 sm:py-2.5 pr-7 text-xs sm:text-[13px] text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
                         >
                           <option value="">e.g. 5,000 Sq. Ft.</option>
                           {QUANTITY_PRESETS.map((q) => (
@@ -375,7 +459,7 @@ export function ProjectRequirementPanel() {
                           ))}
                         </select>
                         <svg
-                          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
+                          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -388,9 +472,9 @@ export function ProjectRequirementPanel() {
                   </div>
 
                   {/* Row 2: Project Location & CTA Button */}
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3.5 sm:gap-4 items-end pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 sm:gap-3 items-end pt-0.5">
                     {/* Project Location (Left side) */}
-                    <div className="sm:col-span-6 lg:col-span-7">
+                    <div className="sm:col-span-6">
                       <label className="block text-xs font-bold text-stone-900 mb-1.5">
                         Project Location
                       </label>
@@ -398,7 +482,7 @@ export function ProjectRequirementPanel() {
                         <select
                           value={location}
                           onChange={(e) => setLocation(e.target.value)}
-                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-3.5 py-2.5 pr-8 text-xs sm:text-sm text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
+                          className="w-full appearance-none rounded-lg border border-stone-200 bg-white px-2.5 py-2 sm:py-2.5 pr-7 text-xs sm:text-[13px] text-stone-800 focus:border-[#D95F18] focus:outline-none focus:ring-1 focus:ring-[#D95F18] shadow-2xs transition-colors"
                         >
                           <option value="">Select location</option>
                           {LOCATIONS.map((loc) => (
@@ -408,7 +492,7 @@ export function ProjectRequirementPanel() {
                           ))}
                         </select>
                         <svg
-                          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
+                          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-stone-600"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -420,38 +504,13 @@ export function ProjectRequirementPanel() {
                     </div>
 
                     {/* Action Button: Get Supplier Quotes */}
-                    <div className="sm:col-span-6 lg:col-span-5">
+                    <div className="sm:col-span-6">
                       <button
                         type="submit"
-                        className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#D95F18] hover:bg-[#C25211] text-white px-4 py-2.5 text-xs sm:text-sm font-semibold shadow-md shadow-[#D95F18]/20 transition-all hover:scale-[1.01] active:scale-[0.99] h-[41px]"
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#D95F18] hover:bg-[#C25211] text-white px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-[13px] font-semibold shadow-md shadow-[#D95F18]/20 transition-all hover:scale-[1.01] active:scale-[0.99] whitespace-nowrap h-[38px] sm:h-[42px]"
                       >
-                        {/* Headset / Quotation Advisor Icon */}
-                        <svg
-                          className="h-4 w-4 shrink-0 text-white"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
-                          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
-                          <path d="M8 21h3a2 2 0 0 0 2-2v-1" />
-                        </svg>
                         <span>{activeTab === "browse" ? "Browse Materials" : "Get Supplier Quotes"}</span>
-                        {/* Right Arrow Icon */}
-                        <svg
-                          className="h-4 w-4 shrink-0 text-white"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
+                        <span aria-hidden="true" className="text-sm font-bold">&rarr;</span>
                       </button>
                     </div>
                   </div>
