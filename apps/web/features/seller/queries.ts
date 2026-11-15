@@ -997,7 +997,12 @@ export async function getSellerEnquiryDetail(
       id: row.buyer_id,
       fullName: row.profiles?.full_name ?? (row as unknown as { guest_name?: string }).guest_name ?? (row.buyer_id ? "Registered Buyer" : "Guest Buyer"),
       email: row.profiles?.email ?? (row as unknown as { guest_email?: string }).guest_email ?? null,
-      phone: row.profiles?.phone ?? (row as unknown as { guest_phone?: string }).guest_phone ?? null,
+      phone:
+        row.profiles?.phone ??
+        (row as unknown as { guest_phone?: string }).guest_phone ??
+        (row.specifications as Record<string, any>)?.buyer_phone ??
+        (row.specifications as Record<string, any>)?.contact_phone ??
+        null,
       city: row.profiles?.city ?? null,
       state: row.profiles?.state ?? null,
       country: row.profiles?.country ?? "IN",

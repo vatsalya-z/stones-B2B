@@ -64,85 +64,45 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
         </div>
       </div>
 
-      {/* Participants Grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Buyer */}
-        <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-5">
-          <div className="flex items-center justify-between pb-3 border-b border-stone-800">
-            <h2 className="text-sm font-semibold text-white">Buyer Information</h2>
-            {buyer && (
-              <Link
-                href={`/admin/buyers/${buyer.id}`}
-                className="text-xs text-amber-500 hover:text-amber-400"
-              >
-                Inspect Buyer Profile →
-              </Link>
-            )}
-          </div>
-          <dl className="mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 text-xs">
-            <div>
-              <dt className="text-stone-500">Buyer Name</dt>
-              <dd className="mt-0.5 font-medium text-stone-200">{buyer?.full_name || "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Location</dt>
-              <dd className="mt-0.5 font-medium text-stone-200">
-                {[buyer?.city, buyer?.state].filter(Boolean).join(", ") || "India"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Email Address</dt>
-              <dd className="mt-0.5 font-mono text-stone-200">{buyer?.email || "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Contact Phone</dt>
-              <dd className="mt-0.5 font-mono text-stone-200">{buyer?.phone || "—"}</dd>
-            </div>
-          </dl>
+      {/* Buyer Information Card */}
+      <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-5">
+        <div className="flex items-center justify-between pb-3 border-b border-stone-800">
+          <h2 className="text-sm font-semibold text-white">Buyer Information</h2>
+          {buyer && buyer.id !== "guest" && (
+            <Link
+              href={`/admin/buyers/${buyer.id}`}
+              className="text-xs text-amber-500 hover:text-amber-400"
+            >
+              Inspect Buyer Profile →
+            </Link>
+          )}
         </div>
-
-        {/* Supplier */}
-        <div className="rounded-xl border border-stone-800 bg-stone-900/60 p-5">
-          <div className="flex items-center justify-between pb-3 border-b border-stone-800">
-            <h2 className="text-sm font-semibold text-white">Target Supplier</h2>
-            {seller && (
-              <Link
-                href={`/admin/sellers/${seller.id}`}
-                className="text-xs text-amber-500 hover:text-amber-400"
-              >
-                Inspect Seller Profile →
-              </Link>
-            )}
+        <dl className="mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+          <div>
+            <dt className="text-stone-500">Buyer Name</dt>
+            <dd className="mt-0.5 font-medium text-stone-200">{buyer?.full_name || "—"}</dd>
           </div>
-          <dl className="mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 text-xs">
-            <div>
-              <dt className="text-stone-500">Business Name</dt>
-              <dd className="mt-0.5 font-medium text-stone-200">{seller?.business_name || "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Owner Name</dt>
-              <dd className="mt-0.5 font-medium text-stone-200">{seller?.owner_name || "—"}</dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Location</dt>
-              <dd className="mt-0.5 text-stone-200">
-                {seller?.city ? `${seller.city}, ${seller.state || "India"}` : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-stone-500">Catalogue Product</dt>
-              <dd className="mt-0.5 font-medium text-stone-200">
-                {product ? (
-                  <Link href={`/admin/products/${product.id}`} className="hover:text-amber-400">
-                    {product.name}
-                  </Link>
-                ) : (
-                  "Custom Multi-Specification RFQ"
-                )}
-              </dd>
-            </div>
-          </dl>
-        </div>
+          <div>
+            <dt className="text-stone-500">Location</dt>
+            <dd className="mt-0.5 font-medium text-stone-200">
+              {[buyer?.city, buyer?.state].filter(Boolean).join(", ") || enquiry.delivery_location || "India"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-stone-500">Email Address</dt>
+            <dd className="mt-0.5 font-mono text-stone-200">{buyer?.email || enquiry.guest_email || "—"}</dd>
+          </div>
+          <div>
+            <dt className="text-stone-500">Contact Phone</dt>
+            <dd className="mt-0.5 font-mono text-stone-200">
+              {buyer?.phone ||
+                enquiry.guest_phone ||
+                (enquiry.specifications as Record<string, any>)?.buyer_phone ||
+                (enquiry.specifications as Record<string, any>)?.contact_phone ||
+                "—"}
+            </dd>
+          </div>
+        </dl>
       </div>
 
       {/* Specification & Shipping */}

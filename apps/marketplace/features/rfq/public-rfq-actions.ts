@@ -294,7 +294,7 @@ export async function submitPublicRfq(
         currency: "INR",
         guest_name: isBuyer ? null : data.name,
         guest_email: isBuyer ? null : data.email,
-        guest_phone: isBuyer ? null : data.phone,
+        guest_phone: data.phone,
         guest_company: isBuyer ? null : data.companyName,
         enquiry_type: "rfq",
         specifications: specificationsPayload,
@@ -331,6 +331,18 @@ export async function submitPublicRfq(
         success: false,
         error: "We could not record your RFQ due to a database issue. Please try again.",
       };
+    }
+
+    // Sync phone number into buyer profile if authenticated
+    if (isBuyer && user?.id && data.phone) {
+      try {
+        await supabaseAdmin
+          .from("profiles")
+          .update({ phone: data.phone })
+          .eq("id", user.id);
+      } catch (profErr) {
+        console.warn("[submitPublicRfq] Non-fatal profile phone update error:", profErr);
+      }
     }
 
     const refNum = `RFQ-${inserted.id.slice(0, 8).toUpperCase()}`;

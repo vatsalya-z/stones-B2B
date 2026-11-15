@@ -856,6 +856,13 @@ export async function getAdminEnquiryDetail(enquiryId: string, ctx?: AdminContex
   }
 
   const enquiry = enquiryRes.data;
+  const specs = (enquiry.specifications as Record<string, any>) || {};
+  const fallbackPhone =
+    enquiry.guest_phone ||
+    specs.buyer_phone ||
+    specs.contact_phone ||
+    specs.phone ||
+    null;
 
   const [buyerRes, sellerRes, productRes] = await Promise.all([
     enquiry.buyer_id
@@ -865,7 +872,7 @@ export async function getAdminEnquiryDetail(enquiryId: string, ctx?: AdminContex
             id: "guest",
             full_name: enquiry.guest_name ? `${enquiry.guest_name} (Guest)` : "Guest Requester",
             email: enquiry.guest_email ?? null,
-            phone: enquiry.guest_phone ?? null,
+            phone: fallbackPhone,
             city: null,
             state: null,
           },
@@ -873,13 +880,7 @@ export async function getAdminEnquiryDetail(enquiryId: string, ctx?: AdminContex
     enquiry.seller_id
       ? supabase.from("seller_profiles").select("id, business_name, owner_name, city, state").eq("id", enquiry.seller_id).maybeSingle()
       : Promise.resolve({
-          data: {
-            id: "general",
-            business_name: (enquiry.specifications as Record<string, string>)?.target_supplier_name ?? "General Platform Lead",
-            owner_name: null,
-            city: null,
-            state: null,
-          },
+          data: null,
         }),
     enquiry.product_id
       ? supabase.from("products").select("id, name, slug, price, currency, unit").eq("id", enquiry.product_id).maybeSingle()
@@ -903,9 +904,17 @@ export async function getAdminEnquiryDetail(enquiryId: string, ctx?: AdminContex
     }),
   );
 
+  const rawBuyer = buyerRes.data;
+  const buyer = rawBuyer
+    ? {
+        ...rawBuyer,
+        phone: rawBuyer.phone || fallbackPhone,
+      }
+    : null;
+
   return {
     enquiry,
-    buyer: buyerRes.data,
+    buyer,
     seller: sellerRes.data,
     product: productRes.data,
     quotations: quotationsRes.data ?? [],
