@@ -16,6 +16,7 @@ interface ProductDiscoveryHeaderProps {
   currentQuery?: string;
   currentMaterial?: string | string[];
   currentCategory?: string;
+  showBreadcrumbs?: boolean;
 }
 
 export function ProductDiscoveryHeader({
@@ -24,6 +25,7 @@ export function ProductDiscoveryHeader({
   currentQuery = "",
   currentMaterial,
   currentCategory,
+  showBreadcrumbs = true,
 }: ProductDiscoveryHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -86,12 +88,14 @@ export function ProductDiscoveryHeader({
   return (
     <div className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <Breadcrumb
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Products" },
-        ]}
-      />
+      {showBreadcrumbs && (
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Products" },
+          ]}
+        />
+      )}
 
       {/* Editorial Header Card */}
       <div className="rounded-3xl border border-stone-200/90 bg-white p-6 sm:p-10 shadow-xs space-y-6">

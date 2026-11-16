@@ -1,25 +1,25 @@
 import React from "react";
 import Link from "next/link";
 
-export default function PublicNotFound() {
+export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-2xl text-center space-y-6">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1 text-xs font-semibold text-amber-900 shadow-xs">
           <span className="flex h-2 w-2 rounded-full bg-amber-600 animate-pulse" />
-          404 Error • Supplier or Page Not Found
+          404 Error • Resource Not Found
         </div>
 
         {/* Heading */}
         <h1 className="text-3xl font-extrabold tracking-tight text-stone-950 sm:text-5xl">
-          Quarry or Supplier Not Found
+          Page or Supplier Not Found
         </h1>
 
         {/* Subtitle */}
         <p className="mx-auto max-w-lg text-base text-stone-600 sm:text-lg leading-relaxed">
-          The supplier storefront or stone catalogue you requested does not exist, is awaiting
-          verification, or has been relocated.
+          The supplier storefront, product lot, or procurement page you are looking for does not
+          exist, is unverified, or has been relocated.
         </p>
 
         {/* Primary Quick Actions */}
@@ -65,4 +65,3 @@ export default function PublicNotFound() {
     </div>
   );
 }
-

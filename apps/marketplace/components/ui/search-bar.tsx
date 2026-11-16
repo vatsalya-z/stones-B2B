@@ -30,8 +30,8 @@ export function SearchBar({
       } else {
         params.delete("q");
       }
-      // Navigate to /search if on homepage, else update current page params
-      const targetPath = pathname === "/" ? "/products" : pathname;
+      // Update current page params with search query
+      const targetPath = pathname;
       router.push(`${targetPath}?${params.toString()}`);
     },
     [router, pathname, searchParams],

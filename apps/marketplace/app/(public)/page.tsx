@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { getFeaturedProducts, getFeaturedSellers, getActiveCategories } from "@/lib/db";
-import { HeroSection } from "@/components/home/hero-section";
-import { TrustMetricsStrip } from "@/components/home/trust-metrics-strip";
-import { ProjectRequirementPanel } from "@/components/home/project-requirement-panel";
-import { StoneCategoriesSection } from "@/components/home/stone-categories-section";
-import { FeaturedMaterialsSection } from "@/components/home/featured-materials-section";
-import { VerifiedSuppliersSection } from "@/components/home/verified-suppliers-section";
-import { ArchitecturalApplicationsSection } from "@/components/home/architectural-applications-section";
-import { HowItWorksSection } from "@/components/home/how-it-works-section";
-import { ValuePropositionsSection } from "@/components/home/value-propositions-section";
-import { ProjectCtaSection } from "@/components/home/project-cta-section";
+import { getProducts, getActiveCategories } from "@/lib/db";
+import { getCurrentUserFavouriteIds } from "@/features/buyer/queries";
+import { StoneCategoryGrid } from "@/components/home/stone-category-grid";
+import { ProductsCatalogSection } from "@/components/products/products-catalog-section";
+import { ProjectApplicationGrid } from "@/components/home/project-application-grid";
 
 export const metadata: Metadata = {
   title: "StonesDekho — Source Natural Stone Direct from Verified Suppliers",
@@ -23,11 +17,47 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage() {
-  const [categories, products, sellers] = await Promise.all([
+interface HomePageProps {
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    material?: string | string[];
+    colour?: string | string[];
+    finish?: string | string[];
+    origin?: string | string[];
+    thickness?: string | string[];
+    stockStatus?: string | string[];
+    minPrice?: string;
+    maxPrice?: string;
+    verified?: string;
+    sort?: string;
+    page?: string;
+  }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const sp = (await searchParams) || {};
+  const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
+
+  const [categories, { products, total, totalPages }, favouriteIds] = await Promise.all([
     getActiveCategories(null),
-    getFeaturedProducts(6),
-    getFeaturedSellers(4),
+    getProducts({
+      q: sp.q,
+      category: sp.category,
+      material: sp.material,
+      colour: sp.colour,
+      finish: sp.finish,
+      origin: sp.origin,
+      thickness: sp.thickness,
+      stockStatus: sp.stockStatus,
+      minPrice: sp.minPrice,
+      maxPrice: sp.maxPrice,
+      verified: sp.verified,
+      sort: sp.sort,
+      page,
+      pageSize: 18,
+    }),
+    getCurrentUserFavouriteIds(),
   ]);
 
   const websiteSchema = {
@@ -70,35 +100,28 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
 
-      {/* 1. Hero Section */}
-      <HeroSection />
+      {/* 1. Live Stone Products Catalog & Sourcing Directory */}
+      <section id="products-catalog" className="pt-6 sm:pt-8 pb-10 bg-white">
+        <div className="container-wide">
+          <ProductsCatalogSection
+            categories={categories}
+            products={products}
+            total={total}
+            totalPages={totalPages}
+            page={page}
+            searchParams={sp}
+            favouriteIds={favouriteIds}
+            showBreadcrumbs={false}
+            baseUrl="/"
+          />
+        </div>
+      </section>
 
-      {/* 2. Trust Metrics Strip */}
-      <TrustMetricsStrip />
+      {/* 2. Curated Geological Collections (Explore by Stone Category - Luxury E-Commerce Showcase) */}
+      <StoneCategoryGrid categories={categories} />
 
-      {/* 3. Floating B2B Requirement Panel */}
-      <ProjectRequirementPanel />
-
-      {/* 4. Browse by Stone Categories */}
-      <StoneCategoriesSection categories={categories} />
-
-      {/* 5. Featured Stone Materials */}
-      <FeaturedMaterialsSection initialProducts={products} />
-
-      {/* 6. Verified Suppliers & Quarries */}
-      <VerifiedSuppliersSection sellers={sellers} />
-
-      {/* 7. Architectural Project Applications */}
-      <ArchitecturalApplicationsSection />
-
-      {/* 8. How StonesDekho Works */}
-      <HowItWorksSection />
-
-      {/* 9. Built for Importers, Architects & Contractors */}
-      <ValuePropositionsSection />
-
-      {/* 10. Final Project Requirement CTA */}
-      <ProjectCtaSection />
+      {/* 3. Popular Project Applications (4 Cards) */}
+      <ProjectApplicationGrid />
     </div>
   );
 }
