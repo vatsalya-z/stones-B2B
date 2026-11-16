@@ -101,7 +101,7 @@ export function VerifiedSuppliersSection({ sellers = [] }: VerifiedSuppliersSect
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-[#FAFAF8] border-t border-stone-200/80">
+    <section className="py-12 sm:py-16 bg-white border-b border-stone-200/80">
       <div className="container-wide">
         {/* Section Header with Eyebrow, Title and View All */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8">

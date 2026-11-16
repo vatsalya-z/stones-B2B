@@ -121,11 +121,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      {/* 2. Verified Indian Stone Suppliers & Quarry Owners */}
-      <VerifiedSuppliersSection sellers={featuredSellers} />
-
-      {/* 3. Curated Geological Collections (Explore by Stone Category - Luxury E-Commerce Showcase) */}
+      {/* 2. Curated Geological Collections (Explore by Stone Category - Compact Luxury Showcase) */}
       <StoneCategoryGrid categories={categories} />
+
+      {/* 3. Verified Indian Stone Suppliers & Quarry Owners */}
+      <VerifiedSuppliersSection sellers={featuredSellers} />
 
       {/* 4. Popular Project Applications (4 Cards) */}
       <ProjectApplicationGrid />
