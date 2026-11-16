@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { getProducts, getActiveCategories } from "@/lib/db";
+import { getProducts, getActiveCategories, getFeaturedSellers } from "@/lib/db";
 import { getCurrentUserFavouriteIds } from "@/features/buyer/queries";
 import { StoneCategoryGrid } from "@/components/home/stone-category-grid";
 import { ProductsCatalogSection } from "@/components/products/products-catalog-section";
+import { VerifiedSuppliersSection } from "@/components/home/verified-suppliers-section";
 import { ProjectApplicationGrid } from "@/components/home/project-application-grid";
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const sp = (await searchParams) || {};
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
 
-  const [categories, { products, total, totalPages }, favouriteIds] = await Promise.all([
+  const [categories, { products, total, totalPages }, favouriteIds, featuredSellers] = await Promise.all([
     getActiveCategories(null),
     getProducts({
       q: sp.q,
@@ -60,6 +61,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       pageSize: 18,
     }),
     getCurrentUserFavouriteIds(),
+    getFeaturedSellers(4),
   ]);
 
   const websiteSchema = {
@@ -119,10 +121,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      {/* 2. Curated Geological Collections (Explore by Stone Category - Luxury E-Commerce Showcase) */}
+      {/* 2. Verified Indian Stone Suppliers & Quarry Owners */}
+      <VerifiedSuppliersSection sellers={featuredSellers} />
+
+      {/* 3. Curated Geological Collections (Explore by Stone Category - Luxury E-Commerce Showcase) */}
       <StoneCategoryGrid categories={categories} />
 
-      {/* 3. Popular Project Applications (4 Cards) */}
+      {/* 4. Popular Project Applications (4 Cards) */}
       <ProjectApplicationGrid />
     </div>
   );
