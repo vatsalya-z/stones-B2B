@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Breadcrumb } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
 import { ProductFilterBar } from "@/components/ui/product-filter-bar";
+import { HeroSearchLocationBar } from "@/components/home/hero-search-location-bar";
 import { Pagination } from "@/components/ui/pagination";
 import type { getActiveCategories, getProducts } from "@/lib/db";
 
@@ -121,7 +122,10 @@ export function ProductsCatalogSection({
       )}
 
       {/* Product Catalog Section: Full-Width 4-Column Layout */}
-      <div className="space-y-6 pt-2">
+      <div className="space-y-5 pt-1">
+        {/* Premium Architectural Search & Location Bar (Below Navbar) */}
+        <HeroSearchLocationBar />
+
         <Suspense fallback={<div className="h-12 w-full animate-pulse bg-stone-200 rounded-xl" />}>
           <ProductFilterBar
             categories={categoryOptions}
@@ -177,45 +181,45 @@ export function ProductsCatalogSection({
             {/* Premium Full-Width 4-Column Product Grid */}
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {products.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    id={p.id}
-                    slug={p.slug}
-                    name={p.name}
-                    primaryImage={p.primaryImage}
-                    materialType={p.materialType}
-                    colour={p.colour}
-                    finish={p.finish}
-                    priceType={p.priceType}
-                    price={p.price}
-                    currency={p.currency}
-                    unit={p.unit}
-                    sellerName={p.sellerName}
-                    sellerSlug={p.sellerSlug}
-                    isVerifiedSeller={p.isVerifiedSeller}
-                    stoneOrigin={p.stoneOrigin}
-                    thickness={p.thickness}
-                    length={p.length}
-                    width={p.width}
-                    minimumOrderQuantity={p.minimumOrderQuantity}
-                    stockStatus={p.stockStatus}
-                    leadTime={p.leadTime}
-                    isFavourited={favouriteIds.has(p.id)}
-                  />
-                ))}
-              </div>
-
-              {/* Pagination */}
-              <div className="pt-6">
-                <Pagination
-                  page={page}
-                  totalPages={totalPages}
-                  baseUrl={baseUrl}
-                  searchParams={searchParams}
+                <ProductCard
+                  key={p.id}
+                  id={p.id}
+                  slug={p.slug}
+                  name={p.name}
+                  primaryImage={p.primaryImage}
+                  materialType={p.materialType}
+                  colour={p.colour}
+                  finish={p.finish}
+                  priceType={p.priceType}
+                  price={p.price}
+                  currency={p.currency}
+                  unit={p.unit}
+                  sellerName={p.sellerName}
+                  sellerSlug={p.sellerSlug}
+                  isVerifiedSeller={p.isVerifiedSeller}
+                  stoneOrigin={p.stoneOrigin}
+                  thickness={p.thickness}
+                  length={p.length}
+                  width={p.width}
+                  minimumOrderQuantity={p.minimumOrderQuantity}
+                  stockStatus={p.stockStatus}
+                  leadTime={p.leadTime}
+                  isFavourited={favouriteIds.has(p.id)}
                 />
-              </div>
-            </>
-          )}
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="pt-6">
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                baseUrl={baseUrl}
+                searchParams={searchParams}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
