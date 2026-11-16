@@ -432,6 +432,24 @@ export function ActiveFilterPills() {
 
   const pills: { key: string; label: string; onRemove: () => void }[] = [];
 
+  const query = searchParams.get("q");
+  if (query) {
+    pills.push({
+      key: "q",
+      label: `Search: "${query}"`,
+      onRemove: () => removeSingleParam("q"),
+    });
+  }
+
+  const location = searchParams.get("location");
+  if (location) {
+    pills.push({
+      key: "location",
+      label: `Location: ${location}`,
+      onRemove: () => removeSingleParam("location"),
+    });
+  }
+
   ["category", "material", "colour", "finish", "origin", "thickness", "stockStatus"].forEach((param) => {
     searchParams.getAll(param).forEach((val) => {
       let displayLabel = `${param.charAt(0).toUpperCase() + param.slice(1)}: ${val}`;

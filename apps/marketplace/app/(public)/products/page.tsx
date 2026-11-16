@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 interface ProductsPageProps {
   searchParams: Promise<{
     q?: string;
+    location?: string;
     category?: string;
     material?: string | string[];
     colour?: string | string[];
@@ -45,6 +46,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     getActiveCategories(null),
     getProducts({
       q: sp.q,
+      location: sp.location,
       category: sp.category,
       material: sp.material,
       colour: sp.colour,

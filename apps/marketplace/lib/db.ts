@@ -1017,7 +1017,22 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
         p.stone_origin?.toLowerCase().includes(query) ||
         p.colour?.toLowerCase().includes(query) ||
         p.finish?.toLowerCase().includes(query) ||
-        p.description?.toLowerCase().includes(query),
+        p.description?.toLowerCase().includes(query) ||
+        p.seller.business_name?.toLowerCase().includes(query) ||
+        p.seller.city?.toLowerCase().includes(query),
+    );
+  }
+
+  if (params.location?.trim()) {
+    const loc = params.location.toLowerCase().trim();
+    list = list.filter(
+      (p) =>
+        (p.stone_origin && p.stone_origin.toLowerCase().includes(loc)) ||
+        (p.seller.city && p.seller.city.toLowerCase().includes(loc)) ||
+        (p.seller.state && p.seller.state.toLowerCase().includes(loc)) ||
+        (loc.includes("rajasthan") && (p.stone_origin?.toLowerCase().includes("rajasthan") || p.seller.state?.toLowerCase().includes("rajasthan"))) ||
+        (loc.includes("andhra") && (p.stone_origin?.toLowerCase().includes("andhra") || p.seller.state?.toLowerCase().includes("andhra"))) ||
+        (loc.includes("haryana") && (p.stone_origin?.toLowerCase().includes("haryana") || p.stone_origin?.toLowerCase().includes("rewari") || p.stone_origin?.toLowerCase().includes("kund"))),
     );
   }
 
@@ -1085,6 +1100,7 @@ function filterSeedSellers(params: SellerFilterParams = {}): {
 
 export interface ProductFilterParams {
   q?: string;
+  location?: string;
   category?: string;
   material?: string | string[];
   colour?: string | string[];
@@ -1132,12 +1148,17 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
 
     const hasFilters = Boolean(
       params.q?.trim() ||
+        params.location?.trim() ||
         params.category ||
         (Array.isArray(params.material) ? params.material.length > 0 : params.material) ||
         (Array.isArray(params.colour) ? params.colour.length > 0 : params.colour) ||
         (Array.isArray(params.finish) ? params.finish.length > 0 : params.finish) ||
+        (Array.isArray(params.origin) ? params.origin.length > 0 : params.origin) ||
+        (Array.isArray(params.thickness) ? params.thickness.length > 0 : params.thickness) ||
+        (Array.isArray(params.stockStatus) ? params.stockStatus.length > 0 : params.stockStatus) ||
         params.minPrice ||
-        params.maxPrice,
+        params.maxPrice ||
+        params.verified,
     );
 
     let categoryId: string | null = null;
@@ -1181,6 +1202,10 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
         type: "plain",
         config: "simple",
       });
+    }
+
+    if (params.location?.trim()) {
+      query = query.ilike("stone_origin", `%${params.location.trim()}%`);
     }
 
     if (params.category) {

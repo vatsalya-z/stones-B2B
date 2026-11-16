@@ -47,7 +47,8 @@ export function ProductFilterBar({
     searchParams.getAll("stockStatus").length +
     (searchParams.get("verified") === "true" ? 1 : 0) +
     (searchParams.get("minPrice") ? 1 : 0) +
-    (searchParams.get("maxPrice") ? 1 : 0);
+    (searchParams.get("maxPrice") ? 1 : 0) +
+    (searchParams.get("location") ? 1 : 0);
 
   return (
     <div className="w-full space-y-2">

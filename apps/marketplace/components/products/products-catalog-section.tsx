@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
+import { Breadcrumb } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
 import { FilterSidebar } from "@/components/ui/filter-sidebar";
 import { ProductFilterBar } from "@/components/ui/product-filter-bar";
 import { Pagination } from "@/components/ui/pagination";
-import { ProductDiscoveryHeader } from "@/components/products/product-discovery-header";
 import type { getActiveCategories, getProducts } from "@/lib/db";
 
 export const MATERIAL_OPTIONS = [
@@ -74,6 +74,7 @@ export interface ProductsCatalogSectionProps {
   page: number;
   searchParams: {
     q?: string;
+    location?: string;
     category?: string;
     material?: string | string[];
     colour?: string | string[];
@@ -109,16 +110,16 @@ export function ProductsCatalogSection({
   }));
 
   return (
-    <div className="space-y-8">
-      {/* Architectural Discovery Header & Quick Material Filter Shortcuts */}
-      <ProductDiscoveryHeader
-        totalCount={total}
-        categories={categories.map((c) => ({ slug: c.slug, name: c.name }))}
-        currentQuery={searchParams.q ?? ""}
-        currentMaterial={searchParams.material}
-        currentCategory={searchParams.category}
-        showBreadcrumbs={showBreadcrumbs}
-      />
+    <div className="space-y-6">
+      {/* Breadcrumb Navigation */}
+      {showBreadcrumbs && (
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Products" },
+          ]}
+        />
+      )}
 
       {/* Main Layout: Sticky Left Filter Sidebar + Product Grid */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 pt-2">
