@@ -365,7 +365,7 @@ export function MobileFilterDrawerModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex lg:hidden">
+    <div className="fixed inset-0 z-50 flex">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-stone-950/60 backdrop-blur-xs transition-opacity"

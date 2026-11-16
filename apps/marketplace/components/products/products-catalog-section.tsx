@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import { Breadcrumb } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
-import { FilterSidebar } from "@/components/ui/filter-sidebar";
 import { ProductFilterBar } from "@/components/ui/product-filter-bar";
 import { Pagination } from "@/components/ui/pagination";
 import type { getActiveCategories, getProducts } from "@/lib/db";
@@ -121,82 +120,63 @@ export function ProductsCatalogSection({
         />
       )}
 
-      {/* Main Layout: Sticky Left Filter Sidebar + Product Grid */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 pt-2">
-        {/* Desktop Left Filter Sidebar */}
-        <div className="hidden lg:block lg:col-span-1">
-          <div className="sticky top-24 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs">
-            <Suspense fallback={<div className="h-96 w-full animate-pulse bg-stone-100 rounded-xl" />}>
-              <FilterSidebar
-                categories={categoryOptions}
-                materialTypes={MATERIAL_OPTIONS}
-                colours={COLOUR_OPTIONS}
-                finishes={FINISH_OPTIONS}
-                origins={ORIGIN_OPTIONS}
-                thicknesses={THICKNESS_OPTIONS}
-                stockStatuses={STOCK_STATUS_OPTIONS}
-              />
-            </Suspense>
-          </div>
-        </div>
+      {/* Product Catalog Section: Full-Width 4-Column Layout */}
+      <div className="space-y-6 pt-2">
+        <Suspense fallback={<div className="h-12 w-full animate-pulse bg-stone-200 rounded-xl" />}>
+          <ProductFilterBar
+            categories={categoryOptions}
+            materialTypes={MATERIAL_OPTIONS}
+            colours={COLOUR_OPTIONS}
+            finishes={FINISH_OPTIONS}
+            origins={ORIGIN_OPTIONS}
+            thicknesses={THICKNESS_OPTIONS}
+            stockStatuses={STOCK_STATUS_OPTIONS}
+            currentSort={searchParams.sort}
+            totalResults={total}
+          />
+        </Suspense>
 
-        {/* Product Grid & Controls */}
-        <div className="lg:col-span-3 space-y-6">
-          <Suspense fallback={<div className="h-10 w-full animate-pulse bg-stone-200 rounded-lg" />}>
-            <ProductFilterBar
-              categories={categoryOptions}
-              materialTypes={MATERIAL_OPTIONS}
-              colours={COLOUR_OPTIONS}
-              finishes={FINISH_OPTIONS}
-              origins={ORIGIN_OPTIONS}
-              thicknesses={THICKNESS_OPTIONS}
-              stockStatuses={STOCK_STATUS_OPTIONS}
-              currentSort={searchParams.sort}
-              totalResults={total}
-            />
-          </Suspense>
-
-          {products.length === 0 ? (
-            /* Enhanced Architectural Empty State */
-            <div className="rounded-3xl border border-stone-200 bg-white p-8 sm:p-14 text-center shadow-xs space-y-6">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-800">
-                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.8}
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
-              </div>
-              <div className="space-y-2 max-w-md mx-auto">
-                <h3 className="text-lg sm:text-xl font-bold text-stone-950 font-sans">
-                  No stone products match your selected filters
-                </h3>
-                <p className="text-xs sm:text-sm text-stone-500 leading-relaxed">
-                  Try broadening your filters, clearing specific thickness or price ranges, or searching for a different stone variety or quarry origin.
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                <Link
-                  href={baseUrl}
-                  className="rounded-xl bg-stone-950 px-5 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-stone-800 transition-colors"
-                >
-                  Reset All Filters
-                </Link>
-                <Link
-                  href="/categories"
-                  className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 hover:bg-stone-50 hover:border-stone-400 transition-colors"
-                >
-                  Browse Geological Collections
-                </Link>
-              </div>
+        {products.length === 0 ? (
+          /* Enhanced Architectural Empty State */
+          <div className="rounded-3xl border border-stone-200 bg-white p-8 sm:p-14 text-center shadow-xs space-y-6">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-800">
+              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.8}
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
+              </svg>
             </div>
-          ) : (
-            <>
-              {/* Premium Product Grid */}
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {products.map((p) => (
+            <div className="space-y-2 max-w-md mx-auto">
+              <h3 className="text-lg sm:text-xl font-bold text-stone-950 font-sans">
+                No stone products match your selected filters
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-500 leading-relaxed">
+                Try broadening your filters, clearing specific thickness or price ranges, or searching for a different stone variety or quarry origin.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link
+                href={baseUrl}
+                className="rounded-xl bg-stone-950 px-5 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-stone-800 transition-colors"
+              >
+                Reset All Filters
+              </Link>
+              <Link
+                href="/categories"
+                className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 hover:bg-stone-50 hover:border-stone-400 transition-colors"
+              >
+                Browse Geological Collections
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Premium Full-Width 4-Column Product Grid */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              {products.map((p) => (
                   <ProductCard
                     key={p.id}
                     id={p.id}
@@ -236,7 +216,6 @@ export function ProductsCatalogSection({
               </div>
             </>
           )}
-        </div>
       </div>
     </div>
   );
