@@ -66,58 +66,72 @@ function HorizontalFilterDropdown({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-colors cursor-pointer whitespace-nowrap shadow-2xs border",
+          "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs transition-all cursor-pointer whitespace-nowrap shadow-2xs border",
           hasActive
-            ? "bg-stone-900 text-white border-stone-900 font-semibold"
-            : "bg-white text-stone-700 border-stone-200/90 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 font-medium",
+            ? "bg-stone-900 text-white border-stone-900 font-semibold shadow-xs"
+            : "bg-stone-50/70 text-stone-700 border-stone-200/90 hover:border-stone-400 hover:bg-white hover:text-stone-950 font-medium",
         )}
         aria-expanded={isOpen}
       >
         <span>{label}</span>
         {hasActive && (
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white">
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-stone-950">
             {selectedValues.length}
           </span>
         )}
         <ChevronDown
           className={cn(
             "h-3.5 w-3.5 transition-transform duration-150",
-            isOpen && "rotate-180",
+            isOpen ? "rotate-180" : "",
+            hasActive ? "text-stone-300" : "text-stone-400",
           )}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-60 rounded-2xl border border-stone-200 bg-white p-2.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 max-h-72 overflow-y-auto space-y-1">
-          <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
-            Filter by {label}
-          </div>
-          {options.map((option) => {
-            const isChecked = selectedValues.includes(option.value);
-            return (
-              <label
-                key={option.value}
-                className="flex cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs hover:bg-stone-50 transition-colors"
+        <div className="absolute left-0 top-full mt-2 z-50 w-64 rounded-2xl border border-stone-200/90 bg-white p-2.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100">
+          <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-stone-100 mb-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
+              Filter by {label}
+            </span>
+            {hasActive && (
+              <button
+                type="button"
+                onClick={() => {
+                  selectedValues.forEach((val) => onChange(param, val, false));
+                }}
+                className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 cursor-pointer"
               >
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={(e) => onChange(param, option.value, e.target.checked)}
-                  className="h-3.5 w-3.5 rounded border-stone-300 text-amber-700 focus:ring-amber-600"
-                />
-                <span
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="max-h-60 overflow-y-auto space-y-0.5 pr-1">
+            {options.map((option) => {
+              const isChecked = selectedValues.includes(option.value);
+              return (
+                <label
+                  key={option.value}
                   className={cn(
-                    "flex-1",
+                    "flex cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-xs transition-colors",
                     isChecked
-                      ? "text-stone-950 font-semibold"
-                      : "text-stone-700 font-normal",
+                      ? "bg-amber-50/60 text-amber-950 font-semibold"
+                      : "text-stone-700 hover:bg-stone-50 hover:text-stone-950",
                   )}
                 >
-                  {option.label}
-                </span>
-              </label>
-            );
-          })}
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) =>
+                      onChange(param, option.value, e.target.checked)
+                    }
+                    className="h-3.5 w-3.5 rounded border-stone-300 text-amber-600 focus:ring-amber-500 accent-amber-600"
+                  />
+                  <span className="flex-1">{option.label}</span>
+                </label>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
@@ -169,10 +183,10 @@ function HorizontalPriceDropdown({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-colors cursor-pointer whitespace-nowrap shadow-2xs border",
+          "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs transition-all cursor-pointer whitespace-nowrap shadow-2xs border",
           hasActive
-            ? "bg-stone-900 text-white border-stone-900 font-semibold"
-            : "bg-white text-stone-700 border-stone-200/90 hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900 font-medium",
+            ? "bg-stone-900 text-white border-stone-900 font-semibold shadow-xs"
+            : "bg-stone-50/70 text-stone-700 border-stone-200/90 hover:border-stone-400 hover:bg-white hover:text-stone-950 font-medium",
         )}
         aria-expanded={isOpen}
       >
@@ -184,19 +198,61 @@ function HorizontalPriceDropdown({
         <ChevronDown
           className={cn(
             "h-3.5 w-3.5 transition-transform duration-150",
-            isOpen && "rotate-180",
+            isOpen ? "rotate-180" : "",
+            hasActive ? "text-stone-300" : "text-stone-400",
           )}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-64 rounded-2xl border border-stone-200 bg-white p-3 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 space-y-3">
-          <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">
-            Wholesale Price (₹ / unit)
+        <div className="absolute left-0 top-full mt-2 z-50 w-72 rounded-2xl border border-stone-200/90 bg-white p-3.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 space-y-3">
+          <div className="flex items-center justify-between border-b border-stone-100 pb-2">
+            <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">
+              Wholesale Rate (₹ / unit)
+            </span>
+            {hasActive && (
+              <button
+                type="button"
+                onClick={() => {
+                  setTempMin("");
+                  setTempMax("");
+                  onApply("", "");
+                  setIsOpen(false);
+                }}
+                className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Quick presets */}
+          <div className="grid grid-cols-2 gap-1.5">
+            {[
+              { label: "< ₹200", min: "", max: "200" },
+              { label: "₹200 - ₹500", min: "200", max: "500" },
+              { label: "₹500 - ₹1000", min: "500", max: "1000" },
+              { label: "₹1000+", min: "1000", max: "" },
+            ].map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => {
+                  setTempMin(preset.min);
+                  setTempMax(preset.max);
+                  onApply(preset.min, preset.max);
+                  setIsOpen(false);
+                }}
+                className="rounded-lg border border-stone-200 bg-stone-50/70 hover:bg-stone-100 hover:border-stone-300 py-1 text-[11px] font-medium text-stone-700 transition-colors cursor-pointer"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
             <div className="relative flex-1">
-              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400">
+              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400 font-medium">
                 ₹
               </span>
               <input
@@ -205,12 +261,12 @@ function HorizontalPriceDropdown({
                 placeholder="Min"
                 value={tempMin}
                 onChange={(e) => setTempMin(e.target.value)}
-                className="w-full rounded-lg border border-stone-300 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:border-amber-600 focus:outline-none"
+                className="w-full rounded-xl border border-stone-200 bg-stone-50/50 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:bg-white focus:border-amber-600 focus:outline-none transition-colors"
               />
             </div>
             <span className="text-xs text-stone-400 font-medium">to</span>
             <div className="relative flex-1">
-              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400">
+              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400 font-medium">
                 ₹
               </span>
               <input
@@ -219,17 +275,18 @@ function HorizontalPriceDropdown({
                 placeholder="Max"
                 value={tempMax}
                 onChange={(e) => setTempMax(e.target.value)}
-                className="w-full rounded-lg border border-stone-300 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:border-amber-600 focus:outline-none"
+                className="w-full rounded-xl border border-stone-200 bg-stone-50/50 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:bg-white focus:border-amber-600 focus:outline-none transition-colors"
               />
             </div>
           </div>
+
           <button
             type="button"
             onClick={() => {
               onApply(tempMin, tempMax);
               setIsOpen(false);
             }}
-            className="w-full rounded-xl bg-amber-600 hover:bg-amber-700 text-white py-1.5 text-xs font-bold transition-colors shadow-2xs cursor-pointer"
+            className="w-full rounded-xl bg-amber-600 hover:bg-amber-700 text-white py-2 text-xs font-bold transition-colors shadow-2xs cursor-pointer"
           >
             Apply Price Filter
           </button>
@@ -240,7 +297,7 @@ function HorizontalPriceDropdown({
 }
 
 // ---------------------------------------------------------------------------
-// Main Product Filter Bar
+// Main Product Filter Bar (Architectural Sourcing Toolbar)
 // ---------------------------------------------------------------------------
 export function ProductFilterBar({
   categories,
@@ -331,26 +388,29 @@ export function ProductFilterBar({
     (searchParams.get("q") ? 1 : 0);
 
   return (
-    <div className="w-full space-y-3">
-      {/* Top Filter Bar Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-200/80 pb-3">
-        {/* Left Side: Filter Pill Dropdowns & Drawer Trigger */}
+    <div className="w-full rounded-2xl border border-stone-200/90 bg-white p-3 sm:p-3.5 shadow-xs transition-all space-y-3">
+      {/* Primary Toolbar Row */}
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+        {/* Left Side: All Filters Trigger + Quick Dropdowns */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* All Filters Button (Opens Full Slide-Over Drawer) */}
+          {/* Tactile All Filters Button */}
           <button
             type="button"
             onClick={() => setIsDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-3.5 py-1.5 text-xs font-bold text-stone-800 shadow-2xs hover:bg-stone-50 hover:border-stone-400 transition-colors cursor-pointer shrink-0"
+            className="inline-flex items-center gap-2 rounded-xl bg-stone-900 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-stone-800 transition-all cursor-pointer shrink-0"
             aria-label="Open full filters drawer"
           >
-            <SlidersHorizontal className="h-3.5 w-3.5 text-stone-600" />
+            <SlidersHorizontal className="h-3.5 w-3.5 text-stone-300" />
             <span>All Filters</span>
             {activeCount > 0 && (
-              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-600 px-1 text-[10px] font-bold text-white">
+              <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-stone-950">
                 {activeCount}
               </span>
             )}
           </button>
+
+          {/* Architectural divider */}
+          <div className="hidden sm:block h-6 w-px bg-stone-200 mx-0.5" />
 
           {/* Quick Dropdown: Stone Category */}
           <HorizontalFilterDropdown
@@ -411,17 +471,17 @@ export function ProductFilterBar({
             type="button"
             onClick={toggleVerified}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium border transition-colors cursor-pointer whitespace-nowrap shadow-2xs shrink-0",
+              "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium border transition-all cursor-pointer whitespace-nowrap shadow-2xs shrink-0",
               isVerified
-                ? "bg-emerald-800 text-white border-emerald-800 font-semibold shadow-xs"
-                : "bg-white text-stone-700 border-stone-200/90 hover:border-emerald-600 hover:text-emerald-800 hover:bg-emerald-50/40",
+                ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-semibold shadow-2xs"
+                : "bg-stone-50/70 text-stone-700 border-stone-200/90 hover:bg-emerald-50/40 hover:text-emerald-800 hover:border-emerald-300",
             )}
             aria-pressed={isVerified}
           >
             <ShieldCheck
               className={cn(
                 "h-3.5 w-3.5",
-                isVerified ? "text-emerald-300" : "text-emerald-600",
+                isVerified ? "text-emerald-700" : "text-emerald-600",
               )}
             />
             <span>Verified Only</span>
@@ -429,18 +489,27 @@ export function ProductFilterBar({
         </div>
 
         {/* Right Side: Lot Counter & Sort Selector */}
-        <div className="flex items-center gap-4 shrink-0 ml-auto">
-          <p className="text-xs text-stone-600 font-medium hidden sm:inline">
-            Showing <span className="font-bold text-stone-900">{totalResults}</span>{" "}
-            stone lots & gangsaw slabs
-          </p>
+        <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2.5 xl:pt-0 border-t border-stone-100 xl:border-t-0">
+          <div className="inline-flex items-center gap-2 rounded-xl bg-stone-50 border border-stone-200/80 px-3 py-2 text-xs text-stone-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>
+              <strong className="font-semibold text-stone-900">{totalResults}</strong> Stone Lots
+            </span>
+          </div>
 
           <ProductSortSelector currentSort={currentSort} />
         </div>
       </div>
 
-      {/* Active Filter Tags */}
-      <ActiveFilterPills />
+      {/* Integrated Active Filter Shelf */}
+      {activeCount > 0 && (
+        <div className="mt-3 pt-3 border-t border-stone-100/90 flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400">
+            Active:
+          </span>
+          <ActiveFilterPills />
+        </div>
+      )}
 
       {/* Slide-over Full Filter Drawer (Modal) */}
       <MobileFilterDrawerModal

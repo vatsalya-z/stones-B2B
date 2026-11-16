@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { ArrowUpDown, Check, ChevronDown, RotateCcw, X } from "lucide-react";
 import { cn } from "@stone/ui";
 
 export interface FilterOption {
@@ -504,44 +505,70 @@ export function ActiveFilterPills() {
   if (pills.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 pt-2 pb-4">
-      <span className="text-xs font-semibold text-stone-500">Active Filters:</span>
+    <div className="flex flex-wrap items-center gap-1.5">
       {pills.map((pill) => (
         <span
           key={pill.key}
-          className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-2.5 py-1 text-xs font-medium text-stone-700 shadow-xs"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200/90 bg-stone-50/90 px-2.5 py-1 text-xs font-medium text-stone-700 shadow-2xs hover:bg-stone-100 transition-colors"
         >
           <span>{pill.label}</span>
           <button
             type="button"
             onClick={pill.onRemove}
-            className="rounded-full p-0.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+            className="rounded-full p-0.5 text-stone-400 hover:bg-stone-200/60 hover:text-stone-700 cursor-pointer transition-colors"
             aria-label={`Remove filter ${pill.label}`}
           >
-            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="h-3 w-3" />
           </button>
         </span>
       ))}
       <button
         type="button"
         onClick={clearAll}
-        className="text-xs font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-2 ml-1"
+        className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-2 ml-1 cursor-pointer transition-colors"
       >
-        Clear all
+        <RotateCcw className="h-3 w-3" />
+        <span>Clear all</span>
       </button>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Sort Selector
+// Sort Selector (Refined Custom Popover Dropdown)
 // ---------------------------------------------------------------------------
 export function ProductSortSelector({ currentSort = "featured" }: { currentSort?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const sortOptions = [
+    { value: "featured", label: "Featured / Newest" },
+    { value: "price_asc", label: "Price: Low to High" },
+    { value: "price_desc", label: "Price: High to Low" },
+    { value: "newest", label: "Recently Published" },
+  ];
+
+  const currentLabel =
+    sortOptions.find((o) => o.value === (currentSort || "featured"))?.label ||
+    "Featured / Newest";
 
   const handleSortChange = (sortVal: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -552,24 +579,54 @@ export function ProductSortSelector({ currentSort = "featured" }: { currentSort?
     }
     params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
+    setIsOpen(false);
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <label htmlFor="product-sort" className="text-xs font-medium text-stone-500 whitespace-nowrap">
-        Sort by:
-      </label>
-      <select
-        id="product-sort"
-        value={currentSort || "featured"}
-        onChange={(e) => handleSortChange(e.target.value)}
-        className="rounded-lg border border-stone-300 bg-white py-1.5 pl-2.5 pr-8 text-xs font-semibold text-stone-800 focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600 shadow-xs"
+    <div ref={containerRef} className="relative inline-block text-left shrink-0">
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="inline-flex items-center gap-2 rounded-xl border border-stone-200/90 bg-stone-50/70 hover:bg-white hover:border-stone-300 px-3 py-2 text-xs font-semibold text-stone-800 transition-all cursor-pointer shadow-2xs"
+        aria-expanded={isOpen}
       >
-        <option value="featured">Featured / Newest</option>
-        <option value="price_asc">Price: Low to High</option>
-        <option value="price_desc">Price: High to Low</option>
-        <option value="newest">Recently Published</option>
-      </select>
+        <ArrowUpDown className="h-3.5 w-3.5 text-stone-500" />
+        <span className="text-stone-500 font-normal">Sort:</span>
+        <span className="font-semibold text-stone-900">{currentLabel}</span>
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 text-stone-400 transition-transform duration-150",
+            isOpen && "rotate-180 text-stone-700",
+          )}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 top-full mt-1.5 z-50 w-52 rounded-2xl border border-stone-200/90 bg-white p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 space-y-0.5">
+          <div className="px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1">
+            Sort Stone Catalog
+          </div>
+          {sortOptions.map((opt) => {
+            const isSelected = (currentSort || "featured") === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => handleSortChange(opt.value)}
+                className={cn(
+                  "w-full flex items-center justify-between rounded-xl px-2.5 py-2 text-xs text-left transition-colors cursor-pointer",
+                  isSelected
+                    ? "bg-stone-900 text-white font-semibold"
+                    : "text-stone-700 hover:bg-stone-50 hover:text-stone-950 font-medium",
+                )}
+              >
+                <span>{opt.label}</span>
+                {isSelected && <Check className="h-3.5 w-3.5 text-amber-400" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
