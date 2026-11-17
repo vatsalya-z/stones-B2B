@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Breadcrumb } from "@stone/ui";
 import { SupplierCard } from "@/components/ui/supplier-card";
 import { Pagination } from "@/components/ui/pagination";
 import { getPublicSellers } from "@/lib/db";
+import { SupplierFilterBar } from "@/components/suppliers/supplier-filter-bar";
 
 export const metadata: Metadata = {
   title: "Verified Indian Stone Suppliers, Quarry Owners & Exporters",
@@ -31,48 +31,6 @@ interface SuppliersPageProps {
   }>;
 }
 
-const BUSINESS_TYPES = [
-  { value: "", label: "All Business Types" },
-  { value: "manufacturer", label: "Manufacturer" },
-  { value: "quarry_owner", label: "Quarry Owner" },
-  { value: "processor", label: "Stone Processor" },
-  { value: "exporter", label: "Exporter" },
-  { value: "wholesaler", label: "Wholesaler" },
-];
-
-const MAJOR_STATES = [
-  { value: "", label: "All States & Quarry Hubs" },
-  { value: "Rajasthan", label: "Rajasthan (Makrana, Jodhpur, Kota, Dholpur)" },
-  { value: "Gujarat", label: "Gujarat (Ambaji, Morbi)" },
-  { value: "Andhra Pradesh", label: "Andhra Pradesh (Ongole, Chimakurthy)" },
-  { value: "Karnataka", label: "Karnataka (Bangalore, Ilkal)" },
-  { value: "Tamil Nadu", label: "Tamil Nadu" },
-  { value: "Telangana", label: "Telangana" },
-  { value: "Madhya Pradesh", label: "Madhya Pradesh (Gwalior)" },
-  { value: "Maharashtra", label: "Maharashtra" },
-];
-
-function buildFilterUrl(
-  current: { q?: string; type?: string; state?: string; page?: string },
-  updates: Record<string, string | null>,
-): string {
-  const next: Record<string, string> = {};
-  for (const [k, v] of Object.entries(current)) {
-    if (v) next[k] = v;
-  }
-  for (const [key, value] of Object.entries(updates)) {
-    if (value === null || value === "") {
-      delete next[key];
-    } else {
-      next[key] = value;
-    }
-  }
-  if ("q" in updates || "type" in updates || "state" in updates) {
-    delete next.page;
-  }
-  const qs = new URLSearchParams(next).toString();
-  return qs ? `/suppliers?${qs}` : "/suppliers";
-}
 
 export default async function SuppliersPage({ searchParams }: SuppliersPageProps) {
   const sp = await searchParams;
@@ -84,7 +42,6 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
     state: sp.state,
     page,
     pageSize: 16,
-    fallback: false,
   });
 
   const hasActiveFilters = Boolean(sp.q?.trim() || sp.type || sp.state);
@@ -125,8 +82,6 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
     ],
   };
 
-  const selectedTypeLabel = BUSINESS_TYPES.find((b) => b.value === sp.type)?.label;
-  const selectedStateLabel = MAJOR_STATES.find((s) => s.value === sp.state)?.label;
 
   return (
     <div className="section-pad bg-stone-50 min-h-screen">
@@ -136,14 +91,6 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
       />
 
       <div className="container-wide space-y-8">
-        {/* Navigation Breadcrumb */}
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Suppliers" },
-          ]}
-        />
-
         {/* Editorial Header Section */}
         <div className="rounded-3xl border border-stone-200/80 bg-white p-6 sm:p-10 shadow-xs">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -219,124 +166,12 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-xs space-y-4">
-          <form method="GET" action="/suppliers" className="grid grid-cols-1 gap-3 sm:grid-cols-12">
-            {/* Search Input */}
-            <div className="sm:col-span-5 relative">
-              <input
-                type="search"
-                name="q"
-                defaultValue={sp.q ?? ""}
-                placeholder="Search by factory name, city, stone specialty..."
-                className="input-base w-full pr-8 text-xs sm:text-sm"
-                aria-label="Search suppliers"
-              />
-              {sp.q && (
-                <Link
-                  href={buildFilterUrl(sp, { q: null })}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs font-bold p-1"
-                  title="Clear search"
-                  aria-label="Clear search"
-                >
-                  ✕
-                </Link>
-              )}
-            </div>
-
-            {/* Business Type Select */}
-            <div className="sm:col-span-3">
-              <select
-                name="type"
-                defaultValue={sp.type ?? ""}
-                className="input-base w-full text-xs sm:text-sm"
-                aria-label="Filter by business type"
-              >
-                {BUSINESS_TYPES.map((b) => (
-                  <option key={b.value} value={b.value}>
-                    {b.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* State Select & Submit Button */}
-            <div className="sm:col-span-4 flex gap-2">
-              <select
-                name="state"
-                defaultValue={sp.state ?? ""}
-                className="input-base flex-1 text-xs sm:text-sm"
-                aria-label="Filter by state"
-              >
-                {MAJOR_STATES.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="btn-primary text-xs font-bold px-5 uppercase tracking-wider"
-              >
-                Filter
-              </button>
-            </div>
-          </form>
-
-          {/* Active Filter Pills */}
-          {hasActiveFilters && (
-            <div className="pt-3 border-t border-stone-100 flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 mr-1">
-                Active Filters:
-              </span>
-
-              {sp.q?.trim() && (
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-800 ring-1 ring-inset ring-stone-200">
-                  <span>Search: &ldquo;{sp.q.trim()}&rdquo;</span>
-                  <Link
-                    href={buildFilterUrl(sp, { q: null })}
-                    className="text-stone-400 hover:text-stone-900 font-bold ml-0.5"
-                    title="Remove search filter"
-                  >
-                    ×
-                  </Link>
-                </span>
-              )}
-
-              {sp.type && (
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-800 ring-1 ring-inset ring-stone-200">
-                  <span>Type: {selectedTypeLabel || sp.type}</span>
-                  <Link
-                    href={buildFilterUrl(sp, { type: null })}
-                    className="text-stone-400 hover:text-stone-900 font-bold ml-0.5"
-                    title="Remove business type filter"
-                  >
-                    ×
-                  </Link>
-                </span>
-              )}
-
-              {sp.state && (
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-800 ring-1 ring-inset ring-stone-200">
-                  <span>State: {selectedStateLabel || sp.state}</span>
-                  <Link
-                    href={buildFilterUrl(sp, { state: null })}
-                    className="text-stone-400 hover:text-stone-900 font-bold ml-0.5"
-                    title="Remove state filter"
-                  >
-                    ×
-                  </Link>
-                </span>
-              )}
-
-              <Link
-                href="/suppliers"
-                className="text-xs font-semibold text-amber-700 hover:text-amber-800 hover:underline ml-2"
-              >
-                Clear all filters
-              </Link>
-            </div>
-          )}
-        </div>
+        <SupplierFilterBar
+          initialSearch={sp.q}
+          initialType={sp.type}
+          initialState={sp.state}
+          totalResults={total}
+        />
 
         {/* Directory Results Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-stone-600 px-1">

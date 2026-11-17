@@ -3,7 +3,6 @@ import {
   Users,
   Building2,
   ClipboardList,
-  Store,
   Heart,
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
@@ -89,14 +88,6 @@ export async function SiteHeader() {
             <span>Post BOQ</span>
           </Link>
 
-          {/* 5. Sell Stone (Marketplace Seller Onboarding) */}
-          <Link
-            href="/register/seller"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-600/30 bg-amber-50/60 hover:bg-amber-100 text-amber-900 transition-all font-bold text-xs"
-          >
-            <Store className="h-3.5 w-3.5 text-amber-700" />
-            <span>Sell Stone</span>
-          </Link>
         </nav>
 
         {/* Right E-Commerce Utilities & Actions */}
