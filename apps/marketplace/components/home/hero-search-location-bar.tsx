@@ -213,7 +213,7 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
         )}
       >
         {/* Architectural Header Label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 sm:pb-4 mb-3.5 sm:mb-4 border-b border-stone-200/70">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:pb-4 md:mb-4 md:border-b md:border-stone-200/70">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
@@ -230,13 +230,13 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
           </div>
         </div>
 
-        {/* The Search & Location Floating Capsule */}
+        {/* The Search & Location Floating Capsule - Hidden on Mobile (as Omnibar is in Header) */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             executeSearch(query, selectedCity);
           }}
-          className="relative bg-white rounded-2xl border-2 border-stone-200 shadow-xs hover:border-amber-500/60 focus-within:border-amber-600 focus-within:ring-4 focus-within:ring-amber-500/10 transition-all p-1.5 sm:p-2"
+          className="hidden md:block relative bg-white rounded-2xl border-2 border-stone-200 shadow-xs hover:border-amber-500/60 focus-within:border-amber-600 focus-within:ring-4 focus-within:ring-amber-500/10 transition-all p-1.5 sm:p-2"
         >
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-1.5 md:gap-0">
             {/* 1. Location Selector Box (Left) */}
