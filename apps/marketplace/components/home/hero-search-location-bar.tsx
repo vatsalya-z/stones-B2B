@@ -7,7 +7,6 @@ import {
   MapPin,
   ChevronDown,
   X,
-  Sparkles,
   Check,
   Building2,
 } from "lucide-react";
@@ -29,14 +28,6 @@ const POPULAR_STONE_HUBS = [
   { name: "Srinagar", state: "Jammu & Kashmir" },
 ];
 
-const TRENDING_STONES = [
-  "Makrana Pure White Marble",
-  "Black Galaxy Granite",
-  "Dholpur Beige Sandstone",
-  "Kota Blue Limestone",
-  "Rajasthan Forest Green",
-  "Classic Travertine Slab",
-];
 
 function CameraSearchIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -193,10 +184,6 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const handleTrendingClick = (stoneName: string) => {
-    setQuery(stoneName);
-    executeSearch(stoneName, selectedCity);
-  };
 
   const handleCameraClick = () => {
     fileInputRef.current?.click();
@@ -226,10 +213,9 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
         )}
       >
         {/* Architectural Header Label */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-stone-200/70">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 sm:pb-4 mb-3.5 sm:mb-4 border-b border-stone-200/70">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
                 Direct Quarry Sourcing Platform
               </span>
@@ -250,13 +236,13 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
             e.preventDefault();
             executeSearch(query, selectedCity);
           }}
-          className="relative bg-white rounded-2xl border-2 border-stone-200 shadow-sm hover:border-amber-500/60 focus-within:border-amber-600 focus-within:ring-4 focus-within:ring-amber-500/10 transition-all p-1.5 sm:p-2"
+          className="relative bg-white rounded-2xl border-2 border-stone-200 shadow-xs hover:border-amber-500/60 focus-within:border-amber-600 focus-within:ring-4 focus-within:ring-amber-500/10 transition-all p-1.5 sm:p-2"
         >
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-0">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-1.5 md:gap-0">
             {/* 1. Location Selector Box (Left) */}
             <div
               ref={locationDropdownRef}
-              className="relative md:w-[260px] lg:w-[290px] shrink-0"
+              className="relative md:w-[260px] lg:w-[290px] shrink-0 border-b border-stone-100 md:border-b-0 pb-1.5 md:pb-0"
             >
               <button
                 type="button"
@@ -344,12 +330,12 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
             <div className="hidden md:block h-8 w-[1px] bg-stone-200 mx-2 shrink-0" />
 
             {/* 2. Main Stone & Product Search Field (Center) */}
-            <div className="flex-1 flex items-center gap-2 px-3 py-1 min-w-0">
+            <div className="flex-1 flex items-center gap-2 px-2.5 sm:px-3 py-1.5 md:py-1 min-w-0">
               <Search className="h-5 w-5 text-amber-600 shrink-0 hidden sm:block" />
               <div className="flex-1 min-w-0">
                 <label
                   htmlFor="hero-search-input"
-                  className="block text-[10px] uppercase font-bold text-stone-400 tracking-wider"
+                  className="block text-[10px] uppercase font-bold text-stone-400 tracking-wider truncate"
                 >
                   Stone Variety / Gangsaw Slab / Thickness
                 </label>
@@ -358,7 +344,7 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. Makrana Pure White, Black Galaxy Granite, 18mm Gangsaw Slabs..."
+                  placeholder="Search stone variety, marble, granite, slab..."
                   className="w-full text-xs sm:text-sm font-semibold text-stone-900 placeholder:text-stone-400 focus:outline-none bg-transparent"
                 />
               </div>
@@ -379,12 +365,12 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
               <button
                 type="button"
                 onClick={handleCameraClick}
-                className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-500 transition-all cursor-pointer relative group shrink-0"
+                className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-500 hover:text-amber-700 transition-all cursor-pointer relative group shrink-0 active:scale-95"
                 title="Search by stone photo / texture"
               >
                 <CameraSearchIcon className="h-5 w-5" />
                 <span className="sr-only">Upload stone photo</span>
-                <span className="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] font-semibold text-white bg-stone-900 rounded-md whitespace-nowrap shadow-sm">
+                <span className="hidden group-hover:block absolute bottom-full mb-2 right-0 sm:left-1/2 sm:-translate-x-1/2 px-2 py-1 text-[10px] font-semibold text-white bg-stone-900 rounded-md whitespace-nowrap shadow-sm z-30">
                   Photo Search
                 </span>
               </button>
@@ -409,24 +395,6 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
             </div>
           </div>
         </form>
-
-        {/* Quick Trending Stones (1-Click Search) */}
-        <div className="mt-3.5 flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 text-xs">
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-stone-500 mr-1">
-            <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-            Trending:
-          </span>
-          {TRENDING_STONES.map((stone) => (
-            <button
-              key={stone}
-              type="button"
-              onClick={() => handleTrendingClick(stone)}
-              className="inline-flex items-center text-[11px] font-semibold text-stone-700 bg-white hover:bg-amber-50 hover:text-amber-900 hover:border-amber-300 border border-stone-200/80 px-2.5 py-1 rounded-lg transition-all cursor-pointer shadow-2xs"
-            >
-              {stone}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Guest Lead Capture Modal */}
