@@ -324,37 +324,31 @@ export function MobileNav({
 
         {/* ── Scrollable Drawer Body ────────────────────────────────── */}
         <div className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain overscroll-contain [webkit-overflow-scrolling:touch] scrollbar-thin scrollbar-thumb-stone-800 scrollbar-track-transparent">
-          {/* ── 1. Top Quarry Image Header (Compact: 120–130px) ──────── */}
+          {/* ── 1. Top Quarry Image Header (Bright & Vibrant) ──────── */}
           <div
             className="relative h-[125px] sm:h-[135px] w-full flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: "url('/images/backgrounds/stone-quarry-header.jpg')" }}
           >
-            {/* Layer 1: Real Quarry Background Photograph */}
+            {/* Layer 1: Real Quarry Background Photograph with boosted brightness and clarity */}
             <Image
               src="/images/backgrounds/stone-quarry-header.jpg"
               alt="Natural Stone Quarry Landscape"
               fill
               priority
-              className="object-cover object-center pointer-events-none"
+              className="object-cover object-center pointer-events-none brightness-115 contrast-105 saturate-110"
               sizes="(max-width: 480px) 100vw, 420px"
               unoptimized
             />
 
-            {/* Layer 2: Dark Charcoal Translucent Tint for Readability */}
+            {/* Layer 2: Subtle Top Vignette behind logo and close button for legibility */}
             <div
-              className="absolute inset-0 bg-[#101010]/40 z-10"
+              className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/65 via-black/25 to-transparent z-10"
               aria-hidden="true"
             />
 
-            {/* Layer 2b: Subtle Black Gradient from Top to Bottom */}
+            {/* Layer 3: Soft Bottom Fade into Drawer Background */}
             <div
-              className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/80 via-black/30 to-transparent z-10"
-              aria-hidden="true"
-            />
-
-            {/* Layer 3: Stronger Bottom Gradient Transitioning into Drawer Background (#101010) */}
-            <div
-              className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#101010] via-[#101010]/85 to-transparent z-10"
+              className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#101010] via-[#101010]/50 to-transparent z-10"
               aria-hidden="true"
             />
 
@@ -366,14 +360,14 @@ export function MobileNav({
                 className="group flex items-center gap-2.5 transition-opacity hover:opacity-95"
                 id={titleId}
               >
-                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#D99A35]/50 bg-gradient-to-br from-[#1c1917]/95 to-[#101010]/95 p-1.5 shadow-md shadow-black/70 backdrop-blur-md">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#D99A35]/60 bg-black/85 p-1.5 shadow-lg shadow-black/80 backdrop-blur-md">
                   <StoneLogoIcon className="h-5 w-5 text-[#D99A35]" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-base font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-sm leading-none">
+                  <span className="text-base font-extrabold tracking-tight text-[#F7F5F0] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] leading-none">
                     Stones<span className="text-[#D99A35]">Dekho</span>
                   </span>
-                  <span className="text-[9px] font-medium tracking-tight text-[#E8BD78] drop-shadow-2xs mt-0.5 leading-tight">
+                  <span className="text-[9px] font-semibold tracking-tight text-[#E8BD78] drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)] mt-0.5 leading-tight">
                     India&apos;s Leading Natural Stone B2B Network
                   </span>
                 </div>
@@ -526,36 +520,37 @@ export function MobileNav({
             })}
           </nav>
 
-          {/* ── Premium Stone Promotional Card (Compact) ────────────── */}
-          <div className="group relative overflow-hidden rounded-xl border border-[#D99A35]/35 bg-[#191919] p-3 shadow-lg transition-all duration-300 hover:border-[#D99A35]">
-            {/* Background Image with Dark Vignette */}
+          {/* ── Premium Stone Promotional Card (Bright & Visible) ───── */}
+          <div className="group relative overflow-hidden rounded-xl border border-[#D99A35]/45 bg-[#161616] p-3 shadow-lg transition-all duration-300 hover:border-[#D99A35]">
+            {/* Background Image with Enhanced Brightness & Clarity */}
             <div className="absolute inset-0 z-0">
               <Image
                 src="/images/hero/stone-quarry-hero.webp"
                 alt="Natural Stone Quarry"
                 fill
-                className="object-cover opacity-20 transition-transform duration-700 group-hover:scale-105"
+                className="object-cover object-center opacity-70 brightness-115 contrast-105 transition-transform duration-700 group-hover:scale-105"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#101010] via-[#101010]/80 to-transparent" />
+              {/* Directional readable overlay: clear view on the right, contrast for text on the left */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
             </div>
 
-            {/* Card Content */}
+            {/* Card Content with Crisp High-Contrast Shadows */}
             <div className="relative z-10 space-y-1">
-              <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-[#D99A35]">
+              <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-[#E8BD78] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                 SOURCE DIRECT
               </span>
-              <h4 className="text-xs font-bold leading-snug tracking-tight text-[#F7F5F0]">
+              <h4 className="text-xs font-bold leading-snug tracking-tight text-[#F7F5F0] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
                 Premium Natural Stone for Every Project
               </h4>
-              <p className="text-[10px] leading-tight text-[#AAA49B] line-clamp-1">
+              <p className="text-[10px] leading-tight text-[#E5E0D8] line-clamp-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                 Direct quarry extraction of marble, granite, sandstone &amp; limestone.
               </p>
               <div className="pt-0.5">
                 <Link
                   href="/products"
                   onClick={() => setOpen(false)}
-                  className="group/cta inline-flex items-center gap-1 text-[11px] font-bold text-[#E8BD78] transition-colors hover:text-[#D99A35]"
+                  className="group/cta inline-flex items-center gap-1 text-[11px] font-bold text-[#E8BD78] transition-colors hover:text-[#D99A35] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
                 >
                   <span>Explore Products</span>
                   <span className="transition-transform duration-200 group-hover/cta:translate-x-1">→</span>
