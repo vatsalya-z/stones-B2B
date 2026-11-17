@@ -3,7 +3,15 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Layers,
+  Mountain,
+  Compass,
+  Gem,
+} from "lucide-react";
+import { cn } from "@stone/ui";
 import type { CategoryItem } from "@/lib/db";
 
 export interface StoneCategoryGridProps {
@@ -22,6 +30,50 @@ export interface StoneCategoryCardData {
   availableLots: string;
   image: string;
 }
+
+const GEOLOGICAL_TABS: {
+  id: GeologicalTab;
+  title: string;
+  categoryNames: string;
+  count: number;
+  icon: React.ComponentType<{ className?: string }>;
+}[] = [
+  {
+    id: "all",
+    title: "All Stones",
+    categoryNames: "All Collections",
+    count: 8,
+    icon: Layers,
+  },
+  {
+    id: "metamorphic",
+    title: "Marble & Slate",
+    categoryNames: "Metamorphic",
+    count: 3,
+    icon: Sparkles,
+  },
+  {
+    id: "igneous",
+    title: "Granite",
+    categoryNames: "Igneous",
+    count: 1,
+    icon: Mountain,
+  },
+  {
+    id: "sedimentary",
+    title: "Sandstone & Kota",
+    categoryNames: "Sedimentary",
+    count: 3,
+    icon: Compass,
+  },
+  {
+    id: "exotic",
+    title: "Onyx & Rare",
+    categoryNames: "Exotic",
+    count: 1,
+    icon: Gem,
+  },
+];
 
 const CATEGORY_ITEMS: StoneCategoryCardData[] = [
   {
@@ -134,82 +186,72 @@ export function StoneCategoryGrid({ categories }: StoneCategoryGridProps) {
     <section className="py-10 sm:py-14 bg-stone-50/70 border-t border-b border-stone-200/80">
       <div className="container-wide space-y-6 sm:space-y-8">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-5 border-b border-stone-200/80">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 border border-amber-500/20">
-              <Sparkles className="h-3 w-3 text-amber-600" />
-              <span>Curated Geological Collections</span>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 pb-5 border-b border-stone-200/80">
+          <div className="space-y-2 max-w-2xl text-center sm:text-left mx-auto sm:mx-0">
+            <div className="flex justify-center sm:justify-start">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 border border-amber-600/20 shadow-2xs">
+                <Sparkles className="h-3 w-3 text-amber-600" />
+                <span>Curated Stone Collections</span>
+              </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-950 tracking-tight font-serif sm:font-sans">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-stone-950 tracking-tight font-serif sm:font-sans">
               Explore by Stone Category
             </h2>
-            <p className="text-xs sm:text-sm text-stone-600">
-              Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India&apos;s heritage stone hubs.
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              <span className="hidden sm:inline">
+                Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India&apos;s heritage stone hubs.
+              </span>
+              <span className="sm:hidden">
+                Factory-calibrated slabs, cut-to-size tiles &amp; quarry blocks from certified Indian stone hubs.
+              </span>
             </p>
           </div>
 
-          {/* Compact Geological Family Filter Tabs */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-white border border-stone-200/90 shadow-2xs shrink-0 overflow-x-auto no-scrollbar scrollbar-hide max-w-full sm:flex-wrap self-start lg:self-auto">
-            <button
-              type="button"
-              onClick={() => setActiveTab("all")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "all"
-                  ? "bg-stone-900 text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
-              }`}
-            >
-              All Stones ({resolvedItems.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("metamorphic")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "metamorphic"
-                  ? "bg-stone-900 text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
-              }`}
-            >
-              Metamorphic (3)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("igneous")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "igneous"
-                  ? "bg-stone-900 text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
-              }`}
-            >
-              Igneous (1)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("sedimentary")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "sedimentary"
-                  ? "bg-stone-900 text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
-              }`}
-            >
-              Sedimentary (3)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("exotic")}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === "exotic"
-                  ? "bg-stone-900 text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
-              }`}
-            >
-              Exotic (1)
-            </button>
+          {/* Luxury Geological Family Filter Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-1 -mx-1 sm:mx-0 sm:flex-wrap self-center lg:self-auto max-w-full shrink-0">
+            {GEOLOGICAL_TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isSelected = activeTab === tab.id;
+              const count = tab.id === "all" ? resolvedItems.length : tab.count;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "group relative flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 cursor-pointer active:scale-95",
+                    isSelected
+                      ? "bg-gradient-to-r from-stone-900 via-stone-850 to-stone-900 text-amber-400 shadow-md border border-amber-500/40 ring-1 ring-amber-500/20"
+                      : "bg-white text-stone-700 hover:text-stone-950 hover:bg-stone-50 border border-stone-200/90 shadow-2xs hover:border-amber-500/40",
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "h-3.5 w-3.5 shrink-0 transition-colors",
+                      isSelected
+                        ? "text-amber-400"
+                        : "text-stone-400 group-hover:text-amber-600",
+                    )}
+                  />
+                  <span className="tracking-tight">{tab.title}</span>
+                  <span
+                    className={cn(
+                      "px-1.5 py-0.5 rounded-full text-[10px] font-black leading-none shrink-0 transition-colors",
+                      isSelected
+                        ? "bg-amber-500 text-stone-950"
+                        : "bg-stone-100 text-stone-600 group-hover:bg-amber-100 group-hover:text-amber-900",
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Compact, Clean Category Grid (2 cols mobile, 4 cols desktop) */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {filteredItems.map((cat) => (
             <Link
               key={cat.id}
@@ -243,19 +285,20 @@ export function StoneCategoryGrid({ categories }: StoneCategoryGridProps) {
               </div>
 
               {/* Compact Clean Body */}
-              <div className="p-3.5 sm:p-4 flex flex-col justify-between flex-1 space-y-2">
+              <div className="p-3 sm:p-4 flex flex-col justify-between flex-1 space-y-1.5 sm:space-y-2">
                 <div>
-                  <h3 className="text-base font-bold text-stone-950 group-hover:text-amber-700 transition-colors">
+                  <h3 className="text-sm sm:text-base font-bold text-stone-950 group-hover:text-amber-700 transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-stone-500 line-clamp-1 font-medium mt-0.5">
+                  <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-1 font-medium mt-0.5">
                     {cat.origin}
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-semibold text-amber-700 group-hover:text-amber-800">
-                  <span>Explore Collection</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-[11px] sm:text-xs font-semibold text-amber-700 group-hover:text-amber-800">
+                  <span className="hidden sm:inline">Explore Collection</span>
+                  <span className="sm:hidden">Explore</span>
+                  <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </Link>
