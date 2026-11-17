@@ -280,7 +280,7 @@ export function MobileIndiaMartHeader({
       <div className="w-full flex flex-col print:hidden">
         {/* ── ROW 1: IndiaMART-Style Solid Top Bar ──────────────────── */}
         <div className="h-12 bg-stone-900 text-white px-3 flex items-center justify-between relative z-10">
-          {/* Left: Hamburger Icon with Red Notification Badge '1' */}
+          {/* Left: Hamburger Icon */}
           <button
             type="button"
             onClick={() => setIsDrawerOpen(true)}
@@ -292,10 +292,6 @@ export function MobileIndiaMartHeader({
               <span className="h-0.5 w-5 bg-white rounded-full transition-all" />
               <span className="h-0.5 w-5 bg-white rounded-full transition-all" />
             </div>
-            {/* Notification Badge '1' */}
-            <span className="absolute -top-0.5 -right-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-amber-600 text-white text-[10px] font-black shadow-xs border border-stone-900">
-              1
-            </span>
           </button>
 
           {/* Center: StonesDekho Brand Logo */}
