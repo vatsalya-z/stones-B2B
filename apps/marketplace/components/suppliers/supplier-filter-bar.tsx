@@ -176,7 +176,7 @@ export function SupplierFilterBar({
               name="q"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search factory, quarry, or stone (Makrana, Galaxy)..."
+              placeholder="Search factory, quarry, or stone..."
               className="w-full bg-transparent text-xs sm:text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:outline-none"
             />
             {q && (

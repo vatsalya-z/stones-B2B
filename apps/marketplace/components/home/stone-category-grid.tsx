@@ -149,7 +149,7 @@ export function StoneCategoryGrid({ categories }: StoneCategoryGridProps) {
           </div>
 
           {/* Compact Geological Family Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1 p-1 rounded-xl bg-white border border-stone-200/90 shadow-2xs shrink-0 self-start lg:self-auto">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-white border border-stone-200/90 shadow-2xs shrink-0 overflow-x-auto no-scrollbar scrollbar-hide max-w-full sm:flex-wrap self-start lg:self-auto">
             <button
               type="button"
               onClick={() => setActiveTab("all")}

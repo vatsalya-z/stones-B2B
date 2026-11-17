@@ -242,15 +242,27 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageJsonLd) }}
       />
-      <div className="container-wide space-y-10">
+      <div className="container-wide space-y-6 sm:space-y-10">
         {/* Breadcrumb Navigation */}
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Categories", href: "/categories" },
-            { label: category.name },
-          ]}
-        />
+        <div className="hidden sm:block">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Categories", href: "/categories" },
+              { label: category.name },
+            ]}
+          />
+        </div>
+        <div className="sm:hidden flex items-center justify-between text-xs text-stone-500">
+          <Link
+            href="/categories"
+            className="inline-flex items-center gap-1 font-semibold text-stone-700 hover:text-amber-800 transition-colors"
+          >
+            <span>←</span>
+            <span>All Stone Categories</span>
+          </Link>
+          <span className="text-stone-400 text-[11px] font-medium">{category.name}</span>
+        </div>
 
         {/* Category Hero Banner */}
         <div className="relative overflow-hidden rounded-3xl border border-stone-800 bg-stone-950 text-white shadow-2xl">
@@ -267,32 +279,32 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             <div className="absolute inset-0 bg-stone-950/70" />
           </div>
 
-          <div className="relative z-10 p-6 sm:p-10 lg:p-12">
-            <div className="max-w-3xl space-y-4">
+          <div className="relative z-10 p-5 sm:p-10 lg:p-12">
+            <div className="max-w-3xl space-y-3.5 sm:space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300 border border-amber-500/30">
                 <span>Verified Natural Stone Family</span>
                 <span>•</span>
                 <span>Factory Wholesale Lots</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
                 {category.name}
               </h1>
-              <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-normal">
+              <p className="text-xs sm:text-base text-stone-300 leading-relaxed font-normal">
                 {category.description ||
                   `Direct quarry connections for ${category.name}. Calibrated gangsaw slabs, project tiles, and custom cut blocks for architectural and commercial developments.`}
               </p>
 
               {/* Action Buttons */}
-              <div className="pt-2 flex flex-wrap gap-3">
+              <div className="pt-2 grid grid-cols-1 sm:flex sm:flex-wrap gap-2.5">
                 <Link
                   href={`/request-quote?category=${slug}`}
-                  className="btn-accent px-6 py-2.5 text-sm font-semibold shadow-md shadow-amber-600/30"
+                  className="btn-accent px-5 py-2.5 text-center text-xs sm:text-sm font-semibold shadow-md shadow-amber-600/30"
                 >
                   Request Bulk Quotation
                 </Link>
                 <Link
                   href={`/products?category=${slug}`}
-                  className="btn-secondary border-stone-700 bg-stone-900/80 text-stone-200 hover:bg-stone-800 px-6 py-2.5 text-sm font-semibold"
+                  className="btn-secondary border-stone-700 bg-stone-900/80 text-stone-200 hover:bg-stone-800 px-5 py-2.5 text-center text-xs sm:text-sm font-semibold"
                 >
                   Filter {category.name} Slabs
                 </Link>
@@ -303,17 +315,17 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
 
         {/* Geological & Architectural Properties Matrix */}
         {archData && (
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-6 sm:p-8 shadow-card">
-            <div className="border-b border-stone-100 pb-4 mb-6">
-              <h2 className="text-lg font-bold text-stone-900">
+          <div className="rounded-2xl border border-stone-200/90 bg-white p-4 sm:p-8 shadow-card">
+            <div className="border-b border-stone-100 pb-3 sm:pb-4 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-bold text-stone-900">
                 Architectural & Engineering Specifications for {category.name}
               </h2>
-              <p className="text-xs text-stone-500 mt-1">
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-1">
                 Standard technical benchmarks and quarry origins verified across Indian manufacturing units.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/60">
                 <span className="text-xs font-semibold uppercase tracking-wider text-amber-800">
                   Primary Quarry Origin
@@ -421,7 +433,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((p) => (
                 <ProductCard
                   key={p.id}

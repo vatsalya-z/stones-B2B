@@ -410,8 +410,8 @@ export function CategoryDiscoveryExplorer({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search stone by family, format, origin (e.g. Makrana, Slabs, Granite, Tiles)..."
-                className="w-full bg-transparent py-4 pl-3.5 pr-10 text-sm sm:text-base text-white placeholder-stone-400 focus:outline-none"
+                placeholder="Search stone family, origin, slab format..."
+                className="w-full bg-transparent py-3.5 sm:py-4 pl-3.5 pr-10 text-xs sm:text-base text-white placeholder-stone-400 focus:outline-none"
                 aria-label="Search stone collections"
               />
               {searchQuery && (
@@ -491,11 +491,11 @@ export function CategoryDiscoveryExplorer({
           </div>
 
           {/* Grouping Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200 flex-shrink-0">
+          <div className="flex sm:flex-wrap items-center gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200 overflow-x-auto no-scrollbar max-w-full shrink-0">
             <button
               type="button"
               onClick={() => setActiveTab("all")}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 sm:px-3.5 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap shrink-0 transition-all ${
                 activeTab === "all"
                   ? "bg-stone-900 text-white shadow-xs"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-200/60"
@@ -506,35 +506,35 @@ export function CategoryDiscoveryExplorer({
             <button
               type="button"
               onClick={() => setActiveTab("geology")}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 sm:px-3.5 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap shrink-0 transition-all ${
                 activeTab === "geology"
                   ? "bg-stone-900 text-white shadow-xs"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-200/60"
               }`}
             >
-              Geological Families ({groupCounts.geology})
+              Geological ({groupCounts.geology})
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("format")}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 sm:px-3.5 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap shrink-0 transition-all ${
                 activeTab === "format"
                   ? "bg-stone-900 text-white shadow-xs"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-200/60"
               }`}
             >
-              Supply Formats ({groupCounts.format})
+              Formats ({groupCounts.format})
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("bespoke")}
-              className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`px-3 sm:px-3.5 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap shrink-0 transition-all ${
                 activeTab === "bespoke"
                   ? "bg-stone-900 text-white shadow-xs"
                   : "text-stone-600 hover:text-stone-900 hover:bg-stone-200/60"
               }`}
             >
-              Architectural &amp; Custom ({groupCounts.bespoke})
+              Custom ({groupCounts.bespoke})
             </button>
           </div>
         </div>
@@ -731,7 +731,7 @@ export function CategoryDiscoveryExplorer({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {ARCHITECTURAL_APPLICATIONS.map((app) => (
             <Link
               key={app.title}
@@ -791,7 +791,7 @@ export function CategoryDiscoveryExplorer({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {REGIONAL_QUARRY_HUBS.map((hub) => (
             <Link
               key={hub.city}

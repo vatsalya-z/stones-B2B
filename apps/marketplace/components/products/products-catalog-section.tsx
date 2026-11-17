@@ -178,8 +178,8 @@ export function ProductsCatalogSection({
           </div>
         ) : (
           <>
-            {/* Premium Full-Width 4-Column Product Grid */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {/* Premium Full-Width Product Grid: 2 columns on mobile, 3 on md, 4 on xl */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {products.map((p) => (
                 <ProductCard
                   key={p.id}

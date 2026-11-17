@@ -151,16 +151,16 @@ export function VerifiedSuppliersSection({ sellers = [] }: VerifiedSuppliersSect
           </div>
         </div>
 
-        {/* 4 Suppliers Horizontal Scroll / Grid */}
+        {/* 4 Suppliers Horizontal Scroll Carousel on Mobile, Grid on Tablet/Desktop */}
         <div
           ref={scrollRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto scrollbar-none pb-2"
+          className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto no-scrollbar scrollbar-hide pb-2 snap-x snap-mandatory"
         >
           {displaySuppliers.map((supplier) => (
             <Link
               key={supplier.id}
               href={`/suppliers/${supplier.slug}`}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-2xs hover:shadow-lg hover:border-amber-600/40 transition-all min-w-[260px]"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-2xs hover:shadow-lg hover:border-amber-600/40 transition-all w-[280px] sm:w-auto shrink-0 snap-center"
             >
               {/* Quarry / Facility Photography */}
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100">

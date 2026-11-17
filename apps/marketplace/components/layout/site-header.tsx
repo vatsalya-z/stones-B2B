@@ -6,7 +6,7 @@ import {
   Heart,
 } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
-import { MobileNav } from "./mobile-nav";
+import { MobileIndiaMartHeader } from "./mobile-indiamart-header";
 import { BuyerNavMenu } from "./buyer-nav-menu";
 import { NavbarGetPriceButton } from "./navbar-get-price-button";
 import { CategoriesMegaMenu } from "./categories-megamenu";
@@ -34,8 +34,18 @@ export async function SiteHeader() {
     null;
 
   return (
-    <header className="sticky top-0 z-30 h-18 sm:h-20 border-b border-stone-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 shadow-xs transition-all print:hidden">
-      <div className="container-wide flex h-full items-center justify-between gap-3 sm:gap-4 lg:gap-6">
+    <header className="sticky top-0 z-30 lg:border-b lg:border-stone-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 shadow-xs transition-all print:hidden">
+      {/* Mobile IndiaMART-Style Navigation (Visible on mobile/tablet < lg) */}
+      <div className="lg:hidden">
+        <MobileIndiaMartHeader
+          isLoggedIn={isLoggedIn}
+          userEmail={user?.email ?? null}
+          userName={userName}
+        />
+      </div>
+
+      {/* Desktop Navigation (Visible on lg+) */}
+      <div className="hidden lg:flex container-wide h-18 sm:h-20 items-center justify-between gap-3 sm:gap-4 lg:gap-6">
         {/* Logo */}
         <Link
           href="/"
@@ -113,12 +123,6 @@ export async function SiteHeader() {
               userName={userName}
             />
           </div>
-
-          {/* Mobile hamburger + drawer */}
-          <MobileNav
-            isLoggedIn={isLoggedIn}
-            userEmail={user?.email ?? null}
-          />
         </div>
       </div>
     </header>

@@ -66,10 +66,7 @@ export default async function RequestQuotePage({ searchParams }: RequestQuotePag
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="space-y-1.5 max-w-2xl">
               <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-0.5 text-xs font-bold text-amber-800 border border-amber-200/80">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-600" />
-                </span>
+                <ShieldCheck className="h-3.5 w-3.5 text-amber-700" />
                 <span>Direct Quarry Procurement Desk</span>
               </div>
 

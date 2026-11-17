@@ -137,7 +137,7 @@ export default async function SupplierStorefrontPage({
         />
       )}
       {/* Cover Image / Hero Banner */}
-      <div className="relative h-72 sm:h-96 lg:h-[480px] w-full overflow-hidden bg-stone-900 shadow-inner">
+      <div className="relative h-44 sm:h-80 lg:h-[420px] w-full overflow-hidden bg-stone-900 shadow-inner">
         {coverImage ? (
           <Image
             src={coverImage}
@@ -161,13 +161,25 @@ export default async function SupplierStorefrontPage({
       {/* Main Content Container */}
       <div className="container-wide py-6 sm:py-8 space-y-8">
         {/* Navigation Breadcrumbs */}
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Suppliers", href: "/suppliers" },
-            { label: seller.businessName },
-          ]}
-        />
+        <div className="hidden sm:block">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Suppliers", href: "/suppliers" },
+              { label: seller.businessName },
+            ]}
+          />
+        </div>
+        <div className="sm:hidden flex items-center justify-between text-xs text-stone-500">
+          <Link
+            href="/suppliers"
+            className="inline-flex items-center gap-1 font-semibold text-stone-700 hover:text-amber-800 transition-colors"
+          >
+            <span>←</span>
+            <span>All Verified Suppliers</span>
+          </Link>
+          <span className="text-stone-400 text-[11px] truncate max-w-[140px]">{seller.businessName}</span>
+        </div>
 
         {/* Synthetic QA Test Disclaimer Banner */}
         {isTest && (
@@ -194,56 +206,56 @@ export default async function SupplierStorefrontPage({
         )}
 
         {/* Profile Card Header */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            <div className="flex items-start sm:items-center gap-5">
+        <div className="rounded-2xl border border-stone-200 bg-white p-4 sm:p-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 sm:gap-6">
+            <div className="flex items-start sm:items-center gap-3.5 sm:gap-5">
               {/* Logo */}
-              <div className="relative h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 overflow-hidden rounded-2xl border-4 border-white bg-stone-100 shadow-md">
+              <div className="relative h-16 w-16 sm:h-24 sm:w-24 flex-shrink-0 overflow-hidden rounded-2xl border-2 sm:border-4 border-white bg-stone-100 shadow-md">
                 {logoImage ? (
                   <Image
                     src={logoImage}
                     alt={seller.businessName}
                     fill
-                    sizes="96px"
+                    sizes="(max-width: 640px) 64px, 96px"
                     className="object-cover"
                     unoptimized={!logoImage.includes(".supabase.co")}
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-stone-200 text-stone-600 font-bold text-xl">
+                  <div className="flex h-full w-full items-center justify-center bg-stone-200 text-stone-600 font-bold text-lg sm:text-xl">
                     {seller.businessName.slice(0, 2).toUpperCase()}
                   </div>
                 )}
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+                  <h1 className="text-xl sm:text-3xl font-extrabold text-stone-900 tracking-tight truncate">
                     {seller.businessName}
                   </h1>
                   {seller.verifiedAt && <VerifiedBadge label="Verified Supplier" />}
                 </div>
 
-                <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-stone-600">
-                  <Badge variant="secondary" className="capitalize">
+                <div className="mt-1 sm:mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-stone-600">
+                  <Badge variant="secondary" className="capitalize text-[11px] sm:text-xs">
                     {seller.businessType.replace(/_/g, " ")}
                   </Badge>
                   {location && <span>• {location}</span>}
                   {seller.yearsInBusiness && (
-                    <span>• {seller.yearsInBusiness}+ years in business</span>
+                    <span>• {seller.yearsInBusiness}+ years</span>
                   )}
                 </div>
 
                 {/* Materials Supplied Badges (P1) */}
                 {materialsSupplied.length > 0 && (
-                  <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-                      Materials Supplied:
+                  <div className="mt-2.5 sm:mt-3.5 flex flex-wrap items-center gap-1.5">
+                    <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+                      Materials:
                     </span>
                     {materialsSupplied.map((m) => (
                       <a
                         key={m}
                         href="#catalogue"
-                        className="inline-flex items-center rounded-lg bg-stone-100 px-2.5 py-0.5 text-xs font-semibold text-stone-800 ring-1 ring-inset ring-stone-200 transition-colors hover:bg-stone-200 hover:text-stone-900"
+                        className="inline-flex items-center rounded-lg bg-stone-100 px-2 py-0.5 text-[11px] sm:text-xs font-semibold text-stone-800 ring-1 ring-inset ring-stone-200 transition-colors hover:bg-stone-200 hover:text-stone-900"
                         title={`View ${m} in factory catalogue`}
                       >
                         {m}
@@ -255,7 +267,7 @@ export default async function SupplierStorefrontPage({
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-2.5 flex-shrink-0">
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch sm:items-center gap-2.5 shrink-0 w-full sm:w-auto">
               <ContactSupplierModal
                 sellerId={seller.id}
                 sellerSlug={seller.slug}
@@ -266,7 +278,7 @@ export default async function SupplierStorefrontPage({
               />
               <Link
                 href={`/request-quote?supplier=${encodeURIComponent(seller.slug)}`}
-                className="btn-accent px-5 py-2.5 text-sm font-semibold shadow-xs hover:shadow-md transition-all active:scale-[0.98]"
+                className="btn-accent px-5 py-2.5 text-center text-xs sm:text-sm font-semibold shadow-xs hover:shadow-md transition-all active:scale-[0.98]"
               >
                 Request Custom Quotation (RFQ)
               </Link>
@@ -336,7 +348,7 @@ export default async function SupplierStorefrontPage({
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((p) => (
                 <ProductCard
                   key={p.id}

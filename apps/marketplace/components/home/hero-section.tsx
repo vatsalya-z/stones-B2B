@@ -27,8 +27,7 @@ export function HeroSection() {
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Upper Badge */}
             <div className="inline-flex items-center gap-2 rounded-full bg-stone-900/90 border border-amber-600/30 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-400 shadow-sm backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-              B2B Stone Sourcing Platform
+              <span>B2B Stone Sourcing Platform</span>
             </div>
 
             {/* Headline matching user reference image */}

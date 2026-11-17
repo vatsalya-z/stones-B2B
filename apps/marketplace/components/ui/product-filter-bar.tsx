@@ -388,9 +388,104 @@ export function ProductFilterBar({
     (searchParams.get("q") ? 1 : 0);
 
   return (
-    <div className="w-full rounded-2xl border border-stone-200/90 bg-white p-3 sm:p-3.5 shadow-xs transition-all space-y-3">
-      {/* Primary Toolbar Row */}
-      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+    <div className="w-full rounded-2xl border border-stone-200/90 bg-white p-3 sm:p-3.5 shadow-xs transition-all space-y-2.5 sm:space-y-3">
+      {/* ── MOBILE FILTER BAR (< sm) ── */}
+      <div className="flex sm:hidden flex-col gap-2.5">
+        {/* Row 1: All Filters Drawer Trigger + Verified Pill + Sort Selector */}
+        <div className="flex items-center justify-between gap-1.5">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Tactile All Filters Button */}
+            <button
+              type="button"
+              onClick={() => setIsDrawerOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-stone-900 px-2.5 sm:px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-stone-800 transition-all cursor-pointer shrink-0"
+              aria-label="Open full filters drawer"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5 text-stone-300" />
+              <span className="hidden min-[380px]:inline">All </span><span>Filters</span>
+              {activeCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-stone-950">
+                  {activeCount}
+                </span>
+              )}
+            </button>
+
+            {/* Quick Pill: Verified Suppliers Only */}
+            <button
+              type="button"
+              onClick={toggleVerified}
+              className={cn(
+                "inline-flex items-center gap-1 rounded-xl px-2 py-2 text-xs font-medium border transition-all cursor-pointer whitespace-nowrap shrink-0",
+                isVerified
+                  ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-semibold shadow-2xs"
+                  : "bg-stone-50 text-stone-700 border-stone-200/90 hover:bg-stone-100",
+              )}
+              aria-pressed={isVerified}
+            >
+              <ShieldCheck
+                className={cn(
+                  "h-3.5 w-3.5",
+                  isVerified ? "text-emerald-700" : "text-emerald-600",
+                )}
+              />
+              <span>Verified</span>
+            </button>
+          </div>
+
+          {/* Sort Selector on Mobile */}
+          <div className="shrink-0 min-w-0">
+            <ProductSortSelector currentSort={currentSort} />
+          </div>
+        </div>
+
+        {/* Row 2: Lot Count & Horizontal Quick Material Tabs */}
+        <div className="flex items-center gap-1.5 pt-2 border-t border-stone-100 overflow-x-auto no-scrollbar scrollbar-hide py-0.5">
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-stone-100 px-2 py-1 text-[11px] text-stone-600 shrink-0 font-medium">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span><strong className="text-stone-900 font-bold">{totalResults}</strong> Lots</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete("material");
+              params.delete("page");
+              router.push(`${pathname}?${params.toString()}`);
+            }}
+            className={cn(
+              "px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors shrink-0",
+              getParamValues("material").length === 0
+                ? "bg-stone-900 text-white shadow-2xs"
+                : "bg-stone-50 text-stone-600 hover:bg-stone-100 border border-stone-200/80",
+            )}
+          >
+            All Stones
+          </button>
+
+          {materialTypes.map((mat) => {
+            const isSelected = getParamValues("material").includes(mat.value);
+            return (
+              <button
+                key={mat.value}
+                type="button"
+                onClick={() => updateParams("material", mat.value, !isSelected)}
+                className={cn(
+                  "px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors shrink-0 border",
+                  isSelected
+                    ? "bg-amber-600 text-white border-amber-600 shadow-2xs"
+                    : "bg-stone-50 text-stone-600 hover:bg-stone-100 border-stone-200/80",
+                )}
+              >
+                {mat.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── DESKTOP & TABLET FILTER TOOLBAR (hidden on < sm, flex on sm+) ── */}
+      <div className="hidden sm:flex flex-col xl:flex-row xl:items-center justify-between gap-3">
         {/* Left Side: All Filters Trigger + Quick Dropdowns */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Tactile All Filters Button */}

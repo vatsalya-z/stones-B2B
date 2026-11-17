@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useId } from "react";
+import { useState, useEffect, useRef, useId, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -25,13 +25,16 @@ import {
 import { cn } from "@stone/ui";
 import { useRfqModal } from "@/features/rfq/rfq-modal-context";
 
-interface MobileNavProps {
+export interface MobileNavProps {
   isLoggedIn: boolean;
   userEmail?: string | null;
   userName?: string | null;
   isBuyer?: boolean;
   isSeller?: boolean;
   isAdmin?: boolean;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  hideDefaultTrigger?: boolean;
 }
 
 interface NavItemConfig {
@@ -62,8 +65,29 @@ export function MobileNav({
   isBuyer = false,
   isSeller = false,
   isAdmin = false,
+  isOpen: controlledOpen,
+  onOpenChange,
+  hideDefaultTrigger = false,
 }: MobileNavProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = typeof controlledOpen === "boolean";
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+  const isControlledRef = useRef(isControlled);
+  isControlledRef.current = isControlled;
+  const openRef = useRef(open);
+  openRef.current = open;
+
+  const setOpen = useCallback((val: boolean | ((prev: boolean) => boolean)) => {
+    const nextVal = typeof val === "function" ? val(openRef.current) : val;
+    if (!isControlledRef.current) {
+      setInternalOpen(nextVal);
+    }
+    onOpenChangeRef.current?.(nextVal);
+  }, []);
+
   const pathname = usePathname();
   const { openRfqModal } = useRfqModal();
   const hamburgerRef = useRef<HTMLButtonElement>(null);
@@ -74,7 +98,7 @@ export function MobileNav({
   // Close drawer on route change
   useEffect(() => {
     setOpen(false);
-  }, [pathname]);
+  }, [pathname, setOpen]);
 
   // Handle Escape key to close & restore focus
   useEffect(() => {
@@ -87,7 +111,7 @@ export function MobileNav({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
+  }, [open, setOpen]);
 
   // Prevent background body scroll when open and manage focus (iOS-safe fixed body lock)
   useEffect(() => {
@@ -212,36 +236,38 @@ export function MobileNav({
   return (
     <>
       {/* ── Luxury Hamburger Trigger ──────────────────────────────────── */}
-      <button
-        ref={hamburgerRef}
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-stone-300/80 bg-white text-stone-800 transition-all duration-200 hover:border-amber-500/60 hover:bg-stone-50 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500/40 lg:hidden shadow-xs"
-        aria-label={open ? "Close menu" : "Open menu"}
-        aria-expanded={open}
-        aria-controls="mobile-navigation-drawer"
-      >
-        <div className="flex flex-col items-center justify-center gap-1.5 w-5 h-5" aria-hidden="true">
-          <span
-            className={cn(
-              "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-300 ease-out",
-              open && "translate-y-2 rotate-45 bg-amber-600",
-            )}
-          />
-          <span
-            className={cn(
-              "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-200 ease-out",
-              open && "opacity-0 scale-x-0",
-            )}
-          />
-          <span
-            className={cn(
-              "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-300 ease-out",
-              open && "-translate-y-2 -rotate-45 bg-amber-600",
-            )}
-          />
-        </div>
-      </button>
+      {!hideDefaultTrigger && (
+        <button
+          ref={hamburgerRef}
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-stone-300/80 bg-white text-stone-800 transition-all duration-200 hover:border-amber-500/60 hover:bg-stone-50 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500/40 lg:hidden shadow-xs"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation-drawer"
+        >
+          <div className="flex flex-col items-center justify-center gap-1.5 w-5 h-5" aria-hidden="true">
+            <span
+              className={cn(
+                "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-300 ease-out",
+                open && "translate-y-2 rotate-45 bg-amber-600",
+              )}
+            />
+            <span
+              className={cn(
+                "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-200 ease-out",
+                open && "opacity-0 scale-x-0",
+              )}
+            />
+            <span
+              className={cn(
+                "h-0.5 w-5 rounded-full bg-stone-900 transition-all duration-300 ease-out",
+                open && "-translate-y-2 -rotate-45 bg-amber-600",
+              )}
+            />
+          </div>
+        </button>
+      )}
 
       {/* ── Backdrop Overlay ────────────────────────────────────────── */}
       {open && (

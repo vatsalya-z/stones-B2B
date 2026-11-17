@@ -242,7 +242,7 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
             {/* 1. Location Selector Box (Left) */}
             <div
               ref={locationDropdownRef}
-              className="relative md:w-[260px] lg:w-[290px] shrink-0 border-b border-stone-100 md:border-b-0 pb-1.5 md:pb-0"
+              className="relative md:w-[260px] lg:w-[290px] shrink-0"
             >
               <button
                 type="button"
@@ -329,8 +329,8 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
             {/* Vertical Divider (Desktop) */}
             <div className="hidden md:block h-8 w-[1px] bg-stone-200 mx-2 shrink-0" />
 
-            {/* 2. Main Stone & Product Search Field (Center) */}
-            <div className="flex-1 flex items-center gap-2 px-2.5 sm:px-3 py-1.5 md:py-1 min-w-0">
+            {/* 2. Main Stone & Product Search Field (Center) - Hidden on Mobile */}
+            <div className="hidden md:flex flex-1 items-center gap-2 px-2.5 sm:px-3 py-1.5 md:py-1 min-w-0">
               <Search className="h-5 w-5 text-amber-600 shrink-0 hidden sm:block" />
               <div className="flex-1 min-w-0">
                 <label

@@ -71,8 +71,8 @@ export function ProjectApplicationGrid() {
           </Link>
         </div>
 
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* 4 Cards Grid (2 cols mobile, 4 cols desktop) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {APPLICATIONS.map((item) => {
             const Icon = item.icon;
             return (
@@ -87,29 +87,29 @@ export function ProjectApplicationGrid() {
                     src={item.imageSrc}
                     alt={item.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
 
                 {/* Bottom Information Panel */}
-                <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3 bg-white">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FAF6F0] text-[#E87500] shrink-0 border border-[#EAE3DB]/80 transition-colors group-hover:bg-[#FFF2E5]">
-                      <Icon className="h-4.5 w-4.5 stroke-[2]" />
+                <div className="p-2.5 sm:p-4 flex items-center justify-between gap-2 sm:gap-3 bg-white">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-[#FAF6F0] text-[#E87500] shrink-0 border border-[#EAE3DB]/80 transition-colors group-hover:bg-[#FFF2E5]">
+                      <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 stroke-[2]" />
                     </div>
                     <div className="min-w-0 space-y-0.5">
-                      <h3 className="text-sm font-bold text-[#211D1A] group-hover:text-[#E87500] transition-colors truncate">
+                      <h3 className="text-xs sm:text-sm font-bold text-[#211D1A] group-hover:text-[#E87500] transition-colors truncate">
                         {item.title}
                       </h3>
-                      <p className="text-xs text-[#716A64] truncate">
+                      <p className="text-[11px] sm:text-xs text-[#716A64] truncate hidden min-[360px]:block">
                         {item.description}
                       </p>
                     </div>
                   </div>
 
-                  {/* Circular Arrow Button */}
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-stone-200 text-stone-400 group-hover:border-[#E87500] group-hover:bg-[#E87500] group-hover:text-white transition-all duration-300 shrink-0">
+                  {/* Circular Arrow Button (Desktop/Tablet) */}
+                  <div className="hidden sm:flex h-7 w-7 items-center justify-center rounded-full border border-stone-200 text-stone-400 group-hover:border-[#E87500] group-hover:bg-[#E87500] group-hover:text-white transition-all duration-300 shrink-0">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>

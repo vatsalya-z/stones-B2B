@@ -92,43 +92,43 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
 
       <div className="container-wide space-y-8">
         {/* Editorial Header Section */}
-        <div className="rounded-3xl border border-stone-200/80 bg-white p-6 sm:p-10 shadow-xs">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <div className="space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 border border-amber-200/60">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-600" />
+        <div className="rounded-3xl border border-stone-200/80 bg-white p-5 sm:p-10 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 sm:gap-6">
+            <div className="space-y-2.5 sm:space-y-3 max-w-3xl">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 border border-amber-200/60">
+                <span className="text-amber-700">✓</span>
                 <span>Verified Direct Quarry &amp; Processing Network</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight">
                 Find the Right Stone Supplier.
               </h1>
-              <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-base text-stone-600 leading-relaxed font-normal">
                 Discover Indian stone manufacturers, quarry owners, processors and exporters for
                 your next architectural, commercial, or residential project. Connect directly with
                 verified factory commercial desks without broker intermediaries.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0 w-full sm:w-auto">
               <Link
                 href="/request-quote"
-                className="btn-accent px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98]"
+                className="btn-accent px-3.5 sm:px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98]"
               >
-                Broadcast Project RFQ
+                Broadcast RFQ
               </Link>
               <Link
                 href="/register/seller"
-                className="btn-secondary px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
+                className="btn-secondary px-3.5 sm:px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wider"
               >
-                Register as Supplier
+                Join as Supplier
               </Link>
             </div>
           </div>
 
-          {/* Genuine Trust Markers Row */}
-          <div className="mt-8 pt-6 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Genuine Trust Markers Row - Sleek on mobile */}
+          <div className="mt-6 pt-5 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-800 text-sm font-bold">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-800 text-xs sm:text-sm font-bold">
                 ✓
               </div>
               <div>

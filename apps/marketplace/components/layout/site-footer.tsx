@@ -56,10 +56,10 @@ export function SiteFooter() {
   return (
     <footer className="bg-stone-900 text-stone-300 print:hidden">
       {/* Main footer grid */}
-      <div className="container-wide py-14">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-wide py-10 sm:py-14">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-white transition-opacity hover:opacity-80"
@@ -164,7 +164,7 @@ export function SiteFooter() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-stone-800">
+      <div className="border-t border-stone-800 pb-16 sm:pb-0">
         <div className="container-wide flex flex-col items-center justify-between gap-3 py-5 text-sm text-stone-500 sm:flex-row">
           <p>
             © {year} StonesDekho. All rights reserved. Made with ❤️ in{" "}
