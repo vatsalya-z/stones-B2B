@@ -24,18 +24,16 @@ export function PublicRfqForm({
   prefilledProduct = "",
 }: PublicRfqFormProps) {
   return (
-    <div className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-10 shadow-sm">
-      <SharedRfqForm
-        supplier={supplier}
-        initialUserName={initialUserName}
-        initialUserEmail={initialUserEmail}
-        initialData={{
-          materialType: prefilledMaterial,
-          stoneVariety: prefilledProduct,
-        }}
-        isModal={false}
-      />
-    </div>
+    <SharedRfqForm
+      supplier={supplier}
+      initialUserName={initialUserName}
+      initialUserEmail={initialUserEmail}
+      initialData={{
+        materialType: prefilledMaterial,
+        stoneVariety: prefilledProduct,
+      }}
+      isModal={false}
+    />
   );
 }
 
