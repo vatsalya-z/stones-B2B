@@ -348,7 +348,7 @@ export function MobileNav({
 
             {/* Layer 3: Soft Bottom Fade into Drawer Background */}
             <div
-              className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#101010] via-[#101010]/50 to-transparent z-10"
+              className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#101010]/80 to-transparent z-10"
               aria-hidden="true"
             />
 
@@ -375,8 +375,8 @@ export function MobileNav({
             </div>
           </div>
 
-          {/* ── 2. Content Body (Overlapping Account Card + Nav + Cards) ── */}
-          <div className="relative z-20 px-3.5 -mt-3 space-y-2.5 pb-4">
+          {/* ── 2. Content Body (Account Card + Nav + Cards - No Overlap) ─ */}
+          <div className="relative z-20 px-3.5 mt-2 space-y-2.5 pb-4">
             {/* ── Account Access Section (Compact) ────────────────────── */}
             <div className="relative overflow-hidden rounded-xl border border-white/[0.12] bg-gradient-to-b from-[#191919] to-[#131313] p-3 shadow-lg shadow-black/40 backdrop-blur-sm">
             {isLoggedIn ? (
