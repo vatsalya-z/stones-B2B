@@ -216,8 +216,7 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 text-center sm:text-left md:pb-4 md:mb-4 md:border-b md:border-stone-200/70">
           <div className="flex flex-col items-center sm:items-start">
             <div className="flex items-center justify-center sm:justify-start">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-600/25 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 shadow-2xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-pulse" aria-hidden="true" />
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 border border-amber-600/25 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 shadow-2xs">
                 Live Quarry &amp; Factory Inventory
               </span>
             </div>
