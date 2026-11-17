@@ -208,24 +208,25 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
     <>
       <div
         className={cn(
-          "w-full bg-gradient-to-b from-stone-50 via-white to-stone-50/70 border border-stone-200/90 rounded-3xl p-4 sm:p-6 lg:p-7 shadow-xs",
+          "w-full bg-gradient-to-b from-amber-500/[0.03] via-white to-stone-50/80 border border-stone-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 shadow-xs",
           className,
         )}
       >
         {/* Architectural Header Label - B2B Product Catalog Sourcing */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:pb-4 md:mb-4 md:border-b md:border-stone-200/70">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md inline-block">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 text-center sm:text-left md:pb-4 md:mb-4 md:border-b md:border-stone-200/70">
+          <div className="flex flex-col items-center sm:items-start">
+            <div className="flex items-center justify-center sm:justify-start">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-600/25 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 shadow-2xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-600 animate-pulse" aria-hidden="true" />
                 Live Quarry &amp; Factory Inventory
               </span>
             </div>
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-stone-900 tracking-tight mt-1">
+            <h2 className="text-center sm:text-left text-[15px] sm:text-lg lg:text-xl font-extrabold text-stone-900 tracking-tight leading-snug mt-2 max-w-xl mx-auto sm:mx-0">
               Source Natural Stone Slabs, Blocks &amp; Tiles at Direct Factory Rates
             </h2>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-stone-600 font-semibold shrink-0">
-            <Building2 className="h-4 w-4 text-amber-600 shrink-0" />
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 text-[11px] sm:text-xs text-stone-600 font-semibold shrink-0 pt-0.5 sm:pt-0">
+            <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 shrink-0" />
             <span>500+ Verified Quarries &bull; Wholesale Pricing</span>
           </div>
         </div>
