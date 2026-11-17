@@ -277,7 +277,7 @@ export function MobileIndiaMartHeader({
 
   return (
     <>
-      <div className="w-full flex flex-col shadow-xs print:hidden">
+      <div className="w-full flex flex-col print:hidden">
         {/* ── ROW 1: IndiaMART-Style Solid Top Bar ──────────────────── */}
         <div className="h-12 bg-stone-900 text-white px-3 flex items-center justify-between relative z-10">
           {/* Left: Hamburger Icon with Red Notification Badge '1' */}
@@ -322,11 +322,11 @@ export function MobileIndiaMartHeader({
           </button>
         </div>
 
-        {/* ── ROW 2: High-Contrast Search Omnibar ───────────────────── */}
-        <div className="bg-white border-b border-stone-200/90 px-3 py-2">
+        {/* ── ROW 2: High-Contrast Search Omnibar (No Bottom Border, Increased Height) ───────────────────── */}
+        <div className="bg-white px-3 py-2">
           <form
             onSubmit={handleSearchSubmit}
-            className="relative flex items-center w-full h-10.5 rounded-xl border border-stone-300 bg-white px-3 shadow-2xs focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-500/20 transition-all"
+            className="relative flex items-center w-full h-12 rounded-xl border border-stone-300 bg-white px-3 shadow-2xs focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-500/20 transition-all"
             role="search"
           >
             {/* Hidden file input for camera photo upload */}

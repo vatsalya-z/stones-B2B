@@ -34,7 +34,7 @@ export async function SiteHeader() {
     null;
 
   return (
-    <header className="sticky top-0 z-30 lg:border-b lg:border-stone-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 shadow-xs transition-all print:hidden">
+    <header className="sticky top-0 z-30 lg:border-b lg:border-stone-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 lg:shadow-xs shadow-none transition-all print:hidden">
       {/* Mobile IndiaMART-Style Navigation (Visible on mobile/tablet < lg) */}
       <div className="lg:hidden">
         <MobileIndiaMartHeader
