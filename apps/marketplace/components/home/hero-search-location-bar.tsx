@@ -212,21 +212,21 @@ export function HeroSearchLocationBar({ className }: { className?: string }) {
           className,
         )}
       >
-        {/* Architectural Header Label */}
+        {/* Architectural Header Label - B2B Product Catalog Sourcing */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:pb-4 md:mb-4 md:border-b md:border-stone-200/70">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-800">
-                Direct Quarry Sourcing Platform
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md inline-block">
+                Live Quarry &amp; Factory Inventory
               </span>
             </div>
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-stone-900 tracking-tight mt-0.5">
-              Source Natural Stone Direct from Certified Indian Quarries
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-stone-900 tracking-tight mt-1">
+              Source Natural Stone Slabs, Blocks &amp; Tiles at Direct Factory Rates
             </h2>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-stone-500 font-medium shrink-0">
-            <Building2 className="h-4 w-4 text-stone-400" />
-            <span>500+ Verified Gangsaw Processors</span>
+          <div className="flex items-center gap-1.5 text-xs text-stone-600 font-semibold shrink-0">
+            <Building2 className="h-4 w-4 text-amber-600 shrink-0" />
+            <span>500+ Verified Quarries &bull; Wholesale Pricing</span>
           </div>
         </div>
 
