@@ -520,40 +520,49 @@ export function MobileNav({
             })}
           </nav>
 
-          {/* ── Premium Stone Promotional Card (Bright & Visible) ───── */}
-          <div className="group relative overflow-hidden rounded-xl border border-[#D99A35]/45 bg-[#161616] p-3 shadow-lg transition-all duration-300 hover:border-[#D99A35]">
-            {/* Background Image with Enhanced Brightness & Clarity */}
+          {/* ── Premium Stone Promotional Card (Compact & Open Quarry View) ─ */}
+          <div className="group relative overflow-hidden rounded-xl border border-[#D99A35]/45 bg-[#121212] p-2.5 shadow-lg transition-all duration-300 hover:border-[#D99A35]">
+            {/* Background Image: Vivid, High-Visibility Natural Quarry */}
             <div className="absolute inset-0 z-0">
               <Image
                 src="/images/hero/stone-quarry-hero.webp"
                 alt="Natural Stone Quarry"
                 fill
-                className="object-cover object-center opacity-70 brightness-115 contrast-105 transition-transform duration-700 group-hover:scale-105"
+                className="object-cover object-center opacity-85 brightness-115 contrast-105 transition-transform duration-700 group-hover:scale-105"
                 unoptimized
               />
-              {/* Directional readable overlay: clear view on the right, contrast for text on the left */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
+              {/* Minimal soft vignettes at top & bottom so middle quarry landscape is unobstructed */}
+              <div className="absolute inset-x-0 top-0 h-9 bg-gradient-to-b from-black/60 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/90 via-black/65 to-transparent" />
             </div>
 
-            {/* Card Content with Crisp High-Contrast Shadows */}
-            <div className="relative z-10 space-y-1">
-              <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-[#E8BD78] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-                SOURCE DIRECT
-              </span>
-              <h4 className="text-xs font-bold leading-snug tracking-tight text-[#F7F5F0] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
-                Premium Natural Stone for Every Project
-              </h4>
-              <p className="text-[10px] leading-tight text-[#E5E0D8] line-clamp-1 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-                Direct quarry extraction of marble, granite, sandstone &amp; limestone.
-              </p>
-              <div className="pt-0.5">
+            {/* Compact Content: Tiny Top Badge + Open Quarry View + Single Bottom Action Row */}
+            <div className="relative z-10 flex min-h-[95px] flex-col justify-between">
+              {/* Top-Left Tiny Tag */}
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1 rounded-md border border-[#D99A35]/40 bg-black/75 px-1.5 py-0.5 text-[8px] font-bold tracking-widest text-[#E8BD78] shadow-sm backdrop-blur-md">
+                  SOURCE DIRECT
+                </span>
+              </div>
+
+              {/* Bottom Compact Text & Explore Button */}
+              <div className="flex items-end justify-between gap-2 pt-3">
+                <div className="min-w-0">
+                  <h4 className="truncate text-xs font-bold text-[#F7F5F0] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+                    Premium Natural Stone Slabs
+                  </h4>
+                  <p className="truncate text-[9.5px] font-medium text-[#DDD7CE] drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)]">
+                    Direct quarry marble, granite &amp; limestone
+                  </p>
+                </div>
+
                 <Link
                   href="/products"
                   onClick={() => setOpen(false)}
-                  className="group/cta inline-flex items-center gap-1 text-[11px] font-bold text-[#E8BD78] transition-colors hover:text-[#D99A35] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                  className="group/cta flex-shrink-0 flex items-center gap-1 rounded-lg bg-gradient-to-r from-[#D99A35] to-[#E8BD78] px-2.5 py-1 text-[10px] font-bold text-[#101010] shadow-md shadow-black/70 transition-all hover:brightness-110 active:scale-95"
                 >
-                  <span>Explore Products</span>
-                  <span className="transition-transform duration-200 group-hover/cta:translate-x-1">→</span>
+                  <span>Explore</span>
+                  <span className="transition-transform duration-200 group-hover/cta:translate-x-0.5">→</span>
                 </Link>
               </div>
             </div>
