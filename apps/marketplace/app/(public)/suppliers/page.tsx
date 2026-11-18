@@ -92,32 +92,32 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
 
       <div className="container-wide space-y-5 sm:space-y-8">
         {/* Editorial Header Section */}
-        <div className="rounded-2xl sm:rounded-3xl border border-stone-200/90 bg-white p-4 sm:p-8 shadow-xs">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6">
-            <div className="space-y-2 sm:space-y-3 max-w-3xl">
+        <div className="rounded-2xl sm:rounded-3xl border border-stone-200/90 bg-white p-4 sm:p-8 shadow-xs text-center">
+          <div className="flex flex-col items-center justify-center gap-3 sm:gap-5 max-w-3xl mx-auto">
+            <div className="space-y-2 sm:space-y-2.5 flex flex-col items-center">
               <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold text-amber-800 border border-amber-200/70">
                 <span className="text-amber-700">✓</span>
                 <span>Verified Direct Quarry &amp; Processing Network</span>
               </div>
-              <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight text-center">
                 Verified Indian Stone Quarries &amp; Processors
               </h1>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal text-center max-w-2xl">
                 Discover certified marble, granite, sandstone, and limestone manufacturers across India.
                 Connect directly with factory commercial desks and quarry owners without broker intermediaries.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0 w-full sm:w-auto">
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 shrink-0 w-full sm:w-auto">
               <Link
                 href="/request-quote"
-                className="btn-accent h-10 sm:h-11 rounded-xl px-3 sm:px-5 py-2 text-center text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center"
+                className="btn-accent h-10 sm:h-11 rounded-xl px-4 sm:px-6 py-2 text-center text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center"
               >
                 Broadcast RFQ
               </Link>
               <Link
                 href="/register/seller"
-                className="btn-secondary h-10 sm:h-11 rounded-xl px-3 sm:px-5 py-2 text-center text-xs font-bold uppercase tracking-wider flex items-center justify-center"
+                className="btn-secondary h-10 sm:h-11 rounded-xl px-4 sm:px-6 py-2 text-center text-xs font-bold uppercase tracking-wider flex items-center justify-center"
               >
                 Join as Supplier
               </Link>
@@ -125,7 +125,7 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
           </div>
 
           {/* Trust Markers Row (Sleek 3-column micro-grid on mobile, full detail on desktop) */}
-          <div className="mt-4 sm:mt-6 pt-3.5 sm:pt-5 border-t border-stone-100 grid grid-cols-3 gap-1.5 sm:gap-4">
+          <div className="mt-4 sm:mt-6 pt-3.5 sm:pt-5 border-t border-stone-100 grid grid-cols-3 gap-1.5 sm:gap-4 max-w-3xl mx-auto">
             <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1 sm:gap-3 p-1.5 sm:p-0 rounded-xl bg-stone-50 sm:bg-transparent">
               <div className="flex h-7 w-7 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold">
                 ✓
@@ -273,7 +273,7 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
           )
         ) : (
           <div className="space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {sellers.map((s) => (
                 <SupplierCard
                   key={s.id}
