@@ -471,7 +471,7 @@ export function SharedRfqForm({
       action={formAction}
       onInput={handleUserInteraction}
       onChange={handleUserInteraction}
-      className="rounded-3xl border border-stone-200/90 bg-white p-5 sm:p-7 shadow-xl shadow-stone-900/5 space-y-4"
+      className="rounded-2xl sm:rounded-3xl border border-stone-200/90 bg-white p-4 sm:p-7 shadow-xl shadow-stone-900/5 space-y-4"
     >
       {/* Backend hidden fields */}
       <input type="hidden" name="supplier_slug" value={supplier?.slug ?? ""} />
@@ -509,7 +509,7 @@ export function SharedRfqForm({
       )}
 
       {/* Form Top Title & Fast-Fill Badge */}
-      <div className="flex items-center justify-between pb-2 border-b border-stone-100">
+      <div className="flex items-center justify-between pb-3 border-b border-stone-100">
         <div>
           <h3 className="text-base sm:text-lg font-black text-stone-900 tracking-tight">
             Direct Quarry Quotation Form
@@ -524,8 +524,8 @@ export function SharedRfqForm({
         </div>
       </div>
 
-      {/* ── STEP 1: STONE VARIETY (WITH INSTANT 1-CLICK PILLS) ── */}
-      <div className="space-y-2">
+      {/* ── STEP 1: STONE VARIETY ── */}
+      <div className="space-y-1.5">
         <label className="block text-xs font-bold text-stone-800">
           1. Stone Name or Category <span className="text-amber-600">*</span>
         </label>
@@ -546,7 +546,7 @@ export function SharedRfqForm({
             placeholder="Search stone (e.g. Makrana White Marble, Black Galaxy, Kota Blue)..."
             required
             autoComplete="off"
-            className="w-full h-11 rounded-2xl border border-stone-200/90 bg-stone-50/70 hover:bg-stone-50 focus:bg-white pl-10 pr-4 text-xs sm:text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
+            className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-stone-200/90 bg-stone-50/70 hover:bg-stone-50 focus:bg-white pl-10 pr-4 text-xs sm:text-sm font-medium text-stone-900 placeholder:text-stone-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
           />
 
           {/* Autocomplete Dropdown */}
@@ -570,30 +570,6 @@ export function SharedRfqForm({
             </div>
           )}
         </div>
-
-        {/* 1-Click Quick Select Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-          <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">
-            Quick Select:
-          </span>
-          {POPULAR_STONES.map((stone) => {
-            const isSelected = productQuery.toLowerCase() === stone.toLowerCase();
-            return (
-              <button
-                key={stone}
-                type="button"
-                onClick={() => setProductQuery(stone)}
-                className={`inline-flex items-center rounded-xl px-2.5 py-1 text-[11px] font-semibold transition-all cursor-pointer border ${
-                  isSelected
-                    ? "bg-stone-900 text-white border-stone-900 shadow-2xs"
-                    : "bg-stone-100/80 hover:bg-amber-50 hover:text-amber-900 text-stone-700 border-stone-200/80"
-                }`}
-              >
-                {stone}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       {/* ── STEP 2: QUANTITY & UNIT (COMPACT ROW) ── */}
@@ -611,7 +587,7 @@ export function SharedRfqForm({
               min={1}
               step="any"
               required
-              className="w-full h-11 rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white px-3.5 text-xs sm:text-sm font-bold text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
+              className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white px-3.5 text-xs sm:text-sm font-bold text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
             />
           </div>
           <div className="w-1/2 relative">
@@ -619,7 +595,7 @@ export function SharedRfqForm({
               name="unit"
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
-              className="w-full h-11 rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white px-3 text-xs sm:text-sm font-semibold text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all cursor-pointer"
+              className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white px-3 text-xs sm:text-sm font-semibold text-stone-800 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all cursor-pointer"
             >
               {UNIT_OPTIONS.map((u) => (
                 <option key={u.value} value={u.value}>
@@ -631,15 +607,15 @@ export function SharedRfqForm({
         </div>
 
         {/* Quick Quantity Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+        <div className="grid grid-cols-4 gap-1.5 w-full pt-0.5">
           {QUICK_QUANTITIES.map((q) => (
             <button
               key={q.value}
               type="button"
               onClick={() => setQuantity(q.value)}
-              className={`rounded-lg px-2 py-0.5 text-[10.5px] font-semibold transition-colors border cursor-pointer ${
+              className={`w-full py-1 text-center text-[10.5px] sm:text-xs font-semibold transition-colors border rounded-xl cursor-pointer ${
                 quantity === q.value
-                  ? "bg-amber-100 border-amber-300 text-amber-900 font-bold"
+                  ? "bg-amber-100 border-amber-300 text-amber-900 font-bold shadow-2xs"
                   : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"
               }`}
             >
@@ -664,7 +640,7 @@ export function SharedRfqForm({
               defaultValue={prefilledLocation}
               placeholder="e.g. Delhi NCR, Bangalore, Mumbai"
               required
-              className="w-full h-11 rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white pl-9 pr-3 text-xs sm:text-sm font-medium text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
+              className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white pl-9 pr-3 text-xs sm:text-sm font-medium text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
             />
           </div>
           {state.fieldErrors?.deliveryLocation && (
@@ -687,7 +663,7 @@ export function SharedRfqForm({
               defaultValue={effectiveUserPhone}
               placeholder="e.g. +91 98765 43210"
               required
-              className="w-full h-11 rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white pl-9 pr-3 text-xs sm:text-sm font-medium text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
+              className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl border border-stone-200/90 bg-stone-50/70 focus:bg-white pl-9 pr-3 text-xs sm:text-sm font-medium text-stone-900 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 shadow-2xs transition-all"
             />
           </div>
           {state.fieldErrors?.phone && (
@@ -701,7 +677,7 @@ export function SharedRfqForm({
         <button
           type="button"
           onClick={() => setShowMoreSpecs(!showMoreSpecs)}
-          className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-stone-50 hover:bg-stone-100 border border-stone-200/80 text-xs font-bold text-stone-700 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between p-3 rounded-xl sm:rounded-2xl bg-stone-50 hover:bg-stone-100 border border-stone-200/80 text-xs font-bold text-stone-700 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2">
             <Sparkles className="h-3.5 w-3.5 text-amber-600" />
@@ -715,7 +691,7 @@ export function SharedRfqForm({
         </button>
 
         {showMoreSpecs && (
-          <div className="mt-3 space-y-3.5 p-4 rounded-2xl bg-stone-50/60 border border-stone-200/70 text-xs animate-in fade-in-50 duration-200">
+          <div className="mt-3 space-y-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-stone-50/60 border border-stone-200/70 text-xs animate-in fade-in-50 duration-200">
             {/* Thickness & Finish */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
@@ -726,7 +702,7 @@ export function SharedRfqForm({
                   name="thickness"
                   value={selectedThickness}
                   onChange={(e) => setSelectedThickness(e.target.value)}
-                  className="w-full h-9 rounded-xl border border-stone-200 bg-white px-2.5 text-xs font-semibold text-stone-800 focus:outline-none"
+                  className="w-full h-10 rounded-xl border border-stone-200 bg-white px-2.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-amber-500"
                 >
                   {THICKNESS_OPTIONS.map((t) => (
                     <option key={t.value} value={t.value}>
@@ -744,7 +720,7 @@ export function SharedRfqForm({
                   name="finish"
                   value={selectedFinish}
                   onChange={(e) => setSelectedFinish(e.target.value)}
-                  className="w-full h-9 rounded-xl border border-stone-200 bg-white px-2.5 text-xs font-semibold text-stone-800 focus:outline-none"
+                  className="w-full h-10 rounded-xl border border-stone-200 bg-white px-2.5 text-xs font-semibold text-stone-800 focus:outline-none focus:border-amber-500"
                 >
                   {FINISH_OPTIONS.map((f) => (
                     <option key={f.value} value={f.value}>
@@ -766,7 +742,7 @@ export function SharedRfqForm({
                   name="name"
                   defaultValue={effectiveUserName}
                   placeholder="e.g. Rajesh Sharma"
-                  className="w-full h-9 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none"
+                  className="w-full h-10 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
@@ -779,7 +755,7 @@ export function SharedRfqForm({
                   name="email"
                   defaultValue={effectiveUserEmail}
                   placeholder="e.g. buyer@company.com"
-                  className="w-full h-9 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none"
+                  className="w-full h-10 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -793,7 +769,7 @@ export function SharedRfqForm({
                 type="text"
                 name="company_name"
                 placeholder="e.g. Skyline Architecture"
-                className="w-full h-9 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none mb-2"
+                className="w-full h-10 rounded-xl border border-stone-200 bg-white px-3 text-xs text-stone-900 focus:outline-none focus:border-amber-500 mb-2.5"
               />
 
               <label className="block text-[11px] font-bold text-stone-700 mb-1">
@@ -803,7 +779,7 @@ export function SharedRfqForm({
                 name="project_notes"
                 rows={2}
                 placeholder="Special slab dimensions, bookmatched layout, edge profiling..."
-                className="w-full rounded-xl border border-stone-200 bg-white p-2.5 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none"
+                className="w-full rounded-xl border border-stone-200 bg-white p-2.5 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-500"
               />
             </div>
           </div>
@@ -826,7 +802,7 @@ export function SharedRfqForm({
           type="button"
           onClick={handlePrimaryButtonClick}
           disabled={isPending}
-          className="w-full h-12 sm:h-13 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 hover:from-amber-500 hover:to-amber-700 active:scale-[0.99] text-white font-extrabold text-xs sm:text-sm rounded-2xl px-5 shadow-lg shadow-amber-700/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="w-full h-12 sm:h-13 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 hover:from-amber-500 hover:to-amber-700 active:scale-[0.99] text-white font-extrabold text-xs sm:text-sm rounded-xl sm:rounded-2xl px-5 shadow-lg shadow-amber-700/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isPending ? (
             <>
