@@ -7,14 +7,14 @@ import { getPublicSellers } from "@/lib/db";
 import { SupplierFilterBar } from "@/components/suppliers/supplier-filter-bar";
 
 export const metadata: Metadata = {
-  title: "Verified Indian Stone Suppliers, Quarry Owners & Exporters",
+  title: "Verified Indian Stone Suppliers, Quarry Owners & Exporters | StonesDekho",
   description:
     "Discover verified Indian natural stone manufacturers, quarry owners, gangsaw processors, and certified exporters from Rajasthan, Gujarat, Andhra Pradesh, and Karnataka.",
   alternates: {
     canonical: "/suppliers",
   },
   openGraph: {
-    title: "Verified Natural Stone Suppliers & Exporters | StoneB2B",
+    title: "Verified Natural Stone Suppliers & Exporters | StonesDekho",
     description:
       "Connect with certified Indian stone processing factories and quarry owners. Direct wholesale pricing, gangsaw capacity, and export crate dispatch.",
     url: "/suppliers",
@@ -90,75 +90,74 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
         dangerouslySetInnerHTML={{ __html: JSON.stringify(suppliersJsonLd) }}
       />
 
-      <div className="container-wide space-y-8">
+      <div className="container-wide space-y-5 sm:space-y-8">
         {/* Editorial Header Section */}
-        <div className="rounded-3xl border border-stone-200/80 bg-white p-5 sm:p-10 shadow-xs">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 sm:gap-6">
-            <div className="space-y-2.5 sm:space-y-3 max-w-3xl">
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 border border-amber-200/60">
+        <div className="rounded-2xl sm:rounded-3xl border border-stone-200/90 bg-white p-4 sm:p-8 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6">
+            <div className="space-y-2 sm:space-y-3 max-w-3xl">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold text-amber-800 border border-amber-200/70">
                 <span className="text-amber-700">✓</span>
                 <span>Verified Direct Quarry &amp; Processing Network</span>
               </div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight">
-                Find the Right Stone Supplier.
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
+                Verified Indian Stone Quarries &amp; Processors
               </h1>
-              <p className="text-xs sm:text-base text-stone-600 leading-relaxed font-normal">
-                Discover Indian stone manufacturers, quarry owners, processors and exporters for
-                your next architectural, commercial, or residential project. Connect directly with
-                verified factory commercial desks without broker intermediaries.
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-normal">
+                Discover certified marble, granite, sandstone, and limestone manufacturers across India.
+                Connect directly with factory commercial desks and quarry owners without broker intermediaries.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 shrink-0 w-full sm:w-auto">
               <Link
                 href="/request-quote"
-                className="btn-accent px-3.5 sm:px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98]"
+                className="btn-accent h-10 sm:h-11 rounded-xl px-3 sm:px-5 py-2 text-center text-xs font-bold uppercase tracking-wider shadow-xs hover:shadow-md transition-all active:scale-[0.98] flex items-center justify-center"
               >
                 Broadcast RFQ
               </Link>
               <Link
                 href="/register/seller"
-                className="btn-secondary px-3.5 sm:px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wider"
+                className="btn-secondary h-10 sm:h-11 rounded-xl px-3 sm:px-5 py-2 text-center text-xs font-bold uppercase tracking-wider flex items-center justify-center"
               >
                 Join as Supplier
               </Link>
             </div>
           </div>
 
-          {/* Genuine Trust Markers Row - Sleek on mobile */}
-          <div className="mt-6 pt-5 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-800 text-xs sm:text-sm font-bold">
+          {/* Trust Markers Row (Sleek 3-column micro-grid on mobile, full detail on desktop) */}
+          <div className="mt-4 sm:mt-6 pt-3.5 sm:pt-5 border-t border-stone-100 grid grid-cols-3 gap-1.5 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1 sm:gap-3 p-1.5 sm:p-0 rounded-xl bg-stone-50 sm:bg-transparent">
+              <div className="flex h-7 w-7 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold">
                 ✓
               </div>
               <div>
-                <p className="text-xs font-bold text-stone-900">100% Verified Trade Entities</p>
-                <p className="text-[11px] text-stone-500">
-                  Government GSTIN &amp; quarry lease validation
+                <p className="text-[10px] sm:text-xs font-bold text-stone-900 leading-tight">GSTIN &amp; Lease</p>
+                <p className="hidden sm:block text-[11px] text-stone-500">
+                  Government validated credentials
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-800 text-sm font-bold">
-                🤝
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1 sm:gap-3 p-1.5 sm:p-0 rounded-xl bg-stone-50 sm:bg-transparent">
+              <div className="flex h-7 w-7 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-amber-100 text-amber-800 text-xs sm:text-sm font-bold">
+                ⚡
               </div>
               <div>
-                <p className="text-xs font-bold text-stone-900">Direct Quarry Sourcing</p>
-                <p className="text-[11px] text-stone-500">
-                  Zero intermediary broker markups (Model B)
+                <p className="text-[10px] sm:text-xs font-bold text-stone-900 leading-tight">Factory-Direct Rates</p>
+                <p className="hidden sm:block text-[11px] text-stone-500">
+                  Zero intermediary broker markups
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-amber-800 text-sm font-bold">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-1 sm:gap-3 p-1.5 sm:p-0 rounded-xl bg-stone-50 sm:bg-transparent">
+              <div className="flex h-7 w-7 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-blue-100 text-blue-800 text-xs sm:text-sm font-bold">
                 📑
               </div>
               <div>
-                <p className="text-xs font-bold text-stone-900">Commercial RFQ Desk</p>
-                <p className="text-[11px] text-stone-500">
-                  Formal pro-forma quotation &amp; lot inspection
+                <p className="text-[10px] sm:text-xs font-bold text-stone-900 leading-tight">Commercial RFQ Desk</p>
+                <p className="hidden sm:block text-[11px] text-stone-500">
+                  Pro-forma &amp; lot inspection
                 </p>
               </div>
             </div>
@@ -207,11 +206,11 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
         {sellers.length === 0 ? (
           hasActiveFilters ? (
             /* Empty State 1: Active filters yielded 0 results */
-            <div className="rounded-3xl border border-stone-200 bg-white p-12 text-center shadow-xs space-y-4">
+            <div className="rounded-2xl sm:rounded-3xl border border-stone-200 bg-white p-6 sm:p-12 text-center shadow-xs space-y-4">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-800 text-2xl font-bold border border-amber-200/60">
                 🔍
               </div>
-              <h2 className="text-xl font-bold text-stone-900">
+              <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                 No Verified Suppliers Match Your Criteria
               </h2>
               <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto leading-relaxed">
@@ -231,13 +230,13 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
               </div>
             </div>
           ) : (
-            /* Empty State 2: Database has 0 verified suppliers (Data Trust Onboarding State) */
-            <div className="rounded-3xl border border-stone-200 bg-white p-12 text-center shadow-xs space-y-5">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-800 text-3xl font-bold border border-amber-200/80">
+            /* Empty State 2: Database has 0 verified suppliers */
+            <div className="rounded-2xl sm:rounded-3xl border border-stone-200 bg-white p-6 sm:p-12 text-center shadow-xs space-y-5">
+              <div className="mx-auto flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-800 text-2xl sm:text-3xl font-bold border border-amber-200/80">
                 🏛️
               </div>
               <div className="space-y-2 max-w-lg mx-auto">
-                <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
                   Verified Indian Stone Suppliers are Being Onboarded
                 </h2>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -247,7 +246,7 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-amber-200/80 bg-amber-50/70 p-4 max-w-md mx-auto text-left space-y-1">
+              <div className="rounded-xl sm:rounded-2xl border border-amber-200/80 bg-amber-50/70 p-3.5 sm:p-4 max-w-md mx-auto text-left space-y-1">
                 <p className="text-xs font-bold text-amber-900">Immediate Sourcing Requirement?</p>
                 <p className="text-[11px] text-amber-800 leading-relaxed">
                   You can submit your project Bill of Quantities (BOQ) directly through our platform
@@ -256,16 +255,16 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
                 </p>
               </div>
 
-              <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
+              <div className="pt-2 sm:pt-3 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 <Link
                   href="/request-quote"
-                  className="btn-accent text-xs px-5 py-2.5 font-bold uppercase tracking-wider shadow-xs"
+                  className="btn-accent text-xs px-4 sm:px-5 py-2 sm:py-2.5 font-bold uppercase tracking-wider shadow-xs"
                 >
                   Submit Platform-Wide RFQ
                 </Link>
                 <Link
                   href="/register/seller"
-                  className="btn-secondary text-xs px-5 py-2.5 font-bold uppercase tracking-wider"
+                  className="btn-secondary text-xs px-4 sm:px-5 py-2 sm:py-2.5 font-bold uppercase tracking-wider"
                 >
                   Apply for Verification
                 </Link>
@@ -273,8 +272,8 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
             </div>
           )
         ) : (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-6 sm:space-y-8">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {sellers.map((s) => (
                 <SupplierCard
                   key={s.id}
@@ -283,6 +282,7 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
                   businessName={s.businessName}
                   businessType={s.businessType}
                   logoUrl={s.logoUrl}
+                  coverImageUrl={s.coverImageUrl}
                   city={s.city}
                   state={s.state}
                   description={s.description}
@@ -311,22 +311,22 @@ export default async function SuppliersPage({ searchParams }: SuppliersPageProps
         )}
 
         {/* B2B Sourcing Program Banner */}
-        <div className="rounded-3xl border border-stone-200 bg-gradient-to-r from-stone-900 via-stone-850 to-stone-900 p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2.5 max-w-2xl">
-            <span className="inline-block rounded-full bg-amber-500/20 px-3 py-0.5 text-xs font-bold text-amber-300 border border-amber-500/30">
+        <div className="rounded-2xl sm:rounded-3xl border border-stone-200 bg-gradient-to-r from-stone-900 via-stone-850 to-stone-900 p-5 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6 text-center md:text-left">
+          <div className="space-y-2 max-w-2xl">
+            <span className="inline-block rounded-full bg-amber-500/20 px-3 py-0.5 text-[11px] sm:text-xs font-bold text-amber-300 border border-amber-500/30">
               Quarry Verification Program
             </span>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight">
               Are you an Indian Natural Stone Quarry Owner or Processor?
             </h2>
             <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
-              Join StoneB2B to showcase your live gangsaw slab inventory directly to global
+              Join StonesDekho to showcase your live gangsaw slab inventory directly to global
               importers, architects, and commercial contractors without broker intermediaries.
             </p>
           </div>
           <Link
             href="/register/seller"
-            className="btn-accent px-6 py-3 text-xs font-bold uppercase tracking-wider flex-shrink-0 shadow-md shadow-amber-600/30"
+            className="btn-accent w-full md:w-auto px-6 py-3 text-xs font-bold uppercase tracking-wider flex-shrink-0 shadow-md shadow-amber-600/30 text-center"
           >
             Apply for Factory Verification
           </Link>
