@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import type { Metadata } from "next";
 import { cn } from "@stone/ui";
+import { CookieSanitizer } from "@/components/common/CookieSanitizer";
 import "../styles/globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stonesdekho.com";
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         suppressHydrationWarning
         className={cn("min-h-full bg-stone-50 text-stone-900 antialiased")}
       >
+        <CookieSanitizer />
         {children}
       </body>
     </html>
