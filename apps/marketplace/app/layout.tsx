@@ -60,7 +60,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           crossOrigin="anonymous"
         />
       </head>
-      <body className={cn("min-h-full bg-stone-50 text-stone-900 antialiased")}>
+      <body
+        suppressHydrationWarning
+        className={cn("min-h-full bg-stone-50 text-stone-900 antialiased")}
+      >
         {children}
       </body>
     </html>

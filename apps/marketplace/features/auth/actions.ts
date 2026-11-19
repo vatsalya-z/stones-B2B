@@ -20,7 +20,10 @@ export async function signUp(raw: RegisterInput, nextPath?: string | null) {
     return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
   }
   const { email, password, fullName, accountType } = parsed.data;
-  const safeNext = sanitizeNextPath(nextPath, "/dashboard");
+  const safeNext = sanitizeNextPath(
+    nextPath,
+    accountType === "seller" ? "/auth/pending" : "/dashboard"
+  );
   const callbackUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/auth/callback?next=${encodeURIComponent(safeNext)}`;
 
   const supabase = await getSupabaseServerClient();
@@ -32,7 +35,18 @@ export async function signUp(raw: RegisterInput, nextPath?: string | null) {
       emailRedirectTo: callbackUrl,
     },
   });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("[SignUp Auth Error]:", error.name, error.message);
+    if (
+      error.name === "AuthRetryableFetchError" ||
+      (typeof error.message === "string" && error.message.toLowerCase().includes("fetch failed"))
+    ) {
+      return {
+        error: "Authentication service is temporarily unreachable. Please check your internet connection and try again.",
+      };
+    }
+    return { error: error.message };
+  }
   if (data.session) {
     return { success: true, redirectTo: safeNext };
   }
@@ -51,7 +65,18 @@ export async function signIn(raw: LoginInput, nextPath?: string | null) {
   const safeNext = sanitizeNextPath(nextPath, "/dashboard");
   const supabase = await getSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("[SignIn Auth Error]:", error.name, error.message);
+    if (
+      error.name === "AuthRetryableFetchError" ||
+      (typeof error.message === "string" && error.message.toLowerCase().includes("fetch failed"))
+    ) {
+      return {
+        error: "Authentication service is temporarily unreachable. Please check your internet connection and try again.",
+      };
+    }
+    return { error: error.message };
+  }
   return { success: true, redirectTo: safeNext };
 }
 
@@ -74,7 +99,18 @@ export async function forgotPassword(formData: FormData) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/auth/reset-password`,
   });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("[ForgotPassword Auth Error]:", error.name, error.message);
+    if (
+      error.name === "AuthRetryableFetchError" ||
+      (typeof error.message === "string" && error.message.toLowerCase().includes("fetch failed"))
+    ) {
+      return {
+        error: "Authentication service is temporarily unreachable. Please check your internet connection and try again.",
+      };
+    }
+    return { error: error.message };
+  }
   return { success: true };
 }
 
@@ -88,6 +124,17 @@ export async function resetPassword(formData: FormData) {
   if (password.length < 10) return { error: "Password must be at least 10 characters" };
   const supabase = await getSupabaseServerClient();
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("[ResetPassword Auth Error]:", error.name, error.message);
+    if (
+      error.name === "AuthRetryableFetchError" ||
+      (typeof error.message === "string" && error.message.toLowerCase().includes("fetch failed"))
+    ) {
+      return {
+        error: "Authentication service is temporarily unreachable. Please check your internet connection and try again.",
+      };
+    }
+    return { error: error.message };
+  }
   redirect("/dashboard");
 }
