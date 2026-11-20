@@ -13,8 +13,8 @@ function SellerLoginForm() {
   const rawNext = searchParams.get("next");
   const safeNext = rawNext ? sanitizeNextPath(rawNext, "/seller/dashboard") : "/seller/dashboard";
   const registerHref = safeNext
-    ? `${marketplaceUrl}/register/seller?next=${encodeURIComponent(safeNext)}`
-    : `${marketplaceUrl}/register/seller`;
+    ? `/register?next=${encodeURIComponent(safeNext)}`
+    : `/register`;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -187,14 +187,14 @@ function SellerLoginForm() {
           <p className="text-xs text-stone-600 font-medium">
             Don&apos;t have a seller account yet?
           </p>
-          <a
+          <Link
             href={registerHref}
             className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50/90 hover:bg-amber-100 hover:border-amber-400 py-2.5 px-4 text-xs sm:text-sm font-bold text-amber-950 transition-all shadow-2xs hover:shadow-xs active:scale-[0.99]"
           >
             <span>✨</span>
             <span>New Seller? Create Account Here</span>
             <span>→</span>
-          </a>
+          </Link>
         </div>
 
         {/* Trust Badges */}
