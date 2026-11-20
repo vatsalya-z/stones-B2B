@@ -58,7 +58,7 @@ export default async function UnauthorizedPage({ searchParams }: UnauthorizedPag
                 className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-sm font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50 hover:border-stone-400"
               >
                 <span>🏪</span>
-                Register as Natural Stone Supplier
+                Create New Seller Account
               </a>
 
               <a

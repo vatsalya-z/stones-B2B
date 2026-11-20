@@ -183,16 +183,18 @@ function SellerLoginForm() {
         </form>
 
         {/* Portal Registration Callout */}
-        <div className="mt-6 pt-5 border-t border-stone-200 text-center">
-          <p className="text-xs text-stone-600">
-            Want to sell stones on StonesDekho?{" "}
-            <a
-              href={registerHref}
-              className="font-semibold text-amber-700 hover:text-amber-900 hover:underline"
-            >
-              Register your Stone Quarry / Business
-            </a>
+        <div className="mt-6 pt-5 border-t border-stone-200 text-center space-y-2.5">
+          <p className="text-xs text-stone-600 font-medium">
+            Don&apos;t have a seller account yet?
           </p>
+          <a
+            href={registerHref}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50/90 hover:bg-amber-100 hover:border-amber-400 py-2.5 px-4 text-xs sm:text-sm font-bold text-amber-950 transition-all shadow-2xs hover:shadow-xs active:scale-[0.99]"
+          >
+            <span>✨</span>
+            <span>New Seller? Create Account Here</span>
+            <span>→</span>
+          </a>
         </div>
 
         {/* Trust Badges */}
