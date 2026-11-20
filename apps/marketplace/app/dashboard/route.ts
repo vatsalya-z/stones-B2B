@@ -24,8 +24,11 @@ export async function GET(request: NextRequest) {
     const roles = (roleRows || []).map((r) => r.role);
 
     if (roles.includes("seller")) {
-      const sellerUrl = process.env.NEXT_PUBLIC_SELLER_URL;
-      if (sellerUrl && sellerUrl !== origin) {
+      const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+      const sellerUrl =
+        process.env.NEXT_PUBLIC_SELLER_URL ||
+        (isProd ? "https://seller.stonesdekho.com" : "http://localhost:3002");
+      if (sellerUrl && !sellerUrl.includes(origin)) {
         return NextResponse.redirect(new URL("/seller/dashboard", sellerUrl));
       }
       return NextResponse.redirect(new URL("/auth/pending", origin));

@@ -15,44 +15,68 @@ import {
 // handle_new_user trigger which creates the profile + assigns the role.
 // ---------------------------------------------------------------------------
 export async function signUp(raw: RegisterInput, nextPath?: string | null) {
-  const parsed = registerSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
-  }
-  const { email, password, fullName, accountType } = parsed.data;
-  const safeNext = sanitizeNextPath(nextPath, "/dashboard");
-  const callbackUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+  try {
+    const parsed = registerSchema.safeParse(raw);
+    if (!parsed.success) {
+      return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
+    }
+    const { email, password, fullName, accountType } = parsed.data;
+    const safeNext = sanitizeNextPath(
+      nextPath,
+      accountType === "seller" ? "/auth/pending" : "/dashboard"
+    );
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stonesdekho.com";
+    const callbackUrl = `${siteUrl}/auth/callback?next=${encodeURIComponent(safeNext)}`;
 
-  const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { full_name: fullName, account_type: accountType },
-      emailRedirectTo: callbackUrl,
-    },
-  });
-  if (error) return { error: error.message };
-  if (data.session) {
-    return { success: true, redirectTo: safeNext };
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName, account_type: accountType },
+        emailRedirectTo: callbackUrl,
+      },
+    });
+    if (error) return { error: error.message };
+    if (data.session) {
+      return { success: true, redirectTo: safeNext };
+    }
+    return { success: true, redirectTo: "/auth/verify-email" };
+  } catch (err: unknown) {
+    console.error("[SignUp Unhandled Server Error]:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred during registration. Please try again.",
+    };
   }
-  return { success: true, redirectTo: "/auth/verify-email" };
 }
 
 // ---------------------------------------------------------------------------
 // signIn — password authentication with safe post-login return URL.
 // ---------------------------------------------------------------------------
 export async function signIn(raw: LoginInput, nextPath?: string | null) {
-  const parsed = loginSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
+  try {
+    const parsed = loginSchema.safeParse(raw);
+    if (!parsed.success) {
+      return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
+    }
+    const { email, password } = parsed.data;
+    const safeNext = sanitizeNextPath(nextPath, "/dashboard");
+    const supabase = await getSupabaseServerClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { error: error.message };
+    return { success: true, redirectTo: safeNext };
+  } catch (err: unknown) {
+    console.error("[SignIn Unhandled Server Error]:", err);
+    return {
+      error:
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred during sign-in. Please try again.",
+    };
   }
-  const { email, password } = parsed.data;
-  const safeNext = sanitizeNextPath(nextPath, "/dashboard");
-  const supabase = await getSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
-  return { success: true, redirectTo: safeNext };
 }
 
 // ---------------------------------------------------------------------------

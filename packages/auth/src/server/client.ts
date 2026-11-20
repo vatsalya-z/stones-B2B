@@ -18,7 +18,12 @@ export async function getSupabaseServerClient(): Promise<SupabaseClient<Database
         .map(({ name, value }) => ({ name, value })),
     setAll: (list) => {
       for (const { name, value, options } of list) {
-        store.set(name, value, options);
+        try {
+          store.set(name, value, options);
+        } catch {
+          // Cookies can only be modified in a Server Action or Route Handler in Next.js.
+          // Ignored if called during Server Component rendering.
+        }
       }
     },
   });

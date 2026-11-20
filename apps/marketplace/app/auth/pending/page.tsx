@@ -2,9 +2,11 @@ import Link from "next/link";
 import { Clock, ShieldCheck, ArrowRight, Home } from "lucide-react";
 
 export default function SellerPendingPage() {
-  const sellerUrl = process.env.NEXT_PUBLIC_SELLER_URL
-    ? `${process.env.NEXT_PUBLIC_SELLER_URL}/seller/dashboard`
-    : "/dashboard";
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+  const sellerBase =
+    process.env.NEXT_PUBLIC_SELLER_URL ||
+    (isProd ? "https://seller.stonesdekho.com" : "http://localhost:3002");
+  const sellerUrl = `${sellerBase}/seller/dashboard`;
 
   return (
     <div className="min-h-screen bg-stone-50 flex items-center justify-center px-4 py-8 sm:py-12">
