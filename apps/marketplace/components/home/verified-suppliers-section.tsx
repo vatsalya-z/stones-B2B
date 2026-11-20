@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, ArrowRight, MapPin } from "lucide-react";
+import { ShieldCheck, ArrowRight, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import type { PublicSeller } from "@/lib/db";
 
 export interface VerifiedSuppliersSectionProps {
@@ -103,52 +103,20 @@ export function VerifiedSuppliersSection({ sellers = [] }: VerifiedSuppliersSect
   return (
     <section className="py-12 sm:py-16 bg-white border-b border-stone-200/80">
       <div className="container-wide">
-        {/* Section Header with Eyebrow, Title and View All */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-300/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900">
-                <ShieldCheck className="h-3 w-3 text-amber-700" />
-                Direct Quarry & Processing Hubs
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight font-serif sm:font-sans">
-              Verified Indian Stone Suppliers
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-500 max-w-xl">
-              Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India.
-            </p>
+        {/* Section Header with Eyebrow & Title */}
+        <div className="pb-8 space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-300/80 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900">
+              <ShieldCheck className="h-3 w-3 text-amber-700" />
+              Direct Quarry & Processing Hubs
+            </span>
           </div>
-
-          <div className="flex items-center gap-3 self-start sm:self-auto shrink-0">
-            {/* Carousel Buttons */}
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => scroll("left")}
-                aria-label="Scroll left"
-                className="h-8 w-8 rounded-full border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-700 flex items-center justify-center transition-colors shadow-2xs cursor-pointer"
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                onClick={() => scroll("right")}
-                aria-label="Scroll right"
-                className="h-8 w-8 rounded-full border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-700 flex items-center justify-center transition-colors shadow-2xs cursor-pointer"
-              >
-                ›
-              </button>
-            </div>
-
-            <Link
-              href="/suppliers"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 hover:border-stone-300 px-3.5 py-2 text-xs font-semibold text-stone-800 shadow-2xs transition-all group cursor-pointer"
-            >
-              <span>Explore All Suppliers</span>
-              <ArrowRight className="h-3.5 w-3.5 text-amber-600 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight font-serif sm:font-sans">
+            Verified Indian Stone Suppliers
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 max-w-xl">
+            Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India.
+          </p>
         </div>
 
         {/* 4 Suppliers Horizontal Scroll Carousel on Mobile, Grid on Tablet/Desktop */}
@@ -214,6 +182,36 @@ export function VerifiedSuppliersSection({ sellers = [] }: VerifiedSuppliersSect
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Centered Controls: Carousel Navigation (Left / Right) & Explore All Suppliers Button */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-8">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              aria-label="Scroll left"
+              className="h-10 w-10 rounded-full border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-700 flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+            >
+              <ChevronLeft className="h-4 w-4 text-stone-700" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              aria-label="Scroll right"
+              className="h-10 w-10 rounded-full border border-stone-200 hover:border-stone-400 bg-white hover:bg-stone-50 text-stone-700 flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+            >
+              <ChevronRight className="h-4 w-4 text-stone-700" />
+            </button>
+          </div>
+
+          <Link
+            href="/suppliers"
+            className="inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 hover:border-stone-300 px-5 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 shadow-2xs transition-all group cursor-pointer active:scale-[0.99]"
+          >
+            <span>Explore All Suppliers</span>
+            <ArrowRight className="h-4 w-4 text-amber-600 transition-transform group-hover:translate-x-0.5" />
+          </Link>
         </div>
       </div>
     </section>
