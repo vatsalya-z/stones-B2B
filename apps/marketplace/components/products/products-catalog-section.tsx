@@ -8,14 +8,15 @@ import { Pagination } from "@/components/ui/pagination";
 import type { getActiveCategories, getProducts } from "@/lib/db";
 
 export const MATERIAL_OPTIONS = [
+  { value: "Sandstone", label: "Sandstone" },
   { value: "Marble", label: "Marble" },
   { value: "Granite", label: "Granite" },
-  { value: "Sandstone", label: "Sandstone" },
-  { value: "Limestone", label: "Limestone" },
-  { value: "Quartzite", label: "Quartzite" },
-  { value: "Slate", label: "Slate" },
-  { value: "Travertine", label: "Travertine" },
   { value: "Onyx", label: "Onyx" },
+  { value: "Semi Precious Stone", label: "Semi Precious Stone" },
+  { value: "Travertine", label: "Travertine" },
+  { value: "Slate Stone", label: "Slate Stone" },
+  { value: "Limestone", label: "Limestone" },
+  { value: "Pebbles", label: "Pebbles" },
 ];
 
 export const COLOUR_OPTIONS = [
@@ -52,7 +53,7 @@ export const ORIGIN_OPTIONS = [
 ];
 
 export const THICKNESS_OPTIONS = [
-  { value: "15", label: "15 mm Calibrated" },
+  { value: "15", label: "15 mm Standard" },
   { value: "16", label: "16 mm Standard Slabs" },
   { value: "18", label: "18 mm Gangsaw Slabs" },
   { value: "20", label: "20 mm Architectural" },

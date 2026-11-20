@@ -364,7 +364,7 @@ export default async function HomePage() {
         <div className="container-wide">
           <SectionHeading
             title="Architectural Project Applications"
-            subtitle="Discover calibrated stone slabs, pavers, and carved elements engineered for specific project typologies"
+            subtitle="Discover stone slabs, pavers, and carved elements engineered for specific project typologies"
             action={
               <Link
                 href="/products"
@@ -416,7 +416,7 @@ export default async function HomePage() {
         <div className="container-wide">
           <SectionHeading
             title="Featured Products"
-            subtitle="Recent approved stone lots, gangsaw slabs, and calibrated tiles from verified suppliers"
+            subtitle="Recent approved stone lots, gangsaw slabs, and architectural tiles from verified suppliers"
             action={
               <Link
                 href="/products"
@@ -505,7 +505,7 @@ export default async function HomePage() {
               {
                 step: "04",
                 title: "Crate Packing & Dispatch",
-                desc: "Sellers pack your slabs in fumigated, seaworthy wooden crates for container loading and port dispatch (Mundra, Pipavav, Chennai).",
+                desc: "Sellers pack your slabs in heavy-duty, seaworthy wooden crates for container loading and port dispatch (Mundra, Pipavav, Chennai).",
               },
             ].map((item) => (
               <div

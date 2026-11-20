@@ -16,40 +16,58 @@ interface StoneCategoriesSectionProps {
 
 const DEFAULT_FEATURED_CATEGORIES = [
   {
+    name: "Sandstone",
+    slug: "sandstone",
+    image: "/images/categories/sandstone-macro.jpg",
+    subtitle: "Agra Red, Dholpur Beige, Mint, Kandla Grey & More",
+  },
+  {
     name: "Marble",
     slug: "marble",
     image: "/images/categories/marble-macro.jpg",
-    subtitle: "Calacatta, Makrana, Carrara & Italian Varieties",
+    subtitle: "Indian White, Indian Colored & Imported Marble",
   },
   {
     name: "Granite",
     slug: "granite",
     image: "/images/categories/granite-macro.jpg",
-    subtitle: "Black Galaxy, Tan Brown & Flamed Pavers",
+    subtitle: "North India, South India & Imported Granite",
   },
   {
-    name: "Sandstone",
-    slug: "sandstone",
-    image: "/images/categories/sandstone-macro.jpg",
-    subtitle: "Dholpur Beige, Teakwood & Rainbow Slabs",
+    name: "Onyx",
+    slug: "onyx",
+    image: "/images/categories/onyx.jpg",
+    subtitle: "Indian Onyx & Imported Onyx Varieties",
+  },
+  {
+    name: "Semi Precious Stone",
+    slug: "semi-precious-stone",
+    image: "/images/categories/semi-precious-stones.jpg",
+    subtitle: "Agate, Carnelian, Jasper, Amethyst & More",
+  },
+  {
+    name: "Travertine",
+    slug: "travertine",
+    image: "/images/categories/travertine.jpg",
+    subtitle: "Classic Cream, Walnut & Silver Travertine",
+  },
+  {
+    name: "Slate Stone",
+    slug: "slate",
+    image: "/images/categories/slate-macro.jpg",
+    subtitle: "Kund Black, Peacock & Rustic Multi",
   },
   {
     name: "Limestone",
     slug: "limestone",
     image: "/images/categories/limestone-macro.jpg",
-    subtitle: "Kota Blue, Tandur & Calibrated Pavers",
+    subtitle: "Kota Blue, Kota Brown & Jaisalmer Stone",
   },
   {
-    name: "Quartzite",
-    slug: "quartzite",
-    image: "/images/categories/quartzite-macro.jpg",
-    subtitle: "Silver White, Taj Mahal & Hard Quartzite",
-  },
-  {
-    name: "Slate",
-    slug: "slate",
-    image: "/images/categories/slate-macro.jpg",
-    subtitle: "Kund Black, Peacock & Rustic Multi",
+    name: "Pebbles",
+    slug: "pebbles",
+    image: "/images/categories/decorative-stone.jpg",
+    subtitle: "River Pebbles, White Pebbles & Mixed",
   },
 ];
 
@@ -88,8 +106,8 @@ export function StoneCategoriesSection({ categories }: StoneCategoriesSectionPro
           </Link>
         </div>
 
-        {/* 6 Category Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+        {/* 9 Category Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {displayCategories.map((cat) => (
             <Link
               key={cat.slug}

@@ -43,12 +43,16 @@ const initialState: RfqActionResult = {
 };
 
 const POPULAR_STONES = [
+  "Agra Red Sandstone",
+  "Dholpur Beige Sandstone",
   "Makrana White Marble",
   "Black Galaxy Granite",
   "Kota Blue Stone",
-  "Dholpur Sandstone",
-  "Tan Brown Granite",
-  "Italian Statuario",
+  "Classic Travertine",
+  "Translucent Honey Onyx",
+  "Amethyst / Agate Gemstone",
+  "Kund Black Slate",
+  "Natural River Pebbles",
 ];
 
 const QUICK_QUANTITIES = [

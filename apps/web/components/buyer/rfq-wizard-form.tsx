@@ -729,7 +729,7 @@ export function RfqWizardForm({
                 maxLength={600}
                 value={form.customSpecifications}
                 onChange={(e) => updateField("customSpecifications", e.target.value)}
-                placeholder="e.g. Thickness tolerance +/- 0.5mm, fumigated wooden crates"
+                placeholder="e.g. Thickness tolerance +/- 0.5mm, seaworthy wooden crates"
                 className="input-base"
               />
             </div>

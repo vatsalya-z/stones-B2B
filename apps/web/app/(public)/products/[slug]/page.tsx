@@ -244,7 +244,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </span>
                   <span className="flex items-center gap-1">
                     <svg className="h-3.5 w-3.5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                    ISPM-15 Fumigated Wooden Crating
+                    Heavy-Duty Seaworthy Wooden Crating
                   </span>
                   <span className="flex items-center gap-1">
                     <svg className="h-3.5 w-3.5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
@@ -322,9 +322,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
                   {product.thickness !== null && (
                     <div className="rounded-xl border border-stone-100 bg-stone-50/60 p-3">
-                      <dt className="text-xs text-stone-400">Calibrated Thickness</dt>
+                      <dt className="text-xs text-stone-400">Thickness</dt>
                       <dd className="mt-1 text-sm font-semibold text-stone-900">
-                        {product.thickness} mm Calibrated
+                        {product.thickness} mm{product.material_type?.toLowerCase() === "sandstone" || product.name?.toLowerCase().includes("sandstone") ? " (Natural Finish)" : ""}
                       </dd>
                     </div>
                   )}
@@ -368,7 +368,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <div className="rounded-xl border border-stone-100 bg-stone-50/60 p-3">
                     <dt className="text-xs text-stone-400">Packaging Standard</dt>
                     <dd className="mt-1 text-sm font-semibold text-stone-900">
-                      ISPM-15 Fumigated Crates
+                      Heavy-Duty Seaworthy Wooden Crates
                     </dd>
                   </div>
                 </dl>
@@ -456,7 +456,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 </div>
                 {isShowcase && (
                   <p className="mt-2 text-[11px] text-amber-800 bg-amber-100/60 rounded-md px-2 py-1">
-                    * Benchmark quotation rate for calibrated gangsaw slabs.
+                    * Benchmark quotation rate for natural gangsaw slabs.
                   </p>
                 )}
               </div>

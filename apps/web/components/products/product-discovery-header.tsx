@@ -8,6 +8,7 @@ import { SearchBar } from "@/components/ui/search-bar";
 export interface ProductCategoryShortcut {
   slug: string;
   name: string;
+  parent_id?: string | null;
 }
 
 interface ProductDiscoveryHeaderProps {
@@ -69,18 +70,19 @@ export function ProductDiscoveryHeader({
   // Use actual database categories, filtering for clean stone families
   const shortcutList = categories.length > 0
     ? categories
-        .filter((c) => !c.slug.includes("semi-precious"))
+        .filter((c) => !c.parent_id)
         .slice(0, 9)
         .map((c) => c.name)
     : [
+        "Sandstone",
         "Marble",
         "Granite",
-        "Sandstone",
-        "Limestone",
-        "Slate",
-        "Quartzite",
-        "Travertine",
         "Onyx",
+        "Semi Precious Stone",
+        "Travertine",
+        "Slate Stone",
+        "Limestone",
+        "Pebbles",
       ];
 
   return (

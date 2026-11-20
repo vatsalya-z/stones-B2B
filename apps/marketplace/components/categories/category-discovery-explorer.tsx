@@ -19,9 +19,42 @@ export interface CategoryMetaProfile {
   standards?: string;
   packaging?: string;
   synonyms: string[];
+  subcategories?: string[];
+  productForms?: string[];
 }
 
 export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
+  sandstone: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Sedimentary Quartzite",
+    subtitle: "Weather-resistant silica-bound sedimentary stone prized for historical facades, paving, and architectural jaalis.",
+    origin: "Dholpur, Jodhpur, Bundi, Bijolia, Karauli (Rajasthan); Gwalior (Madhya Pradesh)",
+    finishes: ["Natural Cleft", "Honed", "Sandblasted", "Tumbled", "Shot-Blasted"],
+    thicknesses: ["18mm", "20mm", "25mm", "30mm", "50mm"],
+    synonyms: ["sandstone", "dholpur", "jodhpur", "agra red", "cleft", "paving", "cladding", "jaali"],
+    subcategories: [
+      "Agra Red",
+      "Dholpur Beige",
+      "Dholpur Pink",
+      "Chocolate",
+      "Bansi Pink",
+      "Mint",
+      "Mint Fossil",
+      "Lalitpur Yellow",
+      "Lalitpur Grey",
+      "Sagar Black",
+      "Kandla Grey",
+      "Autumn Brown",
+      "Raj Green",
+      "Slate Grey",
+      "Teak",
+      "Rainbow",
+      "Jodhpur Pink",
+      "Jaisalmer Yellow",
+    ],
+    productForms: ["Gangsaw Slabs", "Tiles", "Paving", "Cladding", "Landscaping", "Interior", "Exterior"],
+  },
   marble: {
     group: "geology",
     groupLabel: "Geological Stone Family",
@@ -31,6 +64,8 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
     finishes: ["Mirror Polished", "Honed", "Leathered", "Brushed"],
     thicknesses: ["16mm", "18mm", "20mm", "30mm"],
     synonyms: ["marble", "makrana", "white marble", "calcite", "dungri", "albeta", "flooring", "vanity"],
+    subcategories: ["Indian White Marble", "Indian Colored Marble", "Imported Marble"],
+    productForms: ["Gangsaw Slabs", "Tiles", "Cladding", "Interior Flooring", "Vanity Slabs"],
   },
   granite: {
     group: "geology",
@@ -41,56 +76,8 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
     finishes: ["Mirror Polished", "Flamed", "Leathered", "Laporta", "Bush-Hammered"],
     thicknesses: ["18mm", "20mm", "30mm"],
     synonyms: ["granite", "black galaxy", "tan brown", "steel grey", "kitchen", "countertop", "commercial"],
-  },
-  sandstone: {
-    group: "geology",
-    groupLabel: "Geological Stone Family",
-    badge: "Sedimentary Quartzite",
-    subtitle: "Weather-resistant silica-bound sedimentary stone prized for historical facades, paving, and architectural jaalis.",
-    origin: "Dholpur, Jodhpur, Bundi, Bijolia, Karauli (Rajasthan); Gwalior (Madhya Pradesh)",
-    finishes: ["Natural Cleft", "Honed", "Sandblasted", "Tumbled", "Shot-Blasted"],
-    thicknesses: ["18mm", "20mm", "25mm", "30mm", "50mm"],
-    synonyms: ["sandstone", "dholpur", "jodhpur", "agra red", "cleft", "paving", "cladding", "jaali"],
-  },
-  limestone: {
-    group: "geology",
-    groupLabel: "Geological Stone Family",
-    badge: "Sedimentary Carbonate",
-    subtitle: "Fine-grained calcite stone celebrated for uniform non-slip texture, mirror polish, and high compressive strength.",
-    origin: "Kota & Jaisalmer (Rajasthan); Tandur (Karnataka); Kadapa (Andhra Pradesh)",
-    finishes: ["Mirror Polish", "Honed", "Natural Split", "River-Washed", "Tumbled"],
-    thicknesses: ["20mm", "22mm Calibrated", "25mm", "30mm"],
-    synonyms: ["limestone", "kota blue", "kota brown", "tandur", "kadapa", "jaisalmer", "flooring", "pavement"],
-  },
-  quartzite: {
-    group: "geology",
-    groupLabel: "Geological Stone Family",
-    badge: "Non-Foliated Metamorphic",
-    subtitle: "Pure quartz sandstone recrystallized into Mohs 7 hardness slabs combining marble elegance with superior durability.",
-    origin: "Himachal Pradesh; Rajasthan; Andhra Pradesh",
-    finishes: ["Natural Cleft", "Honed", "Polished", "Flamed"],
-    thicknesses: ["15mm", "20mm", "30mm"],
-    synonyms: ["quartzite", "silver white", "golden quartzite", "acid resistant", "scratch proof", "islands"],
-  },
-  slate: {
-    group: "geology",
-    groupLabel: "Geological Stone Family",
-    badge: "Foliated Metamorphic",
-    subtitle: "Homogeneous foliated natural stone cleaving into dense tactile sheets with exceptional freeze-thaw endurance.",
-    origin: "Kund & Rewari Belt (Haryana); Himachal Pradesh; Andhra Pradesh",
-    finishes: ["Natural Split / Cleft", "Honed", "Brushed"],
-    thicknesses: ["10mm", "12mm", "15mm", "20mm"],
-    synonyms: ["slate", "kund black", "roofing", "foliated", "rustic", "pool deck", "cleft"],
-  },
-  travertine: {
-    group: "geology",
-    groupLabel: "Geological Stone Family",
-    badge: "Terrestrial Carbonate",
-    subtitle: "Warm, textured sedimentary stone with characteristic fibrous cavities, available in vein-cut and cross-cut faces.",
-    origin: "Imported & Selective Domestic Formations (Beige, Walnut, Silver, Noce)",
-    finishes: ["Filled & Polished", "Unfilled & Honed", "Brushed", "Tumbled"],
-    thicknesses: ["18mm", "20mm", "30mm"],
-    synonyms: ["travertine", "vein cut", "cross cut", "cream travertine", "spa", "pool", "roman"],
+    subcategories: ["North India Granite", "South India Granite", "Imported Granite"],
+    productForms: ["Gangsaw Slabs", "Countertops", "Tiles", "Flamed Paving", "Exterior Cladding"],
   },
   onyx: {
     group: "geology",
@@ -101,6 +88,20 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
     finishes: ["High-Gloss Diamond Polish", "Translucent Slabs"],
     thicknesses: ["16mm", "18mm", "20mm"],
     synonyms: ["onyx", "translucent", "backlit", "honey onyx", "green onyx", "bar counter", "feature wall"],
+    subcategories: ["Indian Onyx", "Imported Onyx"],
+    productForms: ["Backlit Slabs", "Feature Wall Panels", "Tiles", "Interior Accents"],
+  },
+  "semi-precious-stone": {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Rare Minerals & Inlay",
+    subtitle: "Handcrafted luxury slabs composed of natural agate, carnelian, jasper, lapis lazuli, quartz, amethyst, petrified wood and pyrite.",
+    origin: "Rajasthan & Gujarat Lapidary Centers",
+    finishes: ["Mirror Gem Polish", "Backlit Epoxy Matrix"],
+    thicknesses: ["18mm", "20mm"],
+    synonyms: ["semi precious", "agate", "carnelian", "lapis", "jasper", "amethyst", "petrified wood", "pyrite", "quartz", "inlay", "luxury"],
+    subcategories: ["Agate", "Carnelian", "Jasper", "Lapis Lazuli", "Quartz", "Amethyst", "Petrified Wood", "Pyrite"],
+    productForms: ["Luxury Slabs", "Inlay Medallions", "Feature Walls", "Interior Furniture"],
   },
   "semi-precious-stones": {
     group: "geology",
@@ -111,6 +112,68 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
     finishes: ["Mirror Gem Polish", "Backlit Epoxy Matrix"],
     thicknesses: ["18mm", "20mm"],
     synonyms: ["semi precious", "agate", "lapis", "jasper", "malachite", "petrified wood", "inlay", "luxury"],
+    subcategories: ["Agate", "Carnelian", "Jasper", "Lapis Lazuli", "Quartz", "Amethyst", "Petrified Wood", "Pyrite"],
+    productForms: ["Luxury Slabs", "Inlay Medallions", "Feature Walls", "Interior Furniture"],
+  },
+  travertine: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Terrestrial Carbonate",
+    subtitle: "Warm, textured sedimentary stone with characteristic fibrous cavities, available in vein-cut and cross-cut faces.",
+    origin: "Imported & Selective Domestic Formations (Beige, Walnut, Silver, Noce)",
+    finishes: ["Filled & Polished", "Unfilled & Honed", "Brushed", "Tumbled"],
+    thicknesses: ["18mm", "20mm", "30mm"],
+    synonyms: ["travertine", "vein cut", "cross cut", "cream travertine", "spa", "pool", "roman"],
+    subcategories: ["Classic Cream Travertine", "Walnut Travertine", "Silver Travertine", "Imported Travertine"],
+    productForms: ["Slabs", "Tiles", "Paving", "Cladding", "Pool Copings"],
+  },
+  slate: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Foliated Metamorphic",
+    subtitle: "Homogeneous foliated natural stone cleaving into dense tactile sheets with exceptional freeze-thaw endurance.",
+    origin: "Kund & Rewari Belt (Haryana); Himachal Pradesh; Andhra Pradesh",
+    finishes: ["Natural Split / Cleft", "Honed", "Brushed"],
+    thicknesses: ["10mm", "12mm", "15mm", "20mm"],
+    synonyms: ["slate", "kund black", "roofing", "foliated", "rustic", "pool deck", "cleft"],
+    subcategories: ["Kund Black Slate", "Peacock Slate", "Copper Slate", "Multi Slate", "Silver Shine Slate"],
+    productForms: ["Cleft Slabs", "Roofing Tiles", "Paving", "Wall Cladding", "Interior"],
+  },
+  limestone: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Sedimentary Carbonate",
+    subtitle: "Fine-grained calcite stone celebrated for uniform non-slip texture, mirror polish, and high compressive strength.",
+    origin: "Kota & Jaisalmer (Rajasthan); Tandur (Karnataka); Kadapa (Andhra Pradesh)",
+    finishes: ["Mirror Polish", "Honed", "Natural Split", "River-Washed", "Tumbled"],
+    thicknesses: ["20mm", "22mm", "25mm", "30mm"],
+    synonyms: ["limestone", "kota blue", "kota brown", "tandur", "kadapa", "jaisalmer", "flooring", "pavement"],
+    subcategories: ["Kota Blue", "Kota Brown", "Jaisalmer Yellow", "Tandur Yellow", "Tandur Blue", "Kadapa Black"],
+    productForms: ["Honed Slabs", "Precision Tiles", "Paving", "Cladding", "Cobbles"],
+  },
+  pebbles: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Natural River Stone",
+    subtitle: "Smooth natural river pebbles and mixed stone aggregates for landscaping, garden pathways, and decorative applications.",
+    origin: "Himalayan River Beds; Rajasthan; Andhra Pradesh",
+    finishes: ["Natural Polish", "Tumbled", "Raw Natural"],
+    thicknesses: ["20–60mm", "40–80mm", "60–120mm"],
+    synonyms: ["pebbles", "river pebbles", "cobbles", "garden stones", "landscaping", "pathway"],
+    subcategories: ["River Pebbles", "White Pebbles", "Black Pebbles", "Coloured Pebbles"],
+    productForms: ["Landscaping", "Garden Pathways", "Water Features", "Exterior Ground Cover"],
+  },
+  quartzite: {
+    group: "geology",
+    groupLabel: "Geological Stone Family",
+    badge: "Non-Foliated Metamorphic",
+    subtitle: "Pure quartz sandstone recrystallized into Mohs 7 hardness slabs combining marble elegance with superior durability.",
+    origin: "Himachal Pradesh; Rajasthan; Andhra Pradesh",
+    finishes: ["Natural Cleft", "Honed", "Polished", "Flamed"],
+    thicknesses: ["15mm", "20mm", "30mm"],
+    synonyms: ["quartzite", "silver white", "golden quartzite", "acid resistant", "scratch proof", "islands"],
+    subcategories: ["Silver White Quartzite", "Taj Mahal Quartzite", "Golden Quartzite"],
+    productForms: ["Gangsaw Slabs", "Kitchen Islands", "Outdoor Paving", "Cladding"],
   },
   "natural-stone-slabs": {
     group: "format",
@@ -118,19 +181,19 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
     badge: "Gangsaw Slabs",
     subtitle: "Large-format multi-wire gangsaw and circular cutter slabs for seamless architectural flooring and bookmatched panels.",
     standards: "2800–3200 × 1600–2000 mm Gangsaw Format",
-    packaging: "Seaworthy ISPM-15 A-frame wooden bundles",
+    packaging: "Seaworthy A-frame wooden bundles",
     thicknesses: ["16mm", "18mm", "20mm", "30mm"],
     synonyms: ["slabs", "gangsaw", "large format", "cutter slabs", "bookmatch", "bundles"],
   },
   "stone-tiles": {
     group: "format",
     groupLabel: "Product Format & Supply Standard",
-    badge: "Calibrated Tiles",
-    subtitle: "Precision cut, machine-calibrated, and edge-bevelled tiles for uniform commercial and residential project installations.",
+    badge: "Precision Cut Tiles",
+    subtitle: "Precision cut, dimensionally accurate, and edge-bevelled tiles for uniform commercial and residential project installations.",
     standards: "300×300, 600×300, 600×600, 1200×600 mm",
     packaging: "Corrugated boxes in seaworthy wooden crates",
     thicknesses: ["10mm", "12mm", "15mm", "20mm", "22mm"],
-    synonyms: ["tiles", "calibrated", "cut to size", "flooring tiles", "paving tiles", "chamfered"],
+    synonyms: ["tiles", "cut to size", "flooring tiles", "paving tiles", "chamfered"],
   },
   "stone-blocks": {
     group: "format",
@@ -167,7 +230,7 @@ export const CATEGORY_PROFILES: Record<string, CategoryMetaProfile> = {
 export const ARCHITECTURAL_APPLICATIONS = [
   {
     title: "Flooring & Large-Format Paving",
-    subtitle: "Mirror-polished calcite marble, calibrated limestone tiles, and high-abrasion quartzite slabs.",
+    subtitle: "Mirror-polished calcite marble, precision limestone tiles, and high-abrasion quartzite slabs.",
     href: "/products?finish=Polished",
     image: "/images/product-gallery/marble-install-living.jpg",
     tag: "High Foot-Traffic",
@@ -195,7 +258,7 @@ export const ARCHITECTURAL_APPLICATIONS = [
   },
   {
     title: "Architectural Facades & Cut Panels",
-    subtitle: "Machine-calibrated 25mm–30mm exterior panels engineered for high-wind load curtain walls.",
+    subtitle: "Precision-cut 25mm–30mm exterior panels engineered for high-wind load curtain walls.",
     href: "/products?material=Sandstone&finish=Sandblasted",
     image: "/images/suppliers/stone-slab-warehouse.jpg",
     tag: "Engineered Panels",
@@ -244,7 +307,7 @@ export const REGIONAL_QUARRY_HUBS = [
   {
     city: "Kota",
     state: "Rajasthan",
-    geology: "Kota Blue & Brown Dense Calibrated Limestone",
+    geology: "Kota Blue & Brown Dense Natural Limestone",
     href: "/products?origin=Kota",
     image: "/images/products/kota-blue-limestone.jpg",
     highlight: "Heavy-traffic infrastructure paving",
@@ -276,14 +339,18 @@ export const REGIONAL_QUARRY_HUBS = [
 ];
 
 const SEARCH_SUGGESTIONS = [
+  "Sandstone",
   "Marble",
   "Granite",
-  "Sandstone",
-  "Kota Limestone",
-  "Gangsaw Slabs",
-  "Stone Tiles",
   "Onyx",
-  "Slate",
+  "Semi Precious Stone",
+  "Travertine",
+  "Slate Stone",
+  "Limestone",
+  "Pebbles",
+  "Agra Red",
+  "Dholpur Beige",
+  "Kota Blue",
 ];
 
 export interface CategoryDiscoveryExplorerProps {
@@ -460,7 +527,7 @@ export function CategoryDiscoveryExplorer({
             </div>
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-blue-400" />
-              <span>ISPM-15 Fumigated Export Crates</span>
+              <span>Heavy-Duty Seaworthy Export Crates</span>
             </div>
           </div>
         </div>
@@ -662,6 +729,43 @@ export function CategoryDiscoveryExplorer({
                     {cat.meta.subtitle}
                   </p>
 
+                  {/* Level 2: Sub-Category Varieties */}
+                  {cat.meta.subcategories && cat.meta.subcategories.length > 0 && (
+                    <div className="space-y-1.5 pt-2">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="font-bold text-stone-900 uppercase tracking-wider text-[10px]">
+                          Popular Sub-Categories:
+                        </span>
+                        <span className="text-stone-400 text-[10px]">
+                          {cat.meta.subcategories.length} varieties
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {cat.meta.subcategories.slice(0, 5).map((sub) => (
+                          <span
+                            key={sub}
+                            className="inline-flex items-center rounded-md bg-stone-100 px-2 py-0.5 text-[11px] font-medium text-stone-700 border border-stone-200/60"
+                          >
+                            {sub}
+                          </span>
+                        ))}
+                        {cat.meta.subcategories.length > 5 && (
+                          <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-800 border border-amber-200/60">
+                            +{cat.meta.subcategories.length - 5} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Level 3: Supply Formats & Applications */}
+                  {cat.meta.productForms && cat.meta.productForms.length > 0 && (
+                    <div className="pt-1 text-[11px] text-stone-500">
+                      <span className="font-semibold text-stone-700">Available Formats: </span>
+                      <span>{cat.meta.productForms.join(" · ")}</span>
+                    </div>
+                  )}
+
                   {/* Technical & Sourcing Attributes Matrix */}
                   <div className="space-y-1.5 pt-3 border-t border-stone-100 text-xs text-stone-600">
                     {cat.meta.origin && (
@@ -854,7 +958,7 @@ export function CategoryDiscoveryExplorer({
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                Fumigated ISPM-15 Wooden Crate Packing
+                Heavy-Duty Seaworthy Wooden Crate Packing
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />

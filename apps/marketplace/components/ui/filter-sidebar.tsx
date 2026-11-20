@@ -23,6 +23,16 @@ export interface FilterSidebarProps {
   onCloseDrawer?: () => void;
 }
 
+const SUPPLY_FORMAT_OPTIONS: FilterOption[] = [
+  { value: "slab", label: "Slabs (Gangsaw / Cutter)" },
+  { value: "tile", label: "Architectural Tiles" },
+  { value: "paving", label: "Paving Stones" },
+  { value: "cladding", label: "Wall Cladding & Facades" },
+  { value: "landscaping", label: "Landscaping & Cobbles" },
+  { value: "interior", label: "Interior Surfaces" },
+  { value: "exterior", label: "Exterior Facades" },
+];
+
 function FilterCheckboxGroup({
   label,
   param,
@@ -206,6 +216,15 @@ export function FilterSidebar({
         onChange={updateParams}
       />
 
+      {/* Level 3: Supply Format & Application */}
+      <FilterCheckboxGroup
+        label="Format & Application"
+        param="format"
+        options={SUPPLY_FORMAT_OPTIONS}
+        selectedValues={getParamValues("format")}
+        onChange={updateParams}
+      />
+
       {/* Material Type */}
       <FilterCheckboxGroup
         label="Geological Material"
@@ -245,7 +264,7 @@ export function FilterSidebar({
       {/* Thickness */}
       {thicknesses.length > 0 && (
         <FilterCheckboxGroup
-          label="Calibrated Thickness"
+          label="Thickness"
           param="thickness"
           options={thicknesses}
           selectedValues={getParamValues("thickness")}

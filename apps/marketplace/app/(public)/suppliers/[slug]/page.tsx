@@ -316,7 +316,7 @@ export default async function SupplierStorefrontPage({
                 📦
               </span>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-stone-900">Fumigated Crate Packing</p>
+                <p className="text-xs font-bold text-stone-900">Seaworthy Crate Packing</p>
                 <p className="text-[11px] text-stone-500 truncate">Sea-worthy export wooden crates</p>
               </div>
             </div>

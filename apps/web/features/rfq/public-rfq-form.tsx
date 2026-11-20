@@ -89,7 +89,7 @@ export function PublicRfqForm({
               Track Incoming Factory Quotations
             </h4>
             <p className="text-xs text-amber-800 leading-relaxed">
-              Register as a verified Stone Buyer to compare pricing side-by-side, request lab test reports, and view fumigated crate packing photos before dispatch.
+              Register as a verified Stone Buyer to compare pricing side-by-side, request lab test reports, and view wooden crate packing photos before dispatch.
             </p>
             <div className="pt-2">
               <Link

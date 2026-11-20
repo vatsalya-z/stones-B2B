@@ -42,14 +42,14 @@ const GEOLOGICAL_TABS: {
     id: "all",
     title: "All Stones",
     categoryNames: "All Collections",
-    count: 8,
+    count: 9,
     icon: Layers,
   },
   {
     id: "metamorphic",
     title: "Marble & Slate",
     categoryNames: "Metamorphic",
-    count: 3,
+    count: 2,
     icon: Sparkles,
   },
   {
@@ -61,21 +61,31 @@ const GEOLOGICAL_TABS: {
   },
   {
     id: "sedimentary",
-    title: "Sandstone & Kota",
+    title: "Sandstone & Limestone",
     categoryNames: "Sedimentary",
-    count: 3,
+    count: 4,
     icon: Compass,
   },
   {
     id: "exotic",
-    title: "Onyx & Rare",
+    title: "Onyx & Semi-Precious",
     categoryNames: "Exotic",
-    count: 1,
+    count: 2,
     icon: Gem,
   },
 ];
 
 const CATEGORY_ITEMS: StoneCategoryCardData[] = [
+  {
+    id: "sandstone",
+    name: "Sandstone",
+    slug: "sandstone",
+    group: "sedimentary",
+    geologyBadge: "Sedimentary Quartzite",
+    origin: "Dholpur, Jodhpur & Bundi",
+    availableLots: "22+ Lots",
+    image: "/images/products/dholpur-beige-sandstone.webp",
+  },
   {
     id: "marble",
     name: "Marble",
@@ -97,14 +107,44 @@ const CATEGORY_ITEMS: StoneCategoryCardData[] = [
     image: "/images/products/black-galaxy-granite.webp",
   },
   {
-    id: "sandstone",
-    name: "Sandstone",
-    slug: "sandstone",
+    id: "onyx",
+    name: "Onyx",
+    slug: "onyx",
+    group: "exotic",
+    geologyBadge: "Cryptocrystalline Gemstone",
+    origin: "Salumber & Translucent Reserves",
+    availableLots: "12+ Lots",
+    image: "/images/products/honey-onyx-translucent.webp",
+  },
+  {
+    id: "semi-precious-stone",
+    name: "Semi Precious Stone",
+    slug: "semi-precious-stone",
+    group: "exotic",
+    geologyBadge: "Rare Minerals & Gemstones",
+    origin: "Rajasthan & Gujarat Lapidary",
+    availableLots: "14+ Lots",
+    image: "/images/categories/semi-precious-stones.jpg",
+  },
+  {
+    id: "travertine",
+    name: "Travertine",
+    slug: "travertine",
     group: "sedimentary",
-    geologyBadge: "Sedimentary Quartzite",
-    origin: "Dholpur, Jodhpur & Bharatpur",
-    availableLots: "22+ Lots",
-    image: "/images/products/dholpur-beige-sandstone.webp",
+    geologyBadge: "Terrestrial Carbonate",
+    origin: "Kishangarh & Imported Reserves",
+    availableLots: "15+ Lots",
+    image: "/images/products/classic-travertine-slab.webp",
+  },
+  {
+    id: "slate",
+    name: "Slate Stone",
+    slug: "slate",
+    group: "metamorphic",
+    geologyBadge: "Foliated Metamorphic",
+    origin: "Kund & Rewari Belt",
+    availableLots: "16+ Lots",
+    image: "/images/products/kund-black-slate.webp",
   },
   {
     id: "limestone",
@@ -117,44 +157,14 @@ const CATEGORY_ITEMS: StoneCategoryCardData[] = [
     image: "/images/products/kota-blue-limestone.webp",
   },
   {
-    id: "onyx",
-    name: "Onyx",
-    slug: "onyx",
-    group: "exotic",
-    geologyBadge: "Cryptocrystalline Gemstone",
-    origin: "Salumber & Translucent Reserves",
-    availableLots: "12+ Lots",
-    image: "/images/products/honey-onyx-translucent.webp",
-  },
-  {
-    id: "quartzite",
-    name: "Quartzite",
-    slug: "quartzite",
-    group: "metamorphic",
-    geologyBadge: "Non-Foliated Metamorphic",
-    origin: "Deoli, Bhilwara & Himachal",
-    availableLots: "16+ Lots",
-    image: "/images/products/silver-white-quartzite.webp",
-  },
-  {
-    id: "slate",
-    name: "Slate",
-    slug: "slate",
-    group: "metamorphic",
-    geologyBadge: "Foliated Metamorphic",
-    origin: "Kund & Rewari Belt",
-    availableLots: "14+ Lots",
-    image: "/images/products/kund-black-slate.webp",
-  },
-  {
-    id: "travertine",
-    name: "Travertine",
-    slug: "travertine",
+    id: "pebbles",
+    name: "Pebbles",
+    slug: "pebbles",
     group: "sedimentary",
-    geologyBadge: "Terrestrial Carbonate",
-    origin: "Kishangarh & Imported Reserves",
-    availableLots: "15+ Lots",
-    image: "/images/products/classic-travertine-slab.webp",
+    geologyBadge: "River Stone & Aggregates",
+    origin: "Himalayan & River Formations",
+    availableLots: "8+ Lots",
+    image: "/images/categories/decorative-stone.jpg",
   },
 ];
 
@@ -199,10 +209,10 @@ export function StoneCategoryGrid({ categories }: StoneCategoryGridProps) {
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
               <span className="hidden sm:inline">
-                Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India&apos;s heritage stone hubs.
+                Source factory-finished slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India&apos;s heritage stone hubs.
               </span>
               <span className="sm:hidden">
-                Factory-calibrated slabs, cut-to-size tiles &amp; quarry blocks from certified Indian stone hubs.
+                Factory-finished slabs, cut-to-size tiles &amp; quarry blocks from certified Indian stone hubs.
               </span>
             </p>
           </div>

@@ -55,7 +55,7 @@ const CATEGORY_ARCHITECTURAL_DATA: Record<
     geology: "Sedimentary carbonate rock consisting of calcite and aragonite",
     origin: "Rajasthan (Kota Blue, Jaisalmer Yellow), Karnataka (Tandur), Andhra Pradesh (Kadapa Black)",
     finishes: ["Mirror Polish", "Honed", "River Washed", "Natural Split", "Tumbled"],
-    thicknesses: ["20mm", "25mm", "30mm", "Calibrated 22mm"],
+    thicknesses: ["20mm", "25mm", "30mm", "22mm"],
     applications: ["Commercial Heavy-Duty Flooring", "Hospitality Corridors", "Pathways", "Internal Courtyards"],
     density: "2,550 – 2,650 kg/m³",
     waterAbsorption: "< 0.8%",
@@ -104,6 +104,24 @@ const CATEGORY_ARCHITECTURAL_DATA: Record<
     applications: ["Luxury Feature Walls", "Statement Bar Counters", "Bespoke Furniture", "Inlays"],
     density: "2,600 – 2,700 kg/m³",
     waterAbsorption: "< 0.1%",
+  },
+  "semi-precious-stone": {
+    geology: "Precious and semi-precious microcrystalline mineral aggregates — Agate, Carnelian, Jasper, Lapis Lazuli, Quartz, Amethyst, Petrified Wood, Pyrite",
+    origin: "Rajasthan & Gujarat Lapidary Centers",
+    finishes: ["Mirror Gem Polish", "Backlit Epoxy Matrix"],
+    thicknesses: ["18mm", "20mm"],
+    applications: ["Luxury Feature Walls", "Statement Bar Counters", "Bespoke Furniture", "Decorative Inlays"],
+    density: "2,600 – 2,700 kg/m³",
+    waterAbsorption: "< 0.1%",
+  },
+  pebbles: {
+    geology: "Natural rounded river stone and mixed stone aggregates",
+    origin: "Himalayan River Beds; Rajasthan; Andhra Pradesh",
+    finishes: ["Natural Polish", "Tumbled", "Raw Natural"],
+    thicknesses: ["20–60mm", "40–80mm", "60–120mm"],
+    applications: ["Garden Landscaping", "Pathways & Driveways", "Water Features", "Decorative Ground Cover"],
+    density: "2,400 – 2,650 kg/m³",
+    waterAbsorption: "< 1.5%",
   },
   "natural-stone-slabs": {
     geology: "Multi-wire gangsaw and circular cutter large-format natural stone slabs",
@@ -166,7 +184,7 @@ export async function generateMetadata({
   const description =
     category.seo_description ||
     category.description ||
-    `Source factory-direct ${category.name} gangsaw slabs, cut-to-size blocks, and calibrated tiles from verified Indian quarries and manufacturers.`;
+    `Source factory-direct ${category.name} gangsaw slabs, cut-to-size blocks, and precision tiles from verified Indian quarries and manufacturers.`;
 
   return {
     title,
@@ -197,13 +215,41 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
     notFound();
   }
 
-  const [subCategories, { products, total }] = await Promise.all([
+  const allRootCategories = await getActiveCategories(null);
+  const parentCategory = category.parent_id
+    ? allRootCategories.find(
+        (c) =>
+          c.id === category.parent_id ||
+          (category.parent_id === "cat-1" && c.slug === "sandstone") ||
+          (category.parent_id === "cat-2" && c.slug === "marble") ||
+          (category.parent_id === "cat-3" && c.slug === "granite") ||
+          (category.parent_id === "cat-4" && c.slug === "onyx") ||
+          (category.parent_id === "cat-5" && (c.slug === "semi-precious-stone" || c.slug === "semi-precious-stones")) ||
+          (category.parent_id === "cat-6" && c.slug === "travertine") ||
+          (category.parent_id === "cat-7" && (c.slug === "slate" || c.slug === "slate-stone")) ||
+          (category.parent_id === "cat-8" && c.slug === "limestone") ||
+          (category.parent_id === "cat-9" && c.slug === "pebbles"),
+      ) ?? null
+    : null;
+
+  const [subCategories, sisterCategoriesRaw, { products, total }] = await Promise.all([
     getActiveCategories(category.id),
+    parentCategory
+      ? Promise.all([
+          getActiveCategories(parentCategory.id),
+          category.parent_id ? getActiveCategories(category.parent_id) : Promise.resolve([]),
+        ]).then(([a, b]) => {
+          const combined = [...a, ...b];
+          return combined.filter((v, i, arr) => arr.findIndex((t) => t.slug === v.slug) === i);
+        })
+      : Promise.resolve([]),
     getProducts({ category: slug, pageSize: 12 }),
   ]);
+  const sisterCategories = sisterCategoriesRaw;
 
-  const archData = CATEGORY_ARCHITECTURAL_DATA[slug.toLowerCase()];
-  const fallbackImage = category.image_url || getCategoryFallbackImage(slug);
+  const effectiveArchKey = (CATEGORY_ARCHITECTURAL_DATA[slug.toLowerCase()] ? slug : parentCategory?.slug ?? slug).toLowerCase();
+  const archData = CATEGORY_ARCHITECTURAL_DATA[effectiveArchKey];
+  const fallbackImage = category.image_url || getCategoryFallbackImage(slug) || (parentCategory ? getCategoryFallbackImage(parentCategory.slug) : "");
 
   const collectionPageJsonLd = {
     "@context": "https://schema.org",
@@ -226,12 +272,29 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           name: "Stone Categories",
           item: "https://stonesdekho.com/categories",
         },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: category.name,
-          item: `https://stonesdekho.com/categories/${slug}`,
-        },
+        ...(parentCategory
+          ? [
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: parentCategory.name,
+                item: `https://stonesdekho.com/categories/${parentCategory.slug}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 4,
+                name: category.name,
+                item: `https://stonesdekho.com/categories/${slug}`,
+              },
+            ]
+          : [
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: category.name,
+                item: `https://stonesdekho.com/categories/${slug}`,
+              },
+            ]),
       ],
     },
   };
@@ -242,15 +305,30 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageJsonLd) }}
       />
-      <div className="container-wide space-y-10">
+      <div className="container-wide space-y-6 sm:space-y-10">
         {/* Breadcrumb Navigation */}
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Categories", href: "/categories" },
-            { label: category.name },
-          ]}
-        />
+        <div className="hidden sm:block">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Categories", href: "/categories" },
+              ...(parentCategory
+                ? [{ label: parentCategory.name, href: `/categories/${parentCategory.slug}` }]
+                : []),
+              { label: category.name },
+            ]}
+          />
+        </div>
+        <div className="sm:hidden flex items-center justify-between text-xs text-stone-500">
+          <Link
+            href={parentCategory ? `/categories/${parentCategory.slug}` : "/categories"}
+            className="inline-flex items-center gap-1 font-semibold text-stone-700 hover:text-amber-800 transition-colors"
+          >
+            <span>←</span>
+            <span>{parentCategory ? `All ${parentCategory.name}` : "All Stone Categories"}</span>
+          </Link>
+          <span className="text-stone-400 text-[11px] font-medium">{category.name}</span>
+        </div>
 
         {/* Category Hero Banner */}
         <div className="relative overflow-hidden rounded-3xl border border-stone-800 bg-stone-950 text-white shadow-2xl">
@@ -267,32 +345,34 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             <div className="absolute inset-0 bg-stone-950/70" />
           </div>
 
-          <div className="relative z-10 p-6 sm:p-10 lg:p-12">
-            <div className="max-w-3xl space-y-4">
+          <div className="relative z-10 p-5 sm:p-10 lg:p-12">
+            <div className="max-w-3xl space-y-3.5 sm:space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300 border border-amber-500/30">
-                <span>Verified Natural Stone Family</span>
+                <span>{parentCategory ? `${parentCategory.name} Stone Family` : "Verified Natural Stone Family"}</span>
                 <span>•</span>
                 <span>Factory Wholesale Lots</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
                 {category.name}
               </h1>
-              <p className="text-sm sm:text-base text-stone-300 leading-relaxed font-normal">
+              <p className="text-xs sm:text-base text-stone-300 leading-relaxed font-normal">
                 {category.description ||
-                  `Direct quarry connections for ${category.name}. Calibrated gangsaw slabs, project tiles, and custom cut blocks for architectural and commercial developments.`}
+                  (parentCategory
+                    ? `Direct quarry lot sourcing and processing for ${category.name} within the ${parentCategory.name} stone family. Gangsaw slabs, cut-to-size architectural tiles, and paving for commercial and residential developments.`
+                    : `Direct quarry connections for ${category.name}. Gangsaw slabs, project tiles, and custom cut blocks for architectural and commercial developments.`)}
               </p>
 
               {/* Action Buttons */}
-              <div className="pt-2 flex flex-wrap gap-3">
+              <div className="pt-2 grid grid-cols-1 sm:flex sm:flex-wrap gap-2.5">
                 <Link
                   href={`/request-quote?category=${slug}`}
-                  className="btn-accent px-6 py-2.5 text-sm font-semibold shadow-md shadow-amber-600/30"
+                  className="btn-accent px-5 py-2.5 text-center text-xs sm:text-sm font-semibold shadow-md shadow-amber-600/30"
                 >
                   Request Bulk Quotation
                 </Link>
                 <Link
-                  href={`/products?category=${slug}`}
-                  className="btn-secondary border-stone-700 bg-stone-900/80 text-stone-200 hover:bg-stone-800 px-6 py-2.5 text-sm font-semibold"
+                  href={`/products?category=${parentCategory?.slug ?? slug}&q=${category.name}`}
+                  className="btn-secondary border-stone-700 bg-stone-900/80 text-stone-200 hover:bg-stone-800 px-5 py-2.5 text-center text-xs sm:text-sm font-semibold"
                 >
                   Filter {category.name} Slabs
                 </Link>
@@ -303,17 +383,17 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
 
         {/* Geological & Architectural Properties Matrix */}
         {archData && (
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-6 sm:p-8 shadow-card">
-            <div className="border-b border-stone-100 pb-4 mb-6">
-              <h2 className="text-lg font-bold text-stone-900">
+          <div className="rounded-2xl border border-stone-200/90 bg-white p-4 sm:p-8 shadow-card">
+            <div className="border-b border-stone-100 pb-3 sm:pb-4 mb-4 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-bold text-stone-900">
                 Architectural & Engineering Specifications for {category.name}
               </h2>
-              <p className="text-xs text-stone-500 mt-1">
+              <p className="text-[11px] sm:text-xs text-stone-500 mt-1">
                 Standard technical benchmarks and quarry origins verified across Indian manufacturing units.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/60">
                 <span className="text-xs font-semibold uppercase tracking-wider text-amber-800">
                   Primary Quarry Origin
@@ -367,13 +447,23 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           </div>
         )}
 
-        {/* Subcategories (if any) */}
+        {/* Level 2 Subcategories */}
         {subCategories.length > 0 && (
-          <div>
-            <h2 className="text-base font-semibold text-stone-900 mb-4">
-              Sub-Types & Formats
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                  Sub-Category Taxonomy
+                </span>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                  {category.name} Varieties &amp; Sub-Categories
+                </h2>
+              </div>
+              <span className="text-xs font-semibold text-stone-500">
+                {subCategories.length} {subCategories.length === 1 ? "Variety" : "Varieties Available"}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {subCategories.map((sub) => (
                 <CategoryCard
                   key={sub.id}
@@ -386,6 +476,79 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             </div>
           </div>
         )}
+
+        {/* Sister Subcategories if viewing a specific subcategory */}
+        {parentCategory && sisterCategories.length > 1 && (
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <div>
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                  {parentCategory.name} Stone Family
+                </span>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                  Other {parentCategory.name} Varieties &amp; Colours
+                </h2>
+              </div>
+              <Link
+                href={`/categories/${parentCategory.slug}`}
+                className="text-xs font-bold text-amber-800 hover:text-amber-950 inline-flex items-center gap-1"
+              >
+                <span>View all {parentCategory.name} ({sisterCategories.length})</span>
+                <span>→</span>
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
+              {sisterCategories
+                .filter((sub) => sub.id !== category.id)
+                .slice(0, 8)
+                .map((sub) => (
+                  <CategoryCard
+                    key={sub.id}
+                    name={sub.name}
+                    slug={sub.slug}
+                    description={sub.description}
+                    imageUrl={sub.image_url}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* Level 3 Supply Formats & Applications */}
+        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 sm:p-6 shadow-2xs space-y-3.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                Supply Formats &amp; Project Applications
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-stone-900">
+                Filter {category.name} by Format &amp; Application
+              </h3>
+            </div>
+            <span className="text-xs text-stone-500 font-medium">Slab · Tiles · Paving · Cladding · Landscaping</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            {[
+              { label: "Gangsaw Slabs", query: "slab" },
+              { label: "Architectural Tiles", query: "tile" },
+              { label: "Paving Stones", query: "paving" },
+              { label: "Wall Cladding", query: "cladding" },
+              { label: "Landscaping & Cobbles", query: "landscaping" },
+              { label: "Interior Surfaces", query: "interior" },
+              { label: "Exterior Facades", query: "exterior" },
+            ].map((form) => (
+              <Link
+                key={form.label}
+                href={`/products?category=${slug}&q=${form.query}`}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50/90 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-900 px-3.5 py-2 text-xs font-bold text-stone-800 transition-all shadow-2xs group"
+              >
+                <span>{form.label}</span>
+                <span className="text-stone-400 group-hover:text-amber-700 group-hover:translate-x-0.5 transition-transform">→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Products Grid */}
         <div>
@@ -421,7 +584,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -453,7 +616,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               Looking for custom dimensions or project cut sizes in {category.name}?
             </h3>
             <p className="text-xs sm:text-sm text-stone-600">
-              Submit your architectural Bill of Quantities (BOQ). Verified manufacturers will send direct factory quotations with fumigated crate packaging and shipping terms.
+              Submit your architectural Bill of Quantities (BOQ). Verified manufacturers will send direct factory quotations with seaworthy wooden crate packaging and shipping terms.
             </p>
           </div>
           <Link

@@ -61,7 +61,7 @@ export const STONE_SOURCING_HUBS: StoneLocationHub[] = [
     city: "Kota",
     state: "Rajasthan",
     hubName: "Kota Stone Hub",
-    specialty: "Kota Blue, Kota Brown & heavy-duty calibrated limestone",
+    specialty: "Kota Blue, Kota Brown & heavy-duty natural limestone",
   },
   {
     city: "Dholpur",
@@ -115,15 +115,15 @@ export const STONE_SOURCING_HUBS: StoneLocationHub[] = [
 
 export const QUICK_SELECT_CATEGORIES = [
   { name: "All Stones", type: "all", value: "" },
+  { name: "Sandstone", type: "material", value: "Sandstone" },
   { name: "Marble", type: "material", value: "Marble" },
   { name: "Granite", type: "material", value: "Granite" },
-  { name: "Sandstone", type: "material", value: "Sandstone" },
-  { name: "Limestone", type: "material", value: "Limestone" },
-  { name: "Quartzite", type: "material", value: "Quartzite" },
-  { name: "Slate", type: "material", value: "Slate" },
-  { name: "Travertine", type: "material", value: "Travertine" },
   { name: "Onyx", type: "material", value: "Onyx" },
-  { name: "Natural Stone Slabs", type: "category", value: "natural-stone-slabs" },
+  { name: "Semi Precious Stone", type: "material", value: "Semi Precious Stone" },
+  { name: "Travertine", type: "material", value: "Travertine" },
+  { name: "Slate Stone", type: "material", value: "Slate Stone" },
+  { name: "Limestone", type: "material", value: "Limestone" },
+  { name: "Pebbles", type: "category", value: "pebbles" },
 ] as const;
 
 interface ProductDiscoveryHeaderProps {

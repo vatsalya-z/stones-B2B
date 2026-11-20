@@ -63,20 +63,87 @@ function cleanPublicDescription(raw: string | null | undefined): string | null {
 // ─── Default Stone Categories (mirroring supabase/seed.sql) ───────────────────
 
 const SEED_CATEGORIES: CategoryItem[] = [
-  { id: "cat-1", parent_id: null, name: "Marble", slug: "marble", description: "Natural marble slabs, tiles and blocks", image_url: null, display_order: 10, seo_title: "Marble Suppliers & Exporters", seo_description: null },
-  { id: "cat-2", parent_id: null, name: "Granite", slug: "granite", description: "Granite slabs, tiles and countertops", image_url: null, display_order: 20, seo_title: "Granite Suppliers & Exporters", seo_description: null },
-  { id: "cat-3", parent_id: null, name: "Sandstone", slug: "sandstone", description: "Sandstone paving, cladding and carvings", image_url: null, display_order: 30, seo_title: "Sandstone Suppliers", seo_description: null },
-  { id: "cat-4", parent_id: null, name: "Limestone", slug: "limestone", description: "Limestone tiles, slabs and blocks", image_url: null, display_order: 40, seo_title: "Limestone Suppliers", seo_description: null },
-  { id: "cat-5", parent_id: null, name: "Quartzite", slug: "quartzite", description: "Quartzite slabs and surfaces", image_url: null, display_order: 50, seo_title: "Quartzite Suppliers", seo_description: null },
-  { id: "cat-6", parent_id: null, name: "Slate", slug: "slate", description: "Slate roofing, flooring and cladding", image_url: null, display_order: 60, seo_title: "Slate Suppliers", seo_description: null },
-  { id: "cat-7", parent_id: null, name: "Travertine", slug: "travertine", description: "Travertine tiles and slabs", image_url: null, display_order: 70, seo_title: "Travertine Suppliers", seo_description: null },
-  { id: "cat-8", parent_id: null, name: "Onyx", slug: "onyx", description: "Onyx slabs and decorative panels", image_url: null, display_order: 80, seo_title: "Onyx Suppliers", seo_description: null },
-  { id: "cat-9", parent_id: null, name: "Semi-Precious Stones", slug: "semi-precious-stones", description: "Semi-precious stone products and inlay", image_url: null, display_order: 90, seo_title: "Semi-Precious Stone Suppliers", seo_description: null },
-  { id: "cat-10", parent_id: null, name: "Natural Stone Slabs", slug: "natural-stone-slabs", description: "Polished and honed natural stone slabs", image_url: null, display_order: 100, seo_title: "Natural Stone Slabs", seo_description: null },
-  { id: "cat-11", parent_id: null, name: "Stone Tiles", slug: "stone-tiles", description: "Natural stone tiles for floors and walls", image_url: null, display_order: 110, seo_title: "Stone Tiles", seo_description: null },
-  { id: "cat-12", parent_id: null, name: "Stone Blocks", slug: "stone-blocks", description: "Raw stone blocks from quarries", image_url: null, display_order: 120, seo_title: "Stone Blocks", seo_description: null },
-  { id: "cat-13", parent_id: null, name: "Decorative Stone", slug: "decorative-stone", description: "Decorative and landscaping stone", image_url: null, display_order: 130, seo_title: "Decorative Stone", seo_description: null },
-  { id: "cat-14", parent_id: null, name: "Custom Stone Products", slug: "custom-stone-products", description: "Made-to-order stone products", image_url: null, display_order: 140, seo_title: "Custom Stone Products", seo_description: null },
+  // ─── Level 1: Main Categories ──────────────────────────────────────────────
+  { id: "cat-1", parent_id: null, name: "Sandstone", slug: "sandstone", description: "Sandstone paving, cladding, tiles and architectural carvings", image_url: "/images/categories/sandstone.jpg", display_order: 10, seo_title: "Sandstone Suppliers & Exporters — Agra Red, Dholpur, Mint", seo_description: null },
+  { id: "cat-2", parent_id: null, name: "Marble", slug: "marble", description: "Indian White, Indian Colored & Imported Marble slabs and tiles", image_url: "/images/categories/marble.jpg", display_order: 20, seo_title: "Marble Suppliers & Exporters", seo_description: null },
+  { id: "cat-3", parent_id: null, name: "Granite", slug: "granite", description: "North India, South India & Imported Granite slabs, tiles and countertops", image_url: "/images/categories/granite.jpg", display_order: 30, seo_title: "Granite Suppliers & Exporters", seo_description: null },
+  { id: "cat-4", parent_id: null, name: "Onyx", slug: "onyx", description: "Indian Onyx and Imported Onyx slabs and decorative panels", image_url: "/images/categories/onyx.jpg", display_order: 40, seo_title: "Onyx Suppliers", seo_description: null },
+  { id: "cat-5", parent_id: null, name: "Semi Precious Stone", slug: "semi-precious-stone", description: "Agate, Carnelian, Jasper, Lapis Lazuli, Quartz, Amethyst, Petrified Wood, Pyrite", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 50, seo_title: "Semi-Precious Stone Suppliers", seo_description: null },
+  { id: "cat-6", parent_id: null, name: "Travertine", slug: "travertine", description: "Travertine tiles and slabs — Classic Cream, Walnut, Silver", image_url: "/images/categories/travertine.jpg", display_order: 60, seo_title: "Travertine Suppliers", seo_description: null },
+  { id: "cat-7", parent_id: null, name: "Slate Stone", slug: "slate", description: "Slate roofing, flooring and cladding — Kund Black, Peacock, Multi-color", image_url: "/images/categories/slate.jpg", display_order: 70, seo_title: "Slate Stone Suppliers", seo_description: null },
+  { id: "cat-8", parent_id: null, name: "Limestone", slug: "limestone", description: "Kota Blue, Kota Brown, Jaisalmer & Tandur limestone tiles and slabs", image_url: "/images/categories/limestone.jpg", display_order: 80, seo_title: "Limestone Suppliers", seo_description: null },
+  { id: "cat-9", parent_id: null, name: "Pebbles", slug: "pebbles", description: "River pebbles, white pebbles and mixed stone for landscaping and garden", image_url: "/images/categories/decorative-stone.jpg", display_order: 90, seo_title: "Pebbles & Garden Stone Suppliers", seo_description: null },
+
+  // ─── Level 2: Sandstone Subcategories (parent: cat-1) ──────────────────────
+  { id: "sub-sand-1", parent_id: "cat-1", name: "Agra Red", slug: "agra-red", description: "Rich iron-red natural sandstone for heritage monuments and exterior facades", image_url: "/images/products/agra-red-sandstone.jpg", display_order: 101, seo_title: "Agra Red Sandstone Slabs & Tiles", seo_description: null },
+  { id: "sub-sand-2", parent_id: "cat-1", name: "Dholpur Beige", slug: "dholpur-beige", description: "Warm buff-cream fine-grain sandstone for architectural paving and cladding", image_url: "/images/products/dholpur-beige-sandstone.jpg", display_order: 102, seo_title: "Dholpur Beige Sandstone Quarry Lots", seo_description: null },
+  { id: "sub-sand-3", parent_id: "cat-1", name: "Dholpur Pink", slug: "dholpur-pink", description: "Subtle rose pink sandstone with fine grain and superior weather resistance", image_url: "/images/categories/sandstone.jpg", display_order: 103, seo_title: "Dholpur Pink Sandstone Slabs", seo_description: null },
+  { id: "sub-sand-4", parent_id: "cat-1", name: "Chocolate", slug: "chocolate", description: "Deep chocolate brown uniform sandstone for pavers, borders and steps", image_url: "/images/categories/sandstone-macro.jpg", display_order: 104, seo_title: "Chocolate Sandstone Paving", seo_description: null },
+  { id: "sub-sand-5", parent_id: "cat-1", name: "Bansi Pink", slug: "bansi-pink", description: "Historic Bansi Paharpur pink sandstone celebrated for monumental temple architecture", image_url: "/images/categories/sandstone.jpg", display_order: 105, seo_title: "Bansi Pink Paharpur Sandstone", seo_description: null },
+  { id: "sub-sand-6", parent_id: "cat-1", name: "Mint", slug: "mint", description: "Creamy greenish-yellow mint sandstone with crisp clean cleft split texture", image_url: "/images/categories/sandstone-macro.jpg", display_order: 106, seo_title: "Mint Sandstone Slabs & Tiles", seo_description: null },
+  { id: "sub-sand-7", parent_id: "cat-1", name: "Mint Fossil", slug: "mint-fossil", description: "Natural mint sandstone carrying natural organic fossil impressions and ferns", image_url: "/images/categories/sandstone.jpg", display_order: 107, seo_title: "Mint Fossil Natural Sandstone", seo_description: null },
+  { id: "sub-sand-8", parent_id: "cat-1", name: "Lalitpur Yellow", slug: "lalitpur-yellow", description: "Bright sun-kissed golden yellow sandstone with high silica density", image_url: "/images/categories/sandstone-macro.jpg", display_order: 108, seo_title: "Lalitpur Yellow Sandstone", seo_description: null },
+  { id: "sub-sand-9", parent_id: "cat-1", name: "Lalitpur Grey", slug: "lalitpur-grey", description: "Uniform light dove-grey sandstone ideal for contemporary architecture and paving", image_url: "/images/categories/sandstone.jpg", display_order: 109, seo_title: "Lalitpur Grey Sandstone", seo_description: null },
+  { id: "sub-sand-10", parent_id: "cat-1", name: "Sagar Black", slug: "sagar-black", description: "Dense dark charcoal black sandstone with natural non-slip cleft face", image_url: "/images/products/kund-black-slate.jpg", display_order: 110, seo_title: "Sagar Black Sandstone", seo_description: null },
+  { id: "sub-sand-11", parent_id: "cat-1", name: "Kandla Grey", slug: "kandla-grey", description: "World-renowned quartzitic silver-grey sandstone for export paving flags and setts", image_url: "/images/categories/sandstone.jpg", display_order: 111, seo_title: "Kandla Grey Sandstone Paving", seo_description: null },
+  { id: "sub-sand-12", parent_id: "cat-1", name: "Autumn Brown", slug: "autumn-brown", description: "Earthy dark brown, hazelnut, and olive hues with rich cleft surface", image_url: "/images/categories/sandstone-macro.jpg", display_order: 112, seo_title: "Autumn Brown Sandstone", seo_description: null },
+  { id: "sub-sand-13", parent_id: "cat-1", name: "Raj Green", slug: "raj-green", description: "Traditional Raj Green sandstone blending subtle green, grey, and khaki tones", image_url: "/images/products/rajasthan-green-marble.jpg", display_order: 113, seo_title: "Raj Green Sandstone Paving Slabs", seo_description: null },
+  { id: "sub-sand-14", parent_id: "cat-1", name: "Slate Grey", slug: "slate-grey", description: "Fine-textured slate-grey sandstone for modern wall cladding and interior flooring", image_url: "/images/categories/slate.jpg", display_order: 114, seo_title: "Slate Grey Sandstone", seo_description: null },
+  { id: "sub-sand-15", parent_id: "cat-1", name: "Teak", slug: "teak", description: "Striking natural woodgrain yellow-brown veins resembling natural teak wood", image_url: "/images/categories/sandstone.jpg", display_order: 115, seo_title: "Teakwood Sandstone Slabs", seo_description: null },
+  { id: "sub-sand-16", parent_id: "cat-1", name: "Rainbow", slug: "rainbow", description: "Vibrant swirled bands of purple, violet, violet-red, and gold quartz sandstone", image_url: "/images/categories/sandstone-macro.jpg", display_order: 116, seo_title: "Rainbow Sandstone Slabs", seo_description: null },
+  { id: "sub-sand-17", parent_id: "cat-1", name: "Jodhpur Pink", slug: "jodhpur-pink", description: "Authentic Jodhpur pink sandstone from Mandore quarries for carved architectural screens", image_url: "/images/categories/sandstone.jpg", display_order: 117, seo_title: "Jodhpur Pink Sandstone", seo_description: null },
+  { id: "sub-sand-18", parent_id: "cat-1", name: "Jaisalmer Yellow", slug: "jaisalmer-yellow", description: "Warm ochre-golden sandstone and yellow stone from Thar desert formations", image_url: "/images/products/dholpur-beige-sandstone.jpg", display_order: 118, seo_title: "Jaisalmer Yellow Sandstone", seo_description: null },
+
+  // ─── Level 2: Marble Subcategories (parent: cat-2) ─────────────────────────
+  { id: "sub-marb-1", parent_id: "cat-2", name: "Indian White Marble", slug: "indian-white-marble", description: "Makrana, Ambaji, and Banswara pure white calcite marble varieties", image_url: "/images/products/makrana-white-marble.jpg", display_order: 201, seo_title: "Indian White Marble Suppliers", seo_description: null },
+  { id: "sub-marb-2", parent_id: "cat-2", name: "Indian Colored Marble", slug: "indian-colored-marble", description: "Rajasthan Forest Green, Rain Forest Brown, Torrone and Pink marble slabs", image_url: "/images/products/rajasthan-green-marble.jpg", display_order: 202, seo_title: "Indian Colored Marble Slabs", seo_description: null },
+  { id: "sub-marb-3", parent_id: "cat-2", name: "Imported Marble", slug: "imported-marble", description: "Italian Statuario, Botticino, Calacatta, and Carrara imported gangsaw slabs", image_url: "/images/categories/marble.jpg", display_order: 203, seo_title: "Imported Italian Marble Slabs", seo_description: null },
+
+  // ─── Level 2: Granite Subcategories (parent: cat-3) ────────────────────────
+  { id: "sub-gran-1", parent_id: "cat-3", name: "North India Granite", slug: "north-india-granite", description: "Crystal Yellow, Chima Pink, Tiger Black, and Jalore granite varieties", image_url: "/images/categories/granite-macro.jpg", display_order: 301, seo_title: "North India Granite Slabs", seo_description: null },
+  { id: "sub-gran-2", parent_id: "cat-3", name: "South India Granite", slug: "south-india-granite", description: "Black Galaxy, Tan Brown, Steel Grey, Absolute Black, and Kashmir White", image_url: "/images/products/black-galaxy-granite.jpg", display_order: 302, seo_title: "South India Granite Exports", seo_description: null },
+  { id: "sub-gran-3", parent_id: "cat-3", name: "Imported Granite", slug: "imported-granite", description: "Blue Pearl, Emerald Pearl, Volga Blue, and Brazilian exotic granite slabs", image_url: "/images/categories/granite.jpg", display_order: 303, seo_title: "Imported Granite Slabs", seo_description: null },
+
+  // ─── Level 2: Onyx Subcategories (parent: cat-4) ───────────────────────────
+  { id: "sub-onyx-1", parent_id: "cat-4", name: "Indian Onyx", slug: "indian-onyx", description: "Translucent caramel honey onyx and green banded onyx from domestic quarries", image_url: "/images/products/honey-onyx-translucent.jpg", display_order: 401, seo_title: "Indian Onyx Slabs", seo_description: null },
+  { id: "sub-onyx-2", parent_id: "cat-4", name: "Imported Onyx", slug: "imported-onyx", description: "Pink Onyx, White Onyx, Orange Onyx, and Backlit luxury translucent stone", image_url: "/images/categories/onyx.jpg", display_order: 402, seo_title: "Imported Translucent Onyx Slabs", seo_description: null },
+
+  // ─── Level 2: Semi Precious Stone Subcategories (parent: cat-5) ────────────
+  { id: "sub-semi-1", parent_id: "cat-5", name: "Agate", slug: "agate", description: "Wild agate, black agate, blue agate, and gold agate luxury composite slabs", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 501, seo_title: "Agate Semi Precious Stone Slabs", seo_description: null },
+  { id: "sub-semi-2", parent_id: "cat-5", name: "Carnelian", slug: "carnelian", description: "Translucent orange-red microcrystalline chalcedony gemstone slabs", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 502, seo_title: "Carnelian Gemstone Slabs", seo_description: null },
+  { id: "sub-semi-3", parent_id: "cat-5", name: "Jasper", slug: "jasper", description: "Red jasper, zebra jasper, and multi-colored aggregate gemstone surfaces", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 503, seo_title: "Jasper Stone Slabs", seo_description: null },
+  { id: "sub-semi-4", parent_id: "cat-5", name: "Lapis Lazuli", slug: "lapis-lazuli", description: "Vibrant ultramarine royal blue metamorphic gemstone laced with golden pyrite", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 504, seo_title: "Lapis Lazuli Luxury Slabs", seo_description: null },
+  { id: "sub-semi-5", parent_id: "cat-5", name: "Quartz", slug: "quartz", description: "Rose quartz, smoky quartz, and crystal white semi-precious quartz slabs", image_url: "/images/products/silver-white-quartzite.jpg", display_order: 505, seo_title: "Natural Quartz Slabs", seo_description: null },
+  { id: "sub-semi-6", parent_id: "cat-5", name: "Amethyst", slug: "amethyst", description: "Rich royal violet-purple crystalline amethyst gemstone slabs for statement walls", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 506, seo_title: "Amethyst Gemstone Slabs", seo_description: null },
+  { id: "sub-semi-7", parent_id: "cat-5", name: "Petrified Wood", slug: "petrified-wood", description: "Ancient fossilized timber crystallized into rich chalcedony and agate minerals", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 507, seo_title: "Petrified Wood Slabs", seo_description: null },
+  { id: "sub-semi-8", parent_id: "cat-5", name: "Pyrite", slug: "pyrite", description: "Golden metallic lustered iron sulfide mineral composite luxury slabs", image_url: "/images/categories/semi-precious-stones.jpg", display_order: 508, seo_title: "Golden Pyrite Slabs", seo_description: null },
+
+  // ─── Level 2: Travertine Subcategories (parent: cat-6) ─────────────────────
+  { id: "sub-trav-1", parent_id: "cat-6", name: "Classic Cream Travertine", slug: "classic-cream-travertine", description: "Warm beige-cream vein-cut and cross-cut porous natural travertine", image_url: "/images/products/classic-travertine-slab.jpg", display_order: 601, seo_title: "Classic Cream Travertine Slabs", seo_description: null },
+  { id: "sub-trav-2", parent_id: "cat-6", name: "Walnut Travertine", slug: "walnut-travertine", description: "Rich chocolate walnut and caramel textured sedimentary travertine", image_url: "/images/categories/travertine.jpg", display_order: 602, seo_title: "Walnut Travertine Slabs", seo_description: null },
+  { id: "sub-trav-3", parent_id: "cat-6", name: "Silver Travertine", slug: "silver-travertine", description: "Sophisticated silver-grey and pewter vein-cut architectural travertine", image_url: "/images/categories/travertine.jpg", display_order: 603, seo_title: "Silver Travertine Slabs", seo_description: null },
+  { id: "sub-trav-4", parent_id: "cat-6", name: "Imported Travertine", slug: "imported-travertine", description: "Roman Italian and Turkish travertine slabs for luxury pool decks and facades", image_url: "/images/products/classic-travertine-slab.jpg", display_order: 604, seo_title: "Imported Travertine Slabs", seo_description: null },
+
+  // ─── Level 2: Slate Stone Subcategories (parent: cat-7) ────────────────────
+  { id: "sub-slat-1", parent_id: "cat-7", name: "Kund Black Slate", slug: "kund-black-slate", description: "Uniform charcoal black natural cleft slate from Haryana Kund mining belt", image_url: "/images/products/kund-black-slate.jpg", display_order: 701, seo_title: "Kund Black Slate Tiles & Slabs", seo_description: null },
+  { id: "sub-slat-2", parent_id: "cat-7", name: "Peacock Slate", slug: "peacock-slate", description: "Multi-tonal iridescent peacock feathers colors in rustic cleft sheets", image_url: "/images/categories/slate-macro.jpg", display_order: 702, seo_title: "Peacock Multi Slate", seo_description: null },
+  { id: "sub-slat-3", parent_id: "cat-7", name: "Copper Slate", slug: "copper-slate", description: "Warm rust and copper metallic sheen split-face slate for feature walls", image_url: "/images/categories/slate.jpg", display_order: 703, seo_title: "Copper Slate Tiles", seo_description: null },
+  { id: "sub-slat-4", parent_id: "cat-7", name: "Multi Slate", slug: "multi-slate", description: "Vibrant natural blend of charcoal, plum, gold and earthy hues", image_url: "/images/categories/slate-macro.jpg", display_order: 704, seo_title: "Multi Color Slate Tiles", seo_description: null },
+  { id: "sub-slat-5", parent_id: "cat-7", name: "Silver Shine Slate", slug: "silver-shine-slate", description: "Mica-rich silver reflective cleft slate for interior and exterior accents", image_url: "/images/categories/slate.jpg", display_order: 705, seo_title: "Silver Shine Slate", seo_description: null },
+
+  // ─── Level 2: Limestone Subcategories (parent: cat-8) ──────────────────────
+  { id: "sub-lime-1", parent_id: "cat-8", name: "Kota Blue", slug: "kota-blue", description: "World-famous tough, non-slip, fine-grain blue-green limestone from Kota", image_url: "/images/products/kota-blue-limestone.jpg", display_order: 801, seo_title: "Kota Blue Limestone Tiles", seo_description: null },
+  { id: "sub-lime-2", parent_id: "cat-8", name: "Kota Brown", slug: "kota-brown", description: "Chocolate-brown dense limestone complementing Kota blue for border work", image_url: "/images/categories/limestone.jpg", display_order: 802, seo_title: "Kota Brown Limestone", seo_description: null },
+  { id: "sub-lime-3", parent_id: "cat-8", name: "Jaisalmer Yellow", slug: "jaisalmer-yellow-limestone", description: "Warm yellow fossiliferous natural limestone from Rajasthan", image_url: "/images/categories/limestone-macro.jpg", display_order: 803, seo_title: "Jaisalmer Yellow Limestone", seo_description: null },
+  { id: "sub-lime-4", parent_id: "cat-8", name: "Tandur Yellow", slug: "tandur-yellow", description: "Dense butter-yellow South Indian limestone for paving and flooring", image_url: "/images/categories/limestone.jpg", display_order: 804, seo_title: "Tandur Yellow Limestone", seo_description: null },
+  { id: "sub-lime-5", parent_id: "cat-8", name: "Tandur Blue", slug: "tandur-blue", description: "Uniform greenish-blue natural cleft South Indian paving limestone", image_url: "/images/products/kota-blue-limestone.jpg", display_order: 805, seo_title: "Tandur Blue Limestone", seo_description: null },
+  { id: "sub-lime-6", parent_id: "cat-8", name: "Kadapa Black", slug: "kadapa-black", description: "Deep black dense limestone from Andhra Pradesh for heavy-duty paving", image_url: "/images/categories/limestone-macro.jpg", display_order: 806, seo_title: "Kadapa Black Limestone", seo_description: null },
+
+  // ─── Level 2: Pebbles Subcategories (parent: cat-9) ────────────────────────
+  { id: "sub-pebb-1", parent_id: "cat-9", name: "River Pebbles", slug: "river-pebbles", description: "Smooth water-worn river gravel pebbles for landscaping, water features and gardens", image_url: "/images/categories/decorative-stone.jpg", display_order: 901, seo_title: "Natural River Pebbles", seo_description: null },
+  { id: "sub-pebb-2", parent_id: "cat-9", name: "White Pebbles", slug: "white-pebbles", description: "Tumbled brilliant white marble pebbles for modern planters and landscape pathways", image_url: "/images/categories/decorative-stone.jpg", display_order: 902, seo_title: "Pure White Decorative Pebbles", seo_description: null },
+  { id: "sub-pebb-3", parent_id: "cat-9", name: "Black Pebbles", slug: "black-pebbles", description: "Polished obsidian and matte basalt black river pebbles", image_url: "/images/categories/decorative-stone.jpg", display_order: 903, seo_title: "Black River Pebbles", seo_description: null },
+  { id: "sub-pebb-4", parent_id: "cat-9", name: "Coloured Pebbles", slug: "coloured-pebbles", description: "Curated mixed spectrum natural stone tumbled pebbles for landscape accents", image_url: "/images/categories/decorative-stone.jpg", display_order: 904, seo_title: "Coloured Mixed Stone Pebbles", seo_description: null },
 ];
 
 // ─── Categories ──────────────────────────────────────────────────────────────
@@ -109,13 +176,35 @@ function countProductsForCategory(slug: string): number {
 }
 
 export async function getActiveCategories(parentId?: string | null): Promise<CategoryItem[]> {
+  const getFallback = () => {
+    let list: CategoryItem[];
+    if (parentId === null) {
+      list = SEED_CATEGORIES.filter((c) => c.parent_id === null);
+    } else if (parentId !== undefined) {
+      const SUPABASE_UUID_TO_SEED_ID: Record<string, string> = {
+        "4b702bbe-42cf-4756-b7ec-40a01d456102": "cat-1", // Sandstone
+        "faa945a8-d4b1-4c93-8731-0b2068cc15be": "cat-2", // Marble
+        "9d0644d8-f479-405e-a980-f29ed8cbb682": "cat-3", // Granite
+        "aaad2e4a-f2d0-41b4-8e11-dd2816802731": "cat-4", // Onyx
+        "8191fafd-651e-4fa0-bc7c-3041db35d0d3": "cat-5", // Semi-Precious
+        "5545317e-2acf-4c30-bf98-1d8c79d45dd4": "cat-6", // Travertine
+        "8f767b6b-1a85-4523-9327-cbb8f9a47ef1": "cat-7", // Slate
+        "44036756-5f33-40f2-bb67-bcff5199d96a": "cat-8", // Limestone
+        "be0c22a6-4c90-4b11-8115-a29f1c41797b": "cat-9", // Pebbles
+      };
+      const resolvedParentId = SUPABASE_UUID_TO_SEED_ID[parentId] || parentId;
+      list = SEED_CATEGORIES.filter((c) => c.parent_id === resolvedParentId || c.parent_id === parentId);
+    } else {
+      list = SEED_CATEGORIES.slice();
+    }
+    return list.map((c) => ({
+      ...c,
+      productCount: countProductsForCategory(c.slug),
+    }));
+  };
+
   if (!isSupabaseConfigured()) {
-    return parentId
-      ? []
-      : SEED_CATEGORIES.map((c) => ({
-          ...c,
-          productCount: countProductsForCategory(c.slug),
-        }));
+    return getFallback();
   }
 
   try {
@@ -135,12 +224,7 @@ export async function getActiveCategories(parentId?: string | null): Promise<Cat
 
     const { data, error } = await query;
     if (error || !data || data.length === 0) {
-      return parentId
-        ? []
-        : SEED_CATEGORIES.map((c) => ({
-            ...c,
-            productCount: countProductsForCategory(c.slug),
-          }));
+      return getFallback();
     }
 
     const { data: prods } = await supabase
@@ -166,12 +250,7 @@ export async function getActiveCategories(parentId?: string | null): Promise<Cat
       productCount: counts[cat.id] ?? countProductsForCategory(cat.slug),
     }));
   } catch {
-    return parentId
-      ? []
-      : SEED_CATEGORIES.map((c) => ({
-          ...c,
-          productCount: countProductsForCategory(c.slug),
-        }));
+    return getFallback();
   }
 }
 
@@ -295,13 +374,73 @@ const SEED_SELLERS: PublicSeller[] = [
     coverImageUrl: "/images/suppliers/marble-processing-factory.jpg",
     verifiedAt: "2024-03-20T00:00:00Z",
   },
+  {
+    id: "seller-5",
+    slug: "udaipur-green-marble-exotics",
+    businessName: "Udaipur Green Marble & Exotic Minerals",
+    businessType: "Quarry Owner & Exporter",
+    city: "Udaipur",
+    state: "Rajasthan",
+    country: "India",
+    yearsInBusiness: 28,
+    description:
+      "Direct extraction from the Rishabhdeo green marble belt and processing of translucent honey onyx and serpentine stone slabs for luxury interiors.",
+    logoUrl: "/images/products/rajasthan-green-marble.jpg",
+    coverImageUrl: "/images/hero/stone-quarry-hero.jpg",
+    verifiedAt: "2024-02-18T00:00:00Z",
+  },
+  {
+    id: "seller-6",
+    slug: "kishangarh-stone-mandi-corp",
+    businessName: "Kishangarh Stone Mandi Corporation",
+    businessType: "Manufacturer & Processor",
+    city: "Kishangarh",
+    state: "Rajasthan",
+    country: "India",
+    yearsInBusiness: 30,
+    description:
+      "Asia's premier stone processing cluster specializing in Italian and Indian vein-cut travertine, multi-wire gangsaw calibration, and architectural lot supply.",
+    logoUrl: "/images/products/classic-travertine-slab.jpg",
+    coverImageUrl: "/images/suppliers/marble-processing-factory.jpg",
+    verifiedAt: "2024-01-25T00:00:00Z",
+  },
+  {
+    id: "seller-7",
+    slug: "rewari-slate-quartzite-works",
+    businessName: "Rewari Slate & Quartzite Works",
+    businessType: "Quarry Owner & Manufacturer",
+    city: "Rewari",
+    state: "Haryana",
+    country: "India",
+    yearsInBusiness: 19,
+    description:
+      "Exclusive quarrying of Kund charcoal black natural cleft slate, precision pool coping, and crystalline quartzite for commercial architectural projects.",
+    logoUrl: "/images/products/kund-black-slate.jpg",
+    coverImageUrl: "/images/hero/stone-quarry-hero.jpg",
+    verifiedAt: "2024-03-12T00:00:00Z",
+  },
+  {
+    id: "seller-8",
+    slug: "bangalore-granite-gangsaw-mills",
+    businessName: "Bangalore Monumental Granite Mills",
+    businessType: "Processor & Exporter",
+    city: "Bangalore",
+    state: "Karnataka",
+    country: "India",
+    yearsInBusiness: 25,
+    description:
+      "Large-scale multi-wire gangsaw processing of Sadarahalli White, Hassan Green, and Imperial Red granite slabs and rough quarry blocks for export.",
+    logoUrl: "/images/products/silver-white-quartzite.jpg",
+    coverImageUrl: "/images/suppliers/granite-processing-factory.jpg",
+    verifiedAt: "2024-02-28T00:00:00Z",
+  },
 ];
 
 const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-1",
     seller_id: "seller-1",
-    category_id: "cat-1",
+    category_id: "cat-2",
     name: "Makrana Pure White Marble Gangsaw Slab",
     slug: "makrana-white-marble",
     sku: "MKR-WHT-001",
@@ -322,7 +461,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 7,
     published_at: "2024-04-12T00:00:00Z",
-    category: { id: "cat-1", name: "Marble", slug: "marble" },
+    category: { id: "cat-2", name: "Marble", slug: "marble" },
     seller: {
       id: "seller-1",
       business_name: "Royal Makrana Marbles",
@@ -354,7 +493,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-2",
     seller_id: "seller-2",
-    category_id: "cat-2",
+    category_id: "cat-3",
     name: "Black Galaxy Mirror Polished Granite Slab",
     slug: "black-galaxy-granite",
     sku: "BG-GRN-002",
@@ -375,7 +514,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 10,
     published_at: "2024-04-11T00:00:00Z",
-    category: { id: "cat-2", name: "Granite", slug: "granite" },
+    category: { id: "cat-3", name: "Granite", slug: "granite" },
     seller: {
       id: "seller-2",
       business_name: "Galaxy Granite Exports",
@@ -405,7 +544,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-3",
     seller_id: "seller-3",
-    category_id: "cat-3",
+    category_id: "cat-1",
     name: "Dholpur Beige Sandstone Architectural Slabs",
     slug: "dholpur-beige-sandstone",
     sku: "DLP-SND-003",
@@ -426,7 +565,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 14,
     published_at: "2024-04-10T00:00:00Z",
-    category: { id: "cat-3", name: "Sandstone", slug: "sandstone" },
+    category: { id: "cat-1", name: "Sandstone", slug: "sandstone" },
     seller: {
       id: "seller-3",
       business_name: "Thar Sandstone Industries",
@@ -455,8 +594,8 @@ const SEED_PRODUCTS: ProductDetail[] = [
   },
   {
     id: "prod-4",
-    seller_id: "seller-1",
-    category_id: "cat-1",
+    seller_id: "seller-5",
+    category_id: "cat-2",
     name: "Rajasthan Forest Green Marble Slab",
     slug: "rajasthan-green-marble",
     sku: "RAJ-GRN-004",
@@ -477,20 +616,20 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 7,
     published_at: "2024-04-09T00:00:00Z",
-    category: { id: "cat-1", name: "Marble", slug: "marble" },
+    category: { id: "cat-2", name: "Marble", slug: "marble" },
     seller: {
-      id: "seller-1",
-      business_name: "Royal Makrana Marbles",
-      slug: "royal-makrana-marbles",
-      business_type: "Manufacturer & Exporter",
-      city: "Makrana",
+      id: "seller-5",
+      business_name: "Udaipur Green Marble & Exotic Minerals",
+      slug: "udaipur-green-marble-exotics",
+      business_type: "Quarry Owner & Exporter",
+      city: "Udaipur",
       state: "Rajasthan",
       country: "India",
       description:
-        "Generations of quarrying and precision gangsaw processing of premium Makrana white marble, Dungri, and Kumari varieties.",
-      logo_url: "/images/products/makrana-white-marble.jpg",
+        "Direct extraction from the Rishabhdeo green marble belt and processing of translucent honey onyx and serpentine stone slabs for luxury interiors.",
+      logo_url: "/images/products/rajasthan-green-marble.jpg",
       cover_image_url: "/images/hero/stone-quarry-hero.jpg",
-      years_in_business: 35,
+      years_in_business: 28,
       verification_status: "verified",
     },
     images: [
@@ -505,7 +644,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-5",
     seller_id: "seller-4",
-    category_id: "cat-4",
+    category_id: "cat-8",
     name: "Kota Blue Natural Honed Limestone",
     slug: "kota-blue-limestone",
     sku: "KT-BLU-005",
@@ -526,7 +665,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 7,
     published_at: "2024-04-08T00:00:00Z",
-    category: { id: "cat-4", name: "Limestone", slug: "limestone" },
+    category: { id: "cat-8", name: "Limestone", slug: "limestone" },
     seller: {
       id: "seller-4",
       business_name: "Deccan Limestone Processors",
@@ -553,15 +692,15 @@ const SEED_PRODUCTS: ProductDetail[] = [
   },
   {
     id: "prod-6",
-    seller_id: "seller-1",
-    category_id: "cat-7",
+    seller_id: "seller-6",
+    category_id: "cat-6",
     name: "Classic Vein-Cut Cream Travertine Slabs",
     slug: "classic-travertine-slab",
     sku: "TRV-CRM-006",
     description:
       "Warm honey and walnut linear banded travertine. Carefully cross-cut and vein-cut options with unfilled natural micro-cavities or epoxy resin-filled and honed surfaces.",
     material_type: "Travertine",
-    stone_origin: "Rajasthan",
+    stone_origin: "Kishangarh, Rajasthan",
     colour: "Beige",
     finish: "Honed",
     thickness: 18,
@@ -575,20 +714,20 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 14,
     published_at: "2024-04-07T00:00:00Z",
-    category: { id: "cat-7", name: "Travertine", slug: "travertine" },
+    category: { id: "cat-6", name: "Travertine", slug: "travertine" },
     seller: {
-      id: "seller-1",
-      business_name: "Royal Makrana Marbles",
-      slug: "royal-makrana-marbles",
-      business_type: "Manufacturer & Exporter",
-      city: "Makrana",
+      id: "seller-6",
+      business_name: "Kishangarh Stone Mandi Corporation",
+      slug: "kishangarh-stone-mandi-corp",
+      business_type: "Manufacturer & Processor",
+      city: "Kishangarh",
       state: "Rajasthan",
       country: "India",
       description:
-        "Generations of quarrying and precision gangsaw processing of premium Makrana white marble, Dungri, and Kumari varieties.",
-      logo_url: "/images/products/makrana-white-marble.jpg",
-      cover_image_url: "/images/hero/stone-quarry-hero.jpg",
-      years_in_business: 35,
+        "Asia's premier stone processing cluster specializing in Italian and Indian vein-cut travertine, multi-wire gangsaw calibration, and architectural lot supply.",
+      logo_url: "/images/products/classic-travertine-slab.jpg",
+      cover_image_url: "/images/suppliers/marble-processing-factory.jpg",
+      years_in_business: 30,
       verification_status: "verified",
     },
     images: [
@@ -603,12 +742,12 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-7",
     seller_id: "seller-3",
-    category_id: "cat-3",
-    name: "Agra Red Heritage Sandstone Calibrated Slabs",
+    category_id: "cat-1",
+    name: "Agra Red Heritage Sandstone Natural Finish Slabs",
     slug: "agra-red-sandstone",
     sku: "AGR-RED-007",
     description:
-      "Iconic terracotta-red quartz sandstone prized for monumental facades, courtyards, and weatherproof external wall cladding. Machine-calibrated thickness with natural cleft or sandblasted finish.",
+      "Iconic terracotta-red quartz sandstone prized for monumental facades, courtyards, and weatherproof external wall cladding. Natural cleft or sandblasted finish with authentic quarry texture.",
     material_type: "Sandstone",
     stone_origin: "Tantpur / Agra Belt, Rajasthan",
     colour: "Red",
@@ -624,7 +763,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 10,
     published_at: "2024-04-06T00:00:00Z",
-    category: { id: "cat-3", name: "Sandstone", slug: "sandstone" },
+    category: { id: "cat-1", name: "Sandstone", slug: "sandstone" },
     seller: {
       id: "seller-3",
       business_name: "Thar Sandstone Industries",
@@ -642,7 +781,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     },
     images: [
       { id: "img-71", storage_path: "", src: "/images/products/agra-red-sandstone.jpg", alt_text: "Agra Red Heritage Sandstone Slab", is_primary: true, display_order: 1 },
-      { id: "img-72", storage_path: "", src: "/images/categories/sandstone.jpg", alt_text: "Calibrated Red Sandstone Grain", is_primary: false, display_order: 2 },
+      { id: "img-72", storage_path: "", src: "/images/categories/sandstone.jpg", alt_text: "Natural Red Sandstone Grain", is_primary: false, display_order: 2 },
     ],
     specifications: [
       { id: "sp-71", specification_name: "Compressive Strength", specification_value: "110 MPa", display_order: 1 },
@@ -652,7 +791,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-8",
     seller_id: "seller-1",
-    category_id: "cat-8",
+    category_id: "cat-4",
     name: "Backlit Honey Amber Translucent Onyx Slab",
     slug: "honey-onyx-translucent",
     sku: "ONX-HNY-008",
@@ -673,7 +812,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "limited",
     lead_time: 12,
     published_at: "2024-04-05T00:00:00Z",
-    category: { id: "cat-8", name: "Onyx", slug: "onyx" },
+    category: { id: "cat-4", name: "Onyx", slug: "onyx" },
     seller: {
       id: "seller-1",
       business_name: "Royal Makrana Marbles",
@@ -722,7 +861,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 10,
     published_at: "2024-04-04T00:00:00Z",
-    category: { id: "cat-5", name: "Quartzite", slug: "quartzite" },
+    category: { id: "cat-5", name: "Semi Precious Stone", slug: "semi-precious-stone" },
     seller: {
       id: "seller-2",
       business_name: "Galaxy Granite Exports",
@@ -749,8 +888,8 @@ const SEED_PRODUCTS: ProductDetail[] = [
   },
   {
     id: "prod-10",
-    seller_id: "seller-4",
-    category_id: "cat-6",
+    seller_id: "seller-7",
+    category_id: "cat-7",
     name: "Kund Charcoal Black Natural Cleft Slate Tiles",
     slug: "kund-black-slate",
     sku: "SLT-KND-010",
@@ -771,20 +910,20 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 7,
     published_at: "2024-04-03T00:00:00Z",
-    category: { id: "cat-6", name: "Slate", slug: "slate" },
+    category: { id: "cat-7", name: "Slate Stone", slug: "slate" },
     seller: {
-      id: "seller-4",
-      business_name: "Deccan Limestone Processors",
-      slug: "deccan-limestone-processors",
-      business_type: "Manufacturer",
-      city: "Kota",
-      state: "Rajasthan",
+      id: "seller-7",
+      business_name: "Rewari Slate & Quartzite Works",
+      slug: "rewari-slate-quartzite-works",
+      business_type: "Quarry Owner & Manufacturer",
+      city: "Rewari",
+      state: "Haryana",
       country: "India",
       description:
-        "Large-capacity production of Kota Blue and Kota Brown natural cleft and mirror-polished limestone tiles for major infrastructure projects.",
-      logo_url: "/images/products/kota-blue-limestone.jpg",
-      cover_image_url: "/images/suppliers/marble-processing-factory.jpg",
-      years_in_business: 15,
+        "Exclusive quarrying of Kund charcoal black natural cleft slate, precision pool coping, and crystalline quartzite for commercial architectural projects.",
+      logo_url: "/images/products/kund-black-slate.jpg",
+      cover_image_url: "/images/hero/stone-quarry-hero.jpg",
+      years_in_business: 19,
       verification_status: "verified",
     },
     images: [
@@ -798,15 +937,15 @@ const SEED_PRODUCTS: ProductDetail[] = [
   },
   {
     id: "prod-11",
-    seller_id: "seller-2",
-    category_id: "cat-12",
+    seller_id: "seller-8",
+    category_id: "cat-3",
     name: "Export-Grade Raw Gangsaw Granite Quarry Blocks",
     slug: "raw-quarry-granite-blocks",
     sku: "BLK-GRN-011",
     description:
       "Wire-saw dressed, defect-inspected rectangular gangsaw granite blocks directly from Ongole quarry benches. Ready for container or break-bulk vessel loading for international slab processing plants.",
     material_type: "Granite",
-    stone_origin: "Ongole, Andhra Pradesh",
+    stone_origin: "Bangalore, Karnataka",
     colour: "Grey",
     finish: "Flamed",
     thickness: 1600,
@@ -820,20 +959,20 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "in_stock",
     lead_time: 15,
     published_at: "2024-04-02T00:00:00Z",
-    category: { id: "cat-12", name: "Stone Blocks", slug: "stone-blocks" },
+    category: { id: "cat-3", name: "Granite", slug: "granite" },
     seller: {
-      id: "seller-2",
-      business_name: "Galaxy Granite Exports",
-      slug: "galaxy-granite-exports",
+      id: "seller-8",
+      business_name: "Bangalore Monumental Granite Mills",
+      slug: "bangalore-granite-gangsaw-mills",
       business_type: "Processor & Exporter",
-      city: "Ongole",
-      state: "Andhra Pradesh",
+      city: "Bangalore",
+      state: "Karnataka",
       country: "India",
       description:
-        "Export-oriented gangsaw unit specializing in Black Galaxy, Steel Grey, and Tan Brown granite slabs and cut-to-size tiles.",
-      logo_url: "/images/products/black-galaxy-granite.jpg",
+        "Large-scale multi-wire gangsaw processing of Sadarahalli White, Hassan Green, and Imperial Red granite slabs and rough quarry blocks for export.",
+      logo_url: "/images/products/silver-white-quartzite.jpg",
       cover_image_url: "/images/suppliers/granite-processing-factory.jpg",
-      years_in_business: 22,
+      years_in_business: 25,
       verification_status: "verified",
     },
     images: [
@@ -848,7 +987,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
   {
     id: "prod-12",
     seller_id: "seller-3",
-    category_id: "cat-13",
+    category_id: "cat-1",
     name: "CNC & Hand-Carved Architectural Sandstone Jaali Panel",
     slug: "hand-carved-sandstone-jaali",
     sku: "JAL-SND-012",
@@ -869,7 +1008,7 @@ const SEED_PRODUCTS: ProductDetail[] = [
     stock_status: "made_to_order",
     lead_time: 21,
     published_at: "2024-04-01T00:00:00Z",
-    category: { id: "cat-13", name: "Decorative Stone", slug: "decorative-stone" },
+    category: { id: "cat-1", name: "Sandstone", slug: "sandstone" },
     seller: {
       id: "seller-3",
       business_name: "Thar Sandstone Industries",
@@ -940,14 +1079,46 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
 
   if (params.category) {
     const slug = params.category.toLowerCase();
-    list = list.filter(
-      (p) =>
+    const targetCat = SEED_CATEGORIES.find((c) => c.slug === slug);
+    const parentCat = targetCat?.parent_id ? SEED_CATEGORIES.find((c) => c.id === targetCat.parent_id) : null;
+
+    list = list.filter((p) => {
+      const matchDirect =
         p.category?.slug === slug ||
         p.material_type?.toLowerCase() === slug ||
+        p.name.toLowerCase().includes(slug.replace(/-/g, " ")) ||
+        p.slug.toLowerCase().includes(slug) ||
+        (targetCat && p.name.toLowerCase().includes(targetCat.name.toLowerCase())) ||
         (slug === "natural-stone-slabs" && (p.unit === "sq_ft" || p.name.toLowerCase().includes("slab"))) ||
         (slug === "stone-tiles" && p.name.toLowerCase().includes("tile")) ||
-        (slug === "custom-stone-products" && p.stock_status === "made_to_order"),
+        (slug === "custom-stone-products" && p.stock_status === "made_to_order");
+
+      const matchParent =
+        parentCat &&
+        (p.category?.slug === parentCat.slug ||
+          p.material_type?.toLowerCase() === parentCat.slug.toLowerCase());
+
+      return matchDirect || matchParent;
+    });
+  }
+
+  if (params.format) {
+    const fmts = (Array.isArray(params.format) ? params.format : [params.format]).map((f) =>
+      f.toLowerCase(),
     );
+    list = list.filter((p) => {
+      const text = `${p.name} ${p.description ?? ""} ${p.unit}`.toLowerCase();
+      return fmts.some((fmt) => {
+        if (fmt === "slab" || fmt === "slabs") return text.includes("slab") || text.includes("gangsaw") || p.unit === "sq_ft";
+        if (fmt === "tile" || fmt === "tiles") return text.includes("tile");
+        if (fmt === "paving") return text.includes("paving") || text.includes("paver") || text.includes("patio");
+        if (fmt === "cladding") return text.includes("cladding") || text.includes("facade") || text.includes("wall");
+        if (fmt === "landscaping") return text.includes("landscaping") || text.includes("garden") || text.includes("cobble") || text.includes("pebble");
+        if (fmt === "interior") return text.includes("interior") || text.includes("flooring") || text.includes("kitchen") || text.includes("vanity");
+        if (fmt === "exterior") return text.includes("exterior") || text.includes("facade") || text.includes("elevation") || text.includes("paving");
+        return text.includes(fmt);
+      });
+    });
   }
 
   if (params.material) {
@@ -1017,7 +1188,22 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
         p.stone_origin?.toLowerCase().includes(query) ||
         p.colour?.toLowerCase().includes(query) ||
         p.finish?.toLowerCase().includes(query) ||
-        p.description?.toLowerCase().includes(query),
+        p.description?.toLowerCase().includes(query) ||
+        p.seller.business_name?.toLowerCase().includes(query) ||
+        p.seller.city?.toLowerCase().includes(query),
+    );
+  }
+
+  if (params.location?.trim()) {
+    const loc = params.location.toLowerCase().trim();
+    list = list.filter(
+      (p) =>
+        (p.stone_origin && p.stone_origin.toLowerCase().includes(loc)) ||
+        (p.seller.city && p.seller.city.toLowerCase().includes(loc)) ||
+        (p.seller.state && p.seller.state.toLowerCase().includes(loc)) ||
+        (loc.includes("rajasthan") && (p.stone_origin?.toLowerCase().includes("rajasthan") || p.seller.state?.toLowerCase().includes("rajasthan"))) ||
+        (loc.includes("andhra") && (p.stone_origin?.toLowerCase().includes("andhra") || p.seller.state?.toLowerCase().includes("andhra"))) ||
+        (loc.includes("haryana") && (p.stone_origin?.toLowerCase().includes("haryana") || p.stone_origin?.toLowerCase().includes("rewari") || p.stone_origin?.toLowerCase().includes("kund"))),
     );
   }
 
@@ -1085,8 +1271,10 @@ function filterSeedSellers(params: SellerFilterParams = {}): {
 
 export interface ProductFilterParams {
   q?: string;
+  location?: string;
   category?: string;
   material?: string | string[];
+  format?: string | string[];
   colour?: string | string[];
   finish?: string | string[];
   origin?: string | string[];
@@ -1132,12 +1320,17 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
 
     const hasFilters = Boolean(
       params.q?.trim() ||
+        params.location?.trim() ||
         params.category ||
         (Array.isArray(params.material) ? params.material.length > 0 : params.material) ||
         (Array.isArray(params.colour) ? params.colour.length > 0 : params.colour) ||
         (Array.isArray(params.finish) ? params.finish.length > 0 : params.finish) ||
+        (Array.isArray(params.origin) ? params.origin.length > 0 : params.origin) ||
+        (Array.isArray(params.thickness) ? params.thickness.length > 0 : params.thickness) ||
+        (Array.isArray(params.stockStatus) ? params.stockStatus.length > 0 : params.stockStatus) ||
         params.minPrice ||
-        params.maxPrice,
+        params.maxPrice ||
+        params.verified,
     );
 
     let categoryId: string | null = null;
@@ -1183,21 +1376,16 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       });
     }
 
+    if (params.location?.trim()) {
+      query = query.ilike("stone_origin", `%${params.location.trim()}%`);
+    }
+
     if (params.category) {
       if (categoryId) {
         query = query.eq("category_id", categoryId);
       } else {
-        // Category slug hasn't been seeded into live DB yet — check if DB has any approved products at all
-        const { count: liveTotal } = await supabase
-          .from("products")
-          .select("id", { count: "exact", head: true })
-          .eq("moderation_status", "approved")
-          .not("slug", "ilike", "test-%")
-          .not("name", "ilike", "[TEST]%");
-        if (!liveTotal || liveTotal === 0) {
-          return filterSeedProducts(params);
-        }
-        return { products: [], total: 0, totalPages: 0, page };
+        // Category slug is a subcategory or not seeded in live DB yet — fall back to curated seed products
+        return filterSeedProducts(params);
       }
     }
 
@@ -1289,20 +1477,12 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
 
     const total = count ?? 0;
 
-    // If the live Supabase database has zero approved public products yet,
-    // gracefully display the curated stone showcase catalog (consistent with getActiveCategories).
+    // If the live database has zero products matching the category/filters,
+    // gracefully fall back to the curated stone showcase catalog.
     if (total === 0) {
-      if (!hasFilters) {
-        return filterSeedProducts(params);
-      }
-      const { count: liveCatalogTotal } = await supabase
-        .from("products")
-        .select("id", { count: "exact", head: true })
-        .eq("moderation_status", "approved")
-        .not("slug", "ilike", "test-%")
-        .not("name", "ilike", "[TEST]%");
-      if (!liveCatalogTotal || liveCatalogTotal === 0) {
-        return filterSeedProducts(params);
+      const seedResult = filterSeedProducts(params);
+      if (seedResult.total > 0) {
+        return seedResult;
       }
       return { products: [], total: 0, totalPages: 0, page };
     }

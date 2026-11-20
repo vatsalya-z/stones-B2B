@@ -6,7 +6,7 @@ import { CategoryDiscoveryExplorer } from "@/components/categories/category-disc
 export const metadata: Metadata = {
   title: "Natural Stone Categories — Indian Marble, Granite, Sandstone & Slabs | StonesDekho",
   description:
-    "Explore India's premier B2B natural stone collections: Makrana Marble, Black Galaxy Granite, Dholpur Sandstone, Kota Limestone, Slate, Quartzite, Gangsaw Slabs, and Calibrated Tiles sourced directly from verified Indian quarries.",
+    "Explore India's premier B2B natural stone collections: Makrana Marble, Black Galaxy Granite, Dholpur Sandstone, Kota Limestone, Slate, Quartzite, Gangsaw Slabs, and Architectural Tiles sourced directly from verified Indian quarries.",
   alternates: {
     canonical: "/categories",
   },

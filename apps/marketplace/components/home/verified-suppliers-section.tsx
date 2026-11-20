@@ -115,7 +115,7 @@ export function VerifiedSuppliersSection({ sellers = [] }: VerifiedSuppliersSect
             Verified Indian Stone Suppliers
           </h2>
           <p className="text-xs sm:text-sm text-stone-500 max-w-xl">
-            Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India.
+            Source factory-finished slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India.
           </p>
         </div>
 

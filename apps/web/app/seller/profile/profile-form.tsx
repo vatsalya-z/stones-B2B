@@ -390,7 +390,7 @@ export function SellerProfileForm({
                   Export Capability
                 </span>
                 <span className="text-xs text-stone-500">
-                  IEC-enabled container stuffing, fumigation &amp; port dispatch
+                  IEC-enabled container stuffing, seaworthy packaging &amp; port dispatch
                 </span>
               </div>
             </label>

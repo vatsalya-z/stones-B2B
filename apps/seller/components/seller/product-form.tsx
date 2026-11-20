@@ -909,7 +909,7 @@ export function ProductForm({
               type="text"
               value={packagingInfo}
               onChange={(e) => setPackagingInfo(e.target.value)}
-              placeholder="e.g. ISPM-15 fumigated seaworthy wooden bundles, 7–8 bundles per 20ft container (27 MT)"
+              placeholder="e.g. Heavy-duty seaworthy wooden bundles, 7–8 bundles per 20ft container (27 MT)"
               className="input-base"
             />
           </div>

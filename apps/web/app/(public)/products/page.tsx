@@ -12,14 +12,14 @@ import { getProducts, getActiveCategories } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Natural Stone Slabs & Tiles — Indian Quarry Wholesale Directory | StoneB2B",
   description:
-    "Explore natural stone slabs, calibrated tiles, blocks, and architectural stone collections sourced directly from verified Indian quarries and manufacturers.",
+    "Explore natural stone slabs, architectural tiles, blocks, and natural stone collections sourced directly from verified Indian quarries and manufacturers.",
   alternates: {
     canonical: "/products",
   },
   openGraph: {
     title: "Natural Stone Products & Gangsaw Slabs | StoneB2B Directory",
     description:
-      "Source factory-direct Indian marble, granite, sandstone, limestone, slate, quartzite, and travertine. Calibrated thicknesses and export-grade packaging.",
+      "Source factory-direct Indian marble, granite, sandstone, limestone, slate, quartzite, and travertine. Standard thicknesses and export-grade packaging.",
     url: "/products",
     type: "website",
   },
@@ -118,7 +118,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   ];
 
   const thicknessOptions = [
-    { value: "15", label: "15 mm Calibrated" },
+    { value: "15", label: "15 mm Standard" },
     { value: "16", label: "16 mm Standard Slabs" },
     { value: "18", label: "18 mm Gangsaw Slabs" },
     { value: "20", label: "20 mm Architectural" },
@@ -136,7 +136,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Natural Stone Products & Factory Lots Directory | StoneB2B",
-    description: "Search and filter Indian natural stone products, gangsaw slabs, and calibrated tiles from verified quarries.",
+    description: "Search and filter Indian natural stone products, gangsaw slabs, and architectural tiles from verified quarries.",
     url: "https://stonesdekho.com/products",
     mainEntity: {
       "@type": "ItemList",

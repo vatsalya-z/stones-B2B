@@ -7,60 +7,67 @@ import { cn } from "@stone/ui";
 
 const CATEGORY_ITEMS = [
   {
-    name: "Indian White & Green Marble",
-    slug: "marble",
-    varieties: "Makrana Calcite, Kumari, Forest Green",
-    badge: "28+ Lots",
-    dotColor: "bg-stone-300",
-  },
-  {
-    name: "Granite Gangsaw Slabs",
-    slug: "granite",
-    varieties: "Black Galaxy, Steel Grey, Tan Brown",
-    badge: "34+ Lots",
-    dotColor: "bg-stone-900",
-  },
-  {
-    name: "Architectural Sandstone",
+    name: "Sandstone",
     slug: "sandstone",
-    varieties: "Dholpur Beige, Teakwood, Rainbow Paving",
+    varieties: "Agra Red, Dholpur Beige, Mint, Kandla Grey, Jodhpur Pink",
     badge: "22+ Lots",
     dotColor: "bg-amber-300",
   },
   {
-    name: "Calibrated Limestone & Kota",
-    slug: "limestone",
-    varieties: "Kota Blue, Kota Brown, Kadapa Black",
-    badge: "19+ Lots",
-    dotColor: "bg-slate-400",
+    name: "Marble",
+    slug: "marble",
+    varieties: "Indian White, Indian Colored, Imported Marble",
+    badge: "28+ Lots",
+    dotColor: "bg-stone-300",
   },
   {
-    name: "Crystalline Quartzite",
-    slug: "quartzite",
-    varieties: "Silver White, Taj Mahal, Cristallo",
-    badge: "14+ Lots",
-    dotColor: "bg-blue-200",
+    name: "Granite",
+    slug: "granite",
+    varieties: "North India, South India, Imported Granite",
+    badge: "34+ Lots",
+    dotColor: "bg-stone-900",
   },
   {
-    name: "Vein-Cut Travertine",
-    slug: "travertine",
-    varieties: "Classic Cream, Walnut, Titanium",
+    name: "Onyx",
+    slug: "onyx",
+    varieties: "Indian Onyx, Imported Onyx",
+    badge: "8+ Lots",
+    dotColor: "bg-amber-500",
+  },
+  {
+    name: "Semi Precious Stone",
+    slug: "semi-precious-stone",
+    varieties: "Agate, Carnelian, Jasper, Lapis Lazuli, Amethyst",
     badge: "12+ Lots",
+    dotColor: "bg-purple-300",
+  },
+  {
+    name: "Travertine",
+    slug: "travertine",
+    varieties: "Classic Cream, Walnut, Silver Travertine",
+    badge: "10+ Lots",
     dotColor: "bg-amber-100",
   },
   {
-    name: "Natural Cleft Slate",
+    name: "Slate Stone",
     slug: "slate",
-    varieties: "Kund Charcoal, Multi-color, Peacock",
+    varieties: "Kund Black, Peacock, Rustic Multi-color",
     badge: "16+ Lots",
     dotColor: "bg-stone-700",
   },
   {
-    name: "Translucent Onyx & Alabaster",
-    slug: "onyx",
-    varieties: "Honey Amber, Backlit White, Green Onyx",
-    badge: "8+ Lots",
-    dotColor: "bg-amber-500",
+    name: "Limestone",
+    slug: "limestone",
+    varieties: "Kota Blue, Kota Brown, Jaisalmer, Tandur",
+    badge: "19+ Lots",
+    dotColor: "bg-slate-400",
+  },
+  {
+    name: "Pebbles",
+    slug: "pebbles",
+    varieties: "River Pebbles, White Pebbles, Mixed Pebbles",
+    badge: "6+ Lots",
+    dotColor: "bg-stone-400",
   },
 ];
 
@@ -182,7 +189,7 @@ export function CategoriesMegaMenu() {
           {/* Bottom Bar */}
           <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500 bg-stone-50 -mx-4 -mb-4 px-4 py-2.5 rounded-b-2xl">
             <span className="font-medium">
-              Direct Gangsaw Calibration: ±1mm tolerance
+              Tiles · Slab · Paving · Cladding · Landscaping
             </span>
             <Link
               href="/request-quote"

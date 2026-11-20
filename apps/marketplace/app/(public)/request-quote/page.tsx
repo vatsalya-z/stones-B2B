@@ -141,7 +141,7 @@ export default async function RequestQuotePage({ searchParams }: RequestQuotePag
                   Certified Processing Hubs
                 </span>
                 <p className="text-xs font-semibold leading-snug">
-                  Over 250,000 sq.ft of factory-calibrated slabs &amp; tiles ready for direct project dispatch.
+                  Over 250,000 sq.ft of factory-inspected slabs &amp; tiles ready for direct project dispatch.
                 </p>
               </div>
             </div>

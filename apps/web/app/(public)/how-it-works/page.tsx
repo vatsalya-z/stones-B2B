@@ -51,8 +51,8 @@ const STEPS = [
   {
     step: "04",
     tag: "Fulfillment & Dispatch",
-    title: "Fumigated Crate Packing & Container Loading",
-    desc: "Sellers pack your slabs in ISPM-15 certified, seaworthy wooden A-frames with polyethylene moisture barriers and corner guards for secure sea or road transit.",
+    title: "Seaworthy Crate Packing & Container Loading",
+    desc: "Sellers pack your slabs in heavy-duty, seaworthy wooden A-frames with polyethylene moisture barriers and corner guards for secure sea or road transit.",
     details: [
       "Standard 20ft heavy-duty container stuffing (up to 27-28 metric tons payload)",
       "Pre-dispatch photo & video documentation of crating and container sealing",
@@ -72,7 +72,7 @@ const FAQS = [
   },
   {
     q: "Can I order custom cut-to-size dimensions or special edge profiles?",
-    a: "Yes. Our suppliers operate multi-blade gangsaw and 5-axis CNC bridge cutting equipment capable of producing custom project sizes, vanity tops, bullnose edge profiles, and calibrated tiles according to your architectural drawings.",
+    a: "Yes. Our suppliers operate multi-blade gangsaw and 5-axis CNC bridge cutting equipment capable of producing custom project sizes, vanity tops, bullnose edge profiles, and precision tiles according to your architectural drawings.",
   },
   {
     q: "What is the typical container loading capacity for natural stone?",
