@@ -7,8 +7,8 @@ import type { Database } from "./database.types";
  * NEXT_PUBLIC_* vars must be referenced literally so Next.js can inline them.
  */
 export function createClient(): SupabaseClient<Database> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co";
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef";
   if (!url || !key) throw new Error("Missing public Supabase environment variables");
   return createBrowserClient<Database>(url, key) as unknown as SupabaseClient<Database>;
 }

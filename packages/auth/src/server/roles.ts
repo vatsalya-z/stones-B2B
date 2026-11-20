@@ -5,7 +5,7 @@ import type { AppRole } from "../shared/types";
 import { getSupabaseServerClient } from "./client";
 
 function getAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co";
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return null;
   return createClient<Database>(url, serviceKey, {

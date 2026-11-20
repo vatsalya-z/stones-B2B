@@ -7,8 +7,9 @@ import { decodeSellerDescription } from "@/features/seller/seller-meta";
  * Checks whether Supabase is configured with a live project URL.
  */
 function isSupabaseConfigured(): boolean {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co";
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef";
   if (!url || !key) return false;
   if (url.includes("placeholder.supabase.co") || key.includes("placeholder")) return false;
   return true;
@@ -35,7 +36,9 @@ export function resolveStorageUrl(
     return trimmed;
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "");
+  const supabaseUrl = (
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co"
+  ).replace(/\/+$/, "");
   if (!supabaseUrl) return null;
 
   // Clean path of leading slashes

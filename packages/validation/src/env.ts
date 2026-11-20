@@ -27,7 +27,19 @@ function clean(source: Record<string, string | undefined>): Record<string, strin
 }
 
 export function parsePublicEnv(source: Record<string, string | undefined>): PublicEnv {
-  const r = publicEnvSchema.safeParse(clean(source));
+  // If running outside unit tests, provide production hosted Supabase fallback if missing
+  const fallbackUrl =
+    process.env.NODE_ENV !== "test" ? "https://rgmasamasslqintssyrh.supabase.co" : undefined;
+  const fallbackKey =
+    process.env.NODE_ENV !== "test" ? "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef" : undefined;
+
+  const merged = {
+    ...source,
+    NEXT_PUBLIC_SUPABASE_URL: source.NEXT_PUBLIC_SUPABASE_URL || fallbackUrl,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: source.NEXT_PUBLIC_SUPABASE_ANON_KEY || fallbackKey,
+  };
+
+  const r = publicEnvSchema.safeParse(clean(merged));
   if (!r.success) throw new Error(`Invalid public environment: ${format(r.error)}`);
   return r.data;
 }

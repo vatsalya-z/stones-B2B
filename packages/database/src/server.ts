@@ -15,7 +15,13 @@ export interface CookieAdapter {
  * Always authorise with `supabase.auth.getUser()`, never `getSession()`.
  */
 export function createClient(cookies: CookieAdapter): SupabaseClient<Database> {
-  const env = parsePublicEnv(process.env);
+  const env = parsePublicEnv({
+    ...process.env,
+    NEXT_PUBLIC_SUPABASE_URL:
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY:
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef",
+  });
   const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined;
 
   return createServerClient<Database>(

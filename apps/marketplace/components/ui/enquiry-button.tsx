@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCallback } from "react";
@@ -27,8 +28,8 @@ export function EnquiryButton({
   const handleClick = useCallback(async () => {
     // Inline Supabase browser client to check auth
     const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef",
     );
 
     const {
