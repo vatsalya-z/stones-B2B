@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Card, CardBody } from "@stone/ui";
 import { getCurrentUser } from "@/lib/auth";
+import { getMarketplaceBaseUrl } from "@/lib/marketplace-url";
 
-const marketplaceUrl = process.env.NEXT_PUBLIC_MARKETPLACE_URL || "http://localhost:3000";
+const marketplaceUrl = getMarketplaceBaseUrl();
 const sellerUrl = process.env.NEXT_PUBLIC_SELLER_URL || "http://localhost:3002";
 
 export default async function UnauthorizedPage() {

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Card, CardBody } from "@stone/ui";
+import { getMarketplaceBaseUrl } from "@/lib/marketplace-url";
 
-const marketplaceUrl = process.env.NEXT_PUBLIC_MARKETPLACE_URL || "http://localhost:3000";
+const marketplaceUrl = getMarketplaceBaseUrl();
 
 interface UnauthorizedPageProps {
   searchParams?: Promise<{

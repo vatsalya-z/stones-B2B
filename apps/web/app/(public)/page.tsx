@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SectionHeading, EmptyState } from "@stone/ui";
 import { ProductCard } from "@/components/ui/product-card";
-import { SupplierCard } from "@/components/ui/supplier-card";
+import { SuppliersCarousel } from "@/components/ui/suppliers-carousel";
 import { CategoryCard } from "@/components/ui/category-card";
 import { getFeaturedProducts, getFeaturedSellers, getActiveCategories } from "@/lib/db";
 import { HERO_IMAGES } from "@/lib/images";
@@ -68,7 +68,7 @@ export default async function HomePage() {
   const [categories, products, sellers] = await Promise.all([
     getActiveCategories(null),
     getFeaturedProducts(6),
-    getFeaturedSellers(4),
+    getFeaturedSellers(8),
   ]);
 
   const websiteSchema = {
@@ -590,52 +590,34 @@ export default async function HomePage() {
       {/* 5. Featured Suppliers */}
       <section className="section-pad bg-stone-50 border-t border-stone-200/60">
         <div className="container-wide">
-          <SectionHeading
-            title="Verified Suppliers & Exporters"
-            subtitle="Connect with certified stone processing companies from Rajasthan, Gujarat, Andhra Pradesh, and Karnataka"
-            action={
-              <Link
-                href="/suppliers"
-                className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1"
-              >
-                View all suppliers →
-              </Link>
-            }
-          />
-
-          <div className="mt-8">
-            {sellers.length === 0 ? (
-              <div className="rounded-2xl border border-stone-200 bg-white p-12 text-center">
-                <EmptyState
-                  title="Suppliers directory updating"
-                  description="Verified manufacturers will be featured here."
-                  action={
-                    <Link href="/register/seller" className="btn-accent text-sm">
-                      Register as Supplier
-                    </Link>
-                  }
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {sellers.map((s) => (
-                  <SupplierCard
-                    key={s.id}
-                    id={s.id}
-                    slug={s.slug}
-                    businessName={s.businessName}
-                    businessType={s.businessType}
-                    logoUrl={s.logoUrl}
-                    city={s.city}
-                    state={s.state}
-                    description={s.description}
-                    yearsInBusiness={s.yearsInBusiness}
-                    verifiedAt={s.verifiedAt}
-                  />
-                ))}
-              </div>
-            )}
+          {/* Centered heading — no top-right action link */}
+          <div className="text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-900 mb-3">
+              ⬡ Direct Quarry &amp; Processing Hubs
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+              Verified Indian Stone Suppliers
+            </h2>
+            <p className="mt-2 text-sm text-stone-500 max-w-xl mx-auto">
+              Source factory-calibrated slabs, cut-to-size architectural tiles, and quarry blocks directly from certified processors across India.
+            </p>
           </div>
+
+          {sellers.length === 0 ? (
+            <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-12 text-center">
+              <EmptyState
+                title="Suppliers directory updating"
+                description="Verified manufacturers will be featured here."
+                action={
+                  <Link href="/register/seller" className="btn-accent text-sm">
+                    Register as Supplier
+                  </Link>
+                }
+              />
+            </div>
+          ) : (
+            <SuppliersCarousel sellers={sellers} />
+          )}
         </div>
       </section>
 

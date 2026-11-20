@@ -4,8 +4,9 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { sanitizeNextPath } from "@stone/validation";
+import { getMarketplaceBaseUrl } from "@/lib/marketplace-url";
 
-const marketplaceUrl = process.env.NEXT_PUBLIC_MARKETPLACE_URL || "http://localhost:3000";
+const marketplaceUrl = getMarketplaceBaseUrl();
 
 function AdminLoginForm() {
   const searchParams = useSearchParams();
