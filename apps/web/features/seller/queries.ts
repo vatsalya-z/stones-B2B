@@ -1000,8 +1000,8 @@ export async function getSellerEnquiryDetail(
       phone:
         row.profiles?.phone ??
         (row as unknown as { guest_phone?: string }).guest_phone ??
-        (row.specifications as Record<string, any>)?.buyer_phone ??
-        (row.specifications as Record<string, any>)?.contact_phone ??
+        (row.specifications as Record<string, unknown>)?.buyer_phone as string | undefined ??
+        (row.specifications as Record<string, unknown>)?.contact_phone as string | undefined ??
         null,
       city: row.profiles?.city ?? null,
       state: row.profiles?.state ?? null,

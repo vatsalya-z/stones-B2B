@@ -25,7 +25,6 @@ export function middleware(request: NextRequest) {
 
     if (isStaleLocalSupabase || isObsoleteSupabaseRef) {
       // Purge the stale cookie across root path
-      response.cookies.delete(name);
       response.cookies.set(name, "", {
         path: "/",
         maxAge: 0,

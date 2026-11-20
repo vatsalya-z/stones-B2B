@@ -96,20 +96,20 @@ export default async function AdminEnquiriesPage({ searchParams }: EnquiriesPage
                 enquiries.map((enq) => {
                   const isRfq = !enq.product_id;
                   const quotesCount = enq.quotes_count;
-                  const specs = (enq.specifications as Record<string, any>) || {};
+                  const specs = (enq.specifications as Record<string, unknown>) || {};
                   const productName = isRfq
-                    ? specs.product_name || specs.material_type || specs.stone_variety || "Custom Stone RFQ"
+                    ? (specs.product_name as string | undefined) || (specs.material_type as string | undefined) || (specs.stone_variety as string | undefined) || "Custom Stone RFQ"
                     : enq.product?.name || "Product Enquiry";
-                  const buyerName = enq.buyer?.full_name || enq.guest_name || specs.buyer_name || "Stone Buyer";
+                  const buyerName = enq.buyer?.full_name || enq.guest_name || (specs.buyer_name as string | undefined) || "Stone Buyer";
                   const buyerLocation =
                     enq.delivery_location ||
-                    specs.delivery_location ||
+                    (specs.delivery_location as string | undefined) ||
                     [enq.buyer?.city, enq.buyer?.state].filter(Boolean).join(", ") ||
                     "India";
                   const buyerPhone =
                     enq.guest_phone ||
-                    specs.buyer_phone ||
-                    specs.contact_phone ||
+                    (specs.buyer_phone as string | undefined) ||
+                    (specs.contact_phone as string | undefined) ||
                     null;
 
                   return (

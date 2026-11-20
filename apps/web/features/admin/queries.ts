@@ -856,12 +856,12 @@ export async function getAdminEnquiryDetail(enquiryId: string, ctx?: AdminContex
   }
 
   const enquiry = enquiryRes.data;
-  const specs = (enquiry.specifications as Record<string, any>) || {};
+  const specs = (enquiry.specifications as Record<string, unknown>) || {};
   const fallbackPhone =
     enquiry.guest_phone ||
-    specs.buyer_phone ||
-    specs.contact_phone ||
-    specs.phone ||
+    (specs.buyer_phone as string | undefined) ||
+    (specs.contact_phone as string | undefined) ||
+    (specs.phone as string | undefined) ||
     null;
 
   const [buyerRes, sellerRes, productRes] = await Promise.all([

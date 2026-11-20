@@ -1318,21 +1318,6 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
   try {
     const supabase = await getSupabaseServerClient();
 
-    const hasFilters = Boolean(
-      params.q?.trim() ||
-        params.location?.trim() ||
-        params.category ||
-        (Array.isArray(params.material) ? params.material.length > 0 : params.material) ||
-        (Array.isArray(params.colour) ? params.colour.length > 0 : params.colour) ||
-        (Array.isArray(params.finish) ? params.finish.length > 0 : params.finish) ||
-        (Array.isArray(params.origin) ? params.origin.length > 0 : params.origin) ||
-        (Array.isArray(params.thickness) ? params.thickness.length > 0 : params.thickness) ||
-        (Array.isArray(params.stockStatus) ? params.stockStatus.length > 0 : params.stockStatus) ||
-        params.minPrice ||
-        params.maxPrice ||
-        params.verified,
-    );
-
     let categoryId: string | null = null;
     if (params.category) {
       const { data: cat } = await supabase

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-http-header-size=65536' next dev -p 3000",
+    "dev": "NODE_OPTIONS='--max-http-header-size=262144' next dev -p 3000",
     "build": "next build",
-    "start": "NODE_OPTIONS='--max-http-header-size=65536' next start -p 3000",
+    "start": "NODE_OPTIONS='--max-http-header-size=262144' next start -p 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },

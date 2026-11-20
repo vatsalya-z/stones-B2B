@@ -4,7 +4,6 @@ import {
   Search,
   User,
   Phone,
-  Mail,
   MapPin,
   Sparkles,
   ArrowRight,
@@ -17,19 +16,22 @@ import { EnquiryStatusBadge, QuotationStatusBadge } from "@/components/admin/sta
 
 export const dynamic = "force-dynamic";
 
-const UNIT_LABELS: Record<string, string> = {
-  sq_ft: "Sq. Ft.",
-  sq_m: "Sq. Meter",
-  piece: "Piece",
-  ton: "Ton",
-  metric_ton: "Metric Ton (MT)",
-  slab: "Slab",
-  box: "Box / Crate",
-  custom: "Custom Unit",
-};
-
 interface EnquiryDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+interface EnquirySpecs {
+  product_name?: string;
+  material_type?: string;
+  stone_variety?: string;
+  buyer_name?: string;
+  buyer_phone?: string;
+  contact_phone?: string;
+  phone?: string;
+  buyer_email?: string;
+  delivery_location?: string;
+  project_notes?: string;
+  [key: string]: unknown;
 }
 
 export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPageProps) {
@@ -41,10 +43,9 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
     notFound();
   }
 
-  const { enquiry, quotations, attachments, buyer, seller, product } = data;
+  const { enquiry, quotations, attachments, buyer, product } = data;
   const isRfq = !enquiry.product_id;
-  const specs = (enquiry.specifications as Record<string, any>) || {};
-  const unitLabel = (typeof enquiry.unit === "string" && UNIT_LABELS[enquiry.unit]) || enquiry.unit?.replace(/_/g, " ") || "units";
+  const specs = (enquiry.specifications as EnquirySpecs) || {};
 
   const productName =
     specs.product_name ||
@@ -78,6 +79,8 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
     specs.delivery_location ||
     [buyer?.city, buyer?.state].filter(Boolean).join(", ") ||
     "—";
+
+  const projectNotes = enquiry.description || specs.project_notes || null;
 
   return (
     <div className="space-y-6">
@@ -241,14 +244,14 @@ export default async function AdminEnquiryDetailPage({ params }: EnquiryDetailPa
         </div>
 
         {/* Project Notes (Only if custom remarks exist) */}
-        {(enquiry.description || specs.project_notes) && (
+        {projectNotes && (
           <div className="border-t border-stone-800/80 pt-4">
             <span className="text-stone-400 text-xs font-semibold flex items-center gap-1.5 mb-2">
               <FileText className="h-3.5 w-3.5 text-amber-500" />
               <span>Requirement Notes &amp; Specifications</span>
             </span>
             <div className="whitespace-pre-wrap rounded-lg border border-stone-800 bg-stone-950 p-3.5 font-mono text-[11px] leading-relaxed text-stone-300">
-              {enquiry.description || specs.project_notes}
+              {projectNotes}
             </div>
           </div>
         )}

@@ -6,11 +6,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "dev:marketplace": "pnpm --filter @stone/marketplace dev",
-    "dev:seller": "pnpm --filter @stone/seller dev",
-    "dev:admin": "pnpm --filter @stone/admin dev",
-    "dev:all": "turbo run dev --filter=\"./apps/*\"",
+    "dev": "NODE_OPTIONS='--max-http-header-size=262144' turbo run dev",
+    "dev:marketplace": "NODE_OPTIONS='--max-http-header-size=262144' pnpm --filter @stone/marketplace dev",
+    "dev:seller": "NODE_OPTIONS='--max-http-header-size=262144' pnpm --filter @stone/seller dev",
+    "dev:admin": "NODE_OPTIONS='--max-http-header-size=262144' pnpm --filter @stone/admin dev",
+    "dev:all": "NODE_OPTIONS='--max-http-header-size=262144' turbo run dev --filter=\"./apps/*\"",
     "build": "turbo run build",
     "build:marketplace": "pnpm --filter @stone/marketplace build",
     "build:seller": "pnpm --filter @stone/seller build",

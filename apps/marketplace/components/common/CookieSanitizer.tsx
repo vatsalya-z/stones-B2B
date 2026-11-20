@@ -37,8 +37,15 @@ export function CookieSanitizer() {
         if (isStaleLocal || isObsoleteRef) {
           // Clear across current host and root path
           document.cookie = `${name}=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+          document.cookie = `${name}=; path=/; domain=localhost; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
           cleaned++;
         }
+      }
+
+      // If chunked token exists, purge obsolete unchunked token
+      const hasChunk0 = cookies.some((c) => c.includes(`sb-${ACTIVE_SUPABASE_PROJECT_REF}-auth-token.0=`));
+      if (hasChunk0) {
+        document.cookie = `sb-${ACTIVE_SUPABASE_PROJECT_REF}-auth-token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       }
 
       if (cleaned > 0) {
