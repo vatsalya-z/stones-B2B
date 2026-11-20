@@ -1,7 +1,11 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { parsePublicEnv } from "@stone/validation";
+import {
+  parsePublicEnv,
+  resolvePublicSupabaseUrl,
+  resolvePublicSupabaseAnonKey,
+} from "@stone/validation";
 import type { Database } from "./database.types";
 
 export interface CookieAdapter {
@@ -15,12 +19,12 @@ export interface CookieAdapter {
  * Always authorise with `supabase.auth.getUser()`, never `getSession()`.
  */
 export function createClient(cookies: CookieAdapter): SupabaseClient<Database> {
+  const url = resolvePublicSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const key = resolvePublicSupabaseAnonKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, url);
   const env = parsePublicEnv({
     ...process.env,
-    NEXT_PUBLIC_SUPABASE_URL:
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co",
-    NEXT_PUBLIC_SUPABASE_ANON_KEY:
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef",
+    NEXT_PUBLIC_SUPABASE_URL: url,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: key,
   });
   const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined;
 

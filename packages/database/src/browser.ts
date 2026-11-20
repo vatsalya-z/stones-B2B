@@ -1,5 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { resolvePublicSupabaseUrl, resolvePublicSupabaseAnonKey } from "@stone/validation";
 import type { Database } from "./database.types";
 
 /**
@@ -7,8 +8,7 @@ import type { Database } from "./database.types";
  * NEXT_PUBLIC_* vars must be referenced literally so Next.js can inline them.
  */
 export function createClient(): SupabaseClient<Database> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co";
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef";
-  if (!url || !key) throw new Error("Missing public Supabase environment variables");
+  const url = resolvePublicSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const key = resolvePublicSupabaseAnonKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, url);
   return createBrowserClient<Database>(url, key) as unknown as SupabaseClient<Database>;
 }

@@ -1,6 +1,11 @@
 import "server-only";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { parsePublicEnv, parseServerEnv } from "@stone/validation";
+import {
+  parsePublicEnv,
+  parseServerEnv,
+  resolvePublicSupabaseUrl,
+  resolvePublicSupabaseAnonKey,
+} from "@stone/validation";
 import type { Database } from "./database.types";
 
 /**
@@ -10,12 +15,12 @@ import type { Database } from "./database.types";
  * the `server-only` import makes the build fail if you do.
  */
 export function createAdminClient() {
+  const url = resolvePublicSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const key = resolvePublicSupabaseAnonKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, url);
   const pub = parsePublicEnv({
     ...process.env,
-    NEXT_PUBLIC_SUPABASE_URL:
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "https://rgmasamasslqintssyrh.supabase.co",
-    NEXT_PUBLIC_SUPABASE_ANON_KEY:
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef",
+    NEXT_PUBLIC_SUPABASE_URL: url,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: key,
   });
   const priv = parseServerEnv(process.env);
   return createSupabaseClient<Database>(

@@ -26,17 +26,60 @@ function clean(source: Record<string, string | undefined>): Record<string, strin
   return Object.fromEntries(Object.entries(source).map(([k, v]) => [k, v === "" ? undefined : v]));
 }
 
+export const HOSTED_SUPABASE_PROJECT_REF = "rgmasamasslqintssyrh";
+export const HOSTED_SUPABASE_URL = "https://rgmasamasslqintssyrh.supabase.co";
+export const HOSTED_SUPABASE_ANON_KEY = "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef";
+
+export function resolvePublicSupabaseUrl(raw?: string | null): string {
+  if (!raw) return HOSTED_SUPABASE_URL;
+  const url = raw.trim().replace(/^["']|["']$/g, "").replace(/\/+$/, "");
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    return HOSTED_SUPABASE_URL;
+  }
+  if (
+    process.env.NODE_ENV === "production" &&
+    (url.includes("127.0.0.1") || url.includes("localhost") || url.includes("placeholder"))
+  ) {
+    return HOSTED_SUPABASE_URL;
+  }
+  return url;
+}
+
+export function resolvePublicSupabaseAnonKey(raw?: string | null, url?: string | null): string {
+  if (!raw) return HOSTED_SUPABASE_ANON_KEY;
+  const key = raw.trim().replace(/^["']|["']$/g, "");
+
+  // If accidentally swapped URL into KEY
+  if (key.startsWith("http://") || key.startsWith("https://")) {
+    return HOSTED_SUPABASE_ANON_KEY;
+  }
+  // If local docker demo key was pasted into hosted config
+  if (key.includes("supabase-demo") || key.includes("placeholder")) {
+    return HOSTED_SUPABASE_ANON_KEY;
+  }
+  // If using the hosted StonesDekho Supabase instance, ensure the key is valid
+  const targetUrl = url || process.env.NEXT_PUBLIC_SUPABASE_URL || HOSTED_SUPABASE_URL;
+  if (targetUrl.includes(HOSTED_SUPABASE_PROJECT_REF)) {
+    if (key !== HOSTED_SUPABASE_ANON_KEY && !key.startsWith("eyJ")) {
+      return HOSTED_SUPABASE_ANON_KEY;
+    }
+  }
+  return key;
+}
+
 export function parsePublicEnv(source: Record<string, string | undefined>): PublicEnv {
-  // If running outside unit tests, provide production hosted Supabase fallback if missing
-  const fallbackUrl =
-    process.env.NODE_ENV !== "test" ? "https://rgmasamasslqintssyrh.supabase.co" : undefined;
-  const fallbackKey =
-    process.env.NODE_ENV !== "test" ? "sb_publishable_bELVUlNZWChpsaJFnDk0wQ_3XZinJef" : undefined;
+  let url = source.NEXT_PUBLIC_SUPABASE_URL;
+  let key = source.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (process.env.NODE_ENV !== "test") {
+    url = resolvePublicSupabaseUrl(url);
+    key = resolvePublicSupabaseAnonKey(key, url);
+  }
 
   const merged = {
     ...source,
-    NEXT_PUBLIC_SUPABASE_URL: source.NEXT_PUBLIC_SUPABASE_URL || fallbackUrl,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: source.NEXT_PUBLIC_SUPABASE_ANON_KEY || fallbackKey,
+    NEXT_PUBLIC_SUPABASE_URL: url,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: key,
   };
 
   const r = publicEnvSchema.safeParse(clean(merged));
