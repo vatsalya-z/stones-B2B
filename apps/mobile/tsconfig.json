@@ -1,0 +1,17 @@
+{
+  "extends": "../../packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "lib": ["ES2022"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@stone/types": ["../../packages/types/src/index.ts"],
+      "@stone/utils": ["../../packages/utils/src/index.ts"],
+      "@stone/validation": ["../../packages/validation/src/index.ts"],
+      "@stone/database": ["../../packages/database/src/index.ts"],
+      "@stone/auth": ["../../packages/auth/src/index.ts"]
+    }
+  },
+  "include": ["app/**/*.ts", "app/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "__tests__/**/*.ts", "app.config.ts", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
