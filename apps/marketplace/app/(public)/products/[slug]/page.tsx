@@ -147,16 +147,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     .filter(Boolean)
     .join(", ");
 
-  const formatPrice = () => {
-    if (product.price_type === "on_request" || product.price === null) {
-      return "Price On Request";
-    }
-    const symbol = product.currency === "INR" ? "₹" : product.currency;
-    const prefix = product.price_type === "starting" ? "From " : "";
-    const suffix = product.price_type === "negotiable" ? " (Negotiable)" : "";
-    return `${prefix}${symbol} ${product.price.toLocaleString("en-IN")}${suffix}`;
-  };
-
   const getStockStatusBadge = () => {
     if (product.stock_status === "in_stock") {
       return (
@@ -250,7 +240,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                  This natural stone listing is an architectural benchmark specimen illustrating genuine Indian geological characteristics. Displayed thickness, dimensions, and benchmark pricing (<strong className="text-stone-900">{formatPrice()}</strong>) reflect regional market averages. Commercial enquiries submitted for this profile are broadcast to our verified network of certified Indian stone fabricators and quarry processors.
+                  This natural stone listing is an architectural benchmark specimen illustrating genuine Indian geological characteristics, thickness tolerances, and surface finishes. Commercial enquiries submitted for this profile are broadcast to our verified network of certified Indian stone fabricators and quarry processors for direct quotations.
                 </p>
                 <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-amber-950 font-medium">
                   <span className="flex items-center gap-1">
@@ -310,19 +300,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 )}
               </div>
 
-              {/* Price Block */}
+              {/* Commercial Quote Block (No Public Prices) */}
               <div className="rounded-xl bg-gradient-to-r from-amber-50/80 via-stone-50 to-stone-50 p-4 border border-amber-200/70">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-stone-900 font-mono">
-                    {formatPrice()}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-bold text-stone-900">
+                    Request Best Quarry Quote
                   </span>
-                  {product.price !== null && (
-                    <span className="text-xs text-stone-500 font-medium">
-                      / {product.unit}
-                    </span>
-                  )}
+                  <span className="text-xs font-semibold text-amber-800 bg-amber-100/70 px-2 py-0.5 rounded-full">
+                    B2B Direct
+                  </span>
                 </div>
-                <div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-stone-600">
+                <div className="mt-1.5 flex flex-wrap items-center justify-between gap-2 text-xs text-stone-600">
                   {product.minimum_order_quantity ? (
                     <span className="font-semibold text-stone-800">
                       MOQ: {product.minimum_order_quantity} {product.unit}
@@ -330,11 +318,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   ) : null}
                   <span className="text-stone-500">Ex-Factory / FOB India</span>
                 </div>
-                {isShowcase && (
-                  <p className="mt-2 text-[11px] text-amber-800 bg-amber-100/60 rounded-md px-2 py-1">
-                    * Benchmark quotation rate for natural gangsaw slabs.
-                  </p>
-                )}
               </div>
 
               {/* Supplier Snippet */}
@@ -564,17 +547,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 )}
               </div>
 
-              {/* Price Block */}
+              {/* Commercial Quote Block (No Public Prices) */}
               <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/80">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-stone-900">
-                    {formatPrice()}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-base sm:text-lg font-bold text-stone-900">
+                    Get Best Price &amp; Lot Availability
                   </span>
-                  {product.price !== null && (
-                    <span className="text-sm text-stone-500 font-medium">
-                      / {product.unit}
-                    </span>
-                  )}
                 </div>
                 <div className="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500">
                   {product.minimum_order_quantity ? (
@@ -582,11 +560,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   ) : null}
                   <span>FOB Mundra / Ex-Factory India</span>
                 </div>
-                {isShowcase && (
-                  <p className="mt-2 text-[11px] text-amber-800 bg-amber-100/60 rounded-md px-2 py-1">
-                    * Benchmark quotation rate for natural gangsaw slabs.
-                  </p>
-                )}
               </div>
 
               {/* Supplier / Regional Processor Box */}
@@ -772,23 +745,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 image: product.images.map((i) => i.src),
                 category: product.category?.name,
                 material: product.material_type || undefined,
-                // Only emit commercial Offer if this is a genuine database product with an active seller (never for showcase seeds or synthetic test records)
-                offers:
-                  !isShowcase && !isTest && product.price !== null
-                    ? {
-                        "@type": "Offer",
-                        price: product.price,
-                        priceCurrency: product.currency,
-                        availability:
-                          product.stock_status === "in_stock"
-                            ? "https://schema.org/InStock"
-                            : "https://schema.org/PreOrder",
-                        seller: {
-                          "@type": "Organization",
-                          name: product.seller.business_name,
-                        },
-                      }
-                    : undefined,
               },
               {
                 "@type": "BreadcrumbList",
@@ -842,25 +798,20 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       >
         <div className="min-w-0">
           <span className="block text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-            Wholesale Rate
+            Direct B2B Quote
           </span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-base font-black text-stone-900 font-mono">
-              {formatPrice()}
-            </span>
-            {product.price !== null && (
-              <span className="text-[11px] text-stone-500 font-medium">
-                /{product.unit}
-              </span>
-            )}
-          </div>
+          <span className="text-sm font-bold text-stone-900 truncate block">
+            {product.minimum_order_quantity
+              ? `MOQ: ${product.minimum_order_quantity} ${product.unit}`
+              : "Custom Sizes & Bulk Lots"}
+          </span>
         </div>
 
         <a
           href="#rfq-form"
           className="rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-95 text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-amber-600/20 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
         >
-          <span>Get Quote</span>
+          <span>Request a Quote</span>
           <ChevronRight className="h-3.5 w-3.5 stroke-[2.5]" />
         </a>
       </aside>

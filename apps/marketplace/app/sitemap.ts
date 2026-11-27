@@ -10,14 +10,16 @@ function getSitemapSupabaseClient() {
 }
 
 const FALLBACK_CATEGORIES = [
+  "sandstone",
   "marble",
   "granite",
-  "sandstone",
-  "limestone",
-  "slate",
-  "quartzite",
-  "travertine",
   "onyx",
+  "semi-precious-stone",
+  "travertine",
+  "slate",
+  "limestone",
+  "basalt",
+  "pebbles-and-cobbles",
 ];
 
 const FALLBACK_PRODUCTS = [
@@ -44,15 +46,16 @@ const FALLBACK_SELLERS = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://stonesdekho.com";
 
-  let categories: { slug: string; updated_at?: string }[] = [];
+  let categories: { id?: string; parent_id?: string | null; slug: string; updated_at?: string }[] = [];
   let products: { slug: string; updated_at?: string }[] = [];
   let sellers: { slug: string }[] = [];
+  const enabledFormsByCategoryId = new Map<string, string[]>();
 
   try {
     const supabase = getSitemapSupabaseClient();
     if (supabase) {
-      const [catRes, prodRes, sellRes] = await Promise.all([
-        supabase.from("categories").select("slug, updated_at").eq("is_active", true),
+      const [catRes, prodRes, sellRes, cpfRes, formsRes] = await Promise.all([
+        supabase.from("categories").select("id, parent_id, slug, updated_at").eq("is_active", true),
         supabase
           .from("products")
           .select("slug, updated_at")
@@ -65,11 +68,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           .select("slug")
           .not("slug", "ilike", "%-test")
           .not("business_name", "ilike", "%[TEST]%"),
+        supabase
+          .from("category_product_forms")
+          .select("category_id, form_id")
+          .eq("is_enabled", true),
+        supabase
+          .from("product_forms")
+          .select("id, slug")
+          .eq("is_active", true),
       ]);
 
       categories = (catRes.data ?? []) as typeof categories;
       products = (prodRes.data ?? []) as typeof products;
       sellers = (sellRes.data ?? []) as typeof sellers;
+
+      const formSlugById = new Map<string, string>();
+      for (const f of (formsRes.data ?? []) as { id: string; slug: string }[]) {
+        formSlugById.set(f.id, f.slug);
+      }
+      for (const link of (cpfRes.data ?? []) as { category_id: string; form_id: string }[]) {
+        const formSlug = formSlugById.get(link.form_id);
+        if (!formSlug) continue;
+        const list = enabledFormsByCategoryId.get(link.category_id) ?? [];
+        list.push(formSlug);
+        enabledFormsByCategoryId.set(link.category_id, list);
+      }
     }
   } catch (err) {
     console.error("[sitemap] failed to fetch dynamic entities:", err);
@@ -149,12 +172,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const categoryRoutes: MetadataRoute.Sitemap = categories.map((cat) => ({
-    url: `${base}/categories/${cat.slug}`,
-    lastModified: cat.updated_at ? new Date(cat.updated_at) : new Date(),
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+  const categoryById = new Map(categories.filter((c) => c.id).map((c) => [c.id!, c]));
+  const categoryRoutes: MetadataRoute.Sitemap = categories.map((cat) => {
+    const parent = cat.parent_id ? categoryById.get(cat.parent_id) : null;
+    const urlPath = parent ? `/categories/${parent.slug}/${cat.slug}` : `/categories/${cat.slug}`;
+    return {
+      url: `${base}${urlPath}`,
+      lastModified: cat.updated_at ? new Date(cat.updated_at) : new Date(),
+      changeFrequency: "weekly",
+      priority: parent ? 0.75 : 0.8,
+    };
+  });
+
+  const varietyFormRoutes: MetadataRoute.Sitemap = [];
+  for (const cat of categories) {
+    const parent = cat.parent_id ? categoryById.get(cat.parent_id) : null;
+    if (!parent || !cat.id) continue;
+    const forms = enabledFormsByCategoryId.get(cat.id) ?? [];
+    for (const formSlug of forms) {
+      varietyFormRoutes.push({
+        url: `${base}/categories/${parent.slug}/${cat.slug}/${formSlug}`,
+        lastModified: cat.updated_at ? new Date(cat.updated_at) : new Date(),
+        changeFrequency: "weekly",
+        priority: 0.7,
+      });
+    }
+  }
 
   const productRoutes: MetadataRoute.Sitemap = products.map((prod) => ({
     url: `${base}/products/${prod.slug}`,
@@ -170,5 +213,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...supplierRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...varietyFormRoutes, ...productRoutes, ...supplierRoutes];
 }

@@ -1036,13 +1036,20 @@ export async function getAdminQuotationDetail(quotationId: string, ctx?: AdminCo
 export async function getAdminCategories(ctx?: AdminContext) {
   const { supabase } = ctx ?? (await getAdminContext());
 
-  const [categoriesRes, performanceRes] = await Promise.all([
+  const [categoriesRes, performanceRes, formLinksRes, formsRes] = await Promise.all([
     supabase
       .from("categories")
-      .select("id, name, slug, description, image_url, parent_id, display_order, is_active, created_at, updated_at")
+      .select(
+        "id, name, slug, description, image_url, image_alt, parent_id, display_order, is_active, is_featured, seo_title, seo_description, created_at, updated_at",
+      )
       .order("display_order", { ascending: true })
       .order("name", { ascending: true }),
     supabase.rpc("admin_category_performance"),
+    supabase
+      .from("category_product_forms")
+      .select("category_id, form_id, is_enabled")
+      .eq("is_enabled", true),
+    supabase.from("product_forms").select("id, slug, name").eq("is_active", true),
   ]);
 
   const categories = categoriesRes.data ?? [];
@@ -1051,10 +1058,25 @@ export async function getAdminCategories(ctx?: AdminContext) {
     perfMap.set(p.category_id, p);
   });
 
+  const formIdToSlug = new Map<string, string>();
+  (formsRes.data ?? []).forEach((f) => {
+    formIdToSlug.set(f.id, f.slug);
+  });
+
+  const formsByCat = new Map<string, string[]>();
+  (formLinksRes.data ?? []).forEach((link) => {
+    const slug = formIdToSlug.get(link.form_id);
+    if (!slug) return;
+    const list = formsByCat.get(link.category_id) ?? [];
+    list.push(slug);
+    formsByCat.set(link.category_id, list);
+  });
+
   const categoriesWithStats = categories.map((cat) => {
     const stats = perfMap.get(cat.id);
     return {
       ...cat,
+      enabled_form_slugs: formsByCat.get(cat.id) ?? ["slabs", "tiles", "blocks"],
       total_products: stats?.total_products ?? 0,
       approved_products: stats?.approved_products ?? 0,
       total_enquiries: stats?.total_enquiries ?? 0,
@@ -1067,14 +1089,29 @@ export async function getAdminCategories(ctx?: AdminContext) {
 export async function getAdminCategoryById(categoryId: string, ctx?: AdminContext) {
   const { supabase } = ctx ?? (await getAdminContext());
 
-  const { data, error } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("id", categoryId)
-    .maybeSingle();
+  const [{ data, error }, { data: links }, { data: forms }] = await Promise.all([
+    supabase.from("categories").select("*").eq("id", categoryId).maybeSingle(),
+    supabase
+      .from("category_product_forms")
+      .select("form_id, is_enabled")
+      .eq("category_id", categoryId)
+      .eq("is_enabled", true),
+    supabase.from("product_forms").select("id, slug").eq("is_active", true),
+  ]);
 
   if (error || !data) return null;
-  return data;
+
+  const formIdToSlug = new Map<string, string>();
+  (forms ?? []).forEach((f) => formIdToSlug.set(f.id, f.slug));
+  const enabledFormSlugs = (links ?? [])
+    .map((l) => formIdToSlug.get(l.form_id))
+    .filter((s): s is string => Boolean(s));
+
+  return {
+    ...data,
+    enabled_form_slugs:
+      enabledFormSlugs.length > 0 ? enabledFormSlugs : ["slabs", "tiles", "blocks"],
+  };
 }
 
 // ---------------------------------------------------------------------------

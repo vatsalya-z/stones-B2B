@@ -118,20 +118,6 @@ export function FilterSidebar({
     [router, pathname, searchParams],
   );
 
-  const updatePriceRange = useCallback(
-    (field: "minPrice" | "maxPrice", value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (value.trim()) {
-        params.set(field, value.trim());
-      } else {
-        params.delete(field);
-      }
-      params.delete("page");
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [router, pathname, searchParams],
-  );
-
   const toggleVerified = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     if (params.get("verified") === "true") {
@@ -153,8 +139,6 @@ export function FilterSidebar({
   }, [router, pathname, searchParams]);
 
   const isVerified = searchParams.get("verified") === "true";
-  const minPrice = searchParams.get("minPrice") ?? "";
-  const maxPrice = searchParams.get("maxPrice") ?? "";
 
   const activeFilterCount =
     getParamValues("category").length +
@@ -164,9 +148,7 @@ export function FilterSidebar({
     getParamValues("origin").length +
     getParamValues("thickness").length +
     getParamValues("stockStatus").length +
-    (isVerified ? 1 : 0) +
-    (minPrice ? 1 : 0) +
-    (maxPrice ? 1 : 0);
+    (isVerified ? 1 : 0);
 
   return (
     <aside className={cn("space-y-6", className)} aria-label="Product filters">
@@ -282,40 +264,6 @@ export function FilterSidebar({
           onChange={updateParams}
         />
       )}
-
-      {/* Wholesale Price Range */}
-      <div className="border-b border-stone-100 pb-5">
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-stone-700">
-          Price Range (₹ / unit)
-        </h3>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <span className="absolute left-2.5 top-2 text-xs text-stone-400">₹</span>
-            <input
-              type="number"
-              min={0}
-              placeholder="Min"
-              defaultValue={minPrice}
-              onBlur={(e) => updatePriceRange("minPrice", e.target.value)}
-              className="w-full rounded-lg border border-stone-300 bg-white py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600"
-              aria-label="Minimum price"
-            />
-          </div>
-          <span className="text-stone-400 text-xs font-medium">to</span>
-          <div className="relative flex-1">
-            <span className="absolute left-2.5 top-2 text-xs text-stone-400">₹</span>
-            <input
-              type="number"
-              min={0}
-              placeholder="Max"
-              defaultValue={maxPrice}
-              onBlur={(e) => updatePriceRange("maxPrice", e.target.value)}
-              className="w-full rounded-lg border border-stone-300 bg-white py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600"
-              aria-label="Maximum price"
-            />
-          </div>
-        </div>
-      </div>
 
       {isMobileDrawer && onCloseDrawer && (
         <div className="pt-2">
@@ -494,33 +442,6 @@ export function ActiveFilterPills() {
     });
   }
 
-  const minPrice = searchParams.get("minPrice");
-  const maxPrice = searchParams.get("maxPrice");
-  if (minPrice && maxPrice) {
-    pills.push({
-      key: "price-range",
-      label: `Price: ₹${minPrice} - ₹${maxPrice}`,
-      onRemove: () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete("minPrice");
-        params.delete("maxPrice");
-        router.push(`${pathname}?${params.toString()}`);
-      },
-    });
-  } else if (minPrice) {
-    pills.push({
-      key: "min-price",
-      label: `Min: ₹${minPrice}`,
-      onRemove: () => removeSingleParam("minPrice"),
-    });
-  } else if (maxPrice) {
-    pills.push({
-      key: "max-price",
-      label: `Max: ₹${maxPrice}`,
-      onRemove: () => removeSingleParam("maxPrice"),
-    });
-  }
-
   if (pills.length === 0) return null;
 
   return (
@@ -580,9 +501,8 @@ export function ProductSortSelector({ currentSort = "featured" }: { currentSort?
 
   const sortOptions = [
     { value: "featured", label: "Featured / Newest" },
-    { value: "price_asc", label: "Price: Low to High" },
-    { value: "price_desc", label: "Price: High to Low" },
     { value: "newest", label: "Recently Published" },
+    { value: "name_asc", label: "Name: A to Z" },
   ];
 
   const currentLabel =

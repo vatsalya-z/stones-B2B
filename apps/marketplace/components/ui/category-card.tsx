@@ -6,8 +6,10 @@ import { getCategoryFallbackImage } from "@/lib/images";
 export interface CategoryCardProps {
   name: string;
   slug: string;
+  href?: string;
   description: string | null;
   imageUrl: string | null;
+  imageAlt?: string | null;
   productCount?: number;
 }
 
@@ -28,15 +30,17 @@ function CategoryFallback({ name }: { name: string }) {
 export function CategoryCard({
   name,
   slug,
+  href,
   description,
   imageUrl,
+  imageAlt,
   productCount,
 }: CategoryCardProps) {
   const resolvedImage = imageUrl || getCategoryFallbackImage(slug);
 
   return (
     <Link
-      href={`/categories/${slug}`}
+      href={href || `/categories/${slug}`}
       className={cn(
         "group block overflow-hidden rounded-xl border border-stone-200 bg-white shadow-card",
         "transition-all duration-300 hover:shadow-card-hover hover:scale-[1.01]",
@@ -48,7 +52,7 @@ export function CategoryCard({
         {resolvedImage ? (
           <Image
             src={resolvedImage}
-            alt={`${name} natural stone`}
+            alt={imageAlt || `${name} natural stone`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"

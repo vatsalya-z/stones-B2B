@@ -207,7 +207,9 @@ export interface Database {
           slug: string;
           description: string | null;
           image_url: string | null;
+          image_alt: string | null;
           is_active: boolean;
+          is_featured: boolean;
           display_order: number;
           seo_title: string | null;
           seo_description: string | null;
@@ -221,7 +223,9 @@ export interface Database {
           slug: string;
           description?: string | null;
           image_url?: string | null;
+          image_alt?: string | null;
           is_active?: boolean;
+          is_featured?: boolean;
           display_order?: number;
           seo_title?: string | null;
           seo_description?: string | null;
@@ -234,10 +238,73 @@ export interface Database {
           slug?: string;
           description?: string | null;
           image_url?: string | null;
+          image_alt?: string | null;
           is_active?: boolean;
+          is_featured?: boolean;
           display_order?: number;
           seo_title?: string | null;
           seo_description?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      product_forms: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          description: string | null;
+          display_order: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          description?: string | null;
+          display_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          slug?: string;
+          name?: string;
+          description?: string | null;
+          display_order?: number;
+          is_active?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      category_product_forms: {
+        Row: {
+          id: string;
+          category_id: string;
+          form_id: string;
+          is_enabled: boolean;
+          display_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_id: string;
+          form_id: string;
+          is_enabled?: boolean;
+          display_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string;
+          form_id?: string;
+          is_enabled?: boolean;
+          display_order?: number;
           updated_at?: string;
         };
         Relationships: [];
@@ -248,6 +315,8 @@ export interface Database {
           id: string;
           seller_id: string;
           category_id: string | null;
+          form_id: string | null;
+          form_attributes: Json;
           name: string;
           slug: string;
           sku: string | null;
@@ -283,6 +352,8 @@ export interface Database {
         Insert: {
           seller_id: string;
           category_id?: string | null;
+          form_id?: string | null;
+          form_attributes?: Json;
           name: string;
           slug: string;
           sku?: string | null;
@@ -305,6 +376,8 @@ export interface Database {
         };
         Update: {
           category_id?: string | null;
+          form_id?: string | null;
+          form_attributes?: Json;
           name?: string;
           slug?: string;
           sku?: string | null;
@@ -1394,6 +1467,13 @@ export interface Database {
           approved_products: number;
           enquiries: number;
         }>;
+      };
+      admin_reassign_category_products: {
+        Args: {
+          _from_category_id: string;
+          _to_category_id: string;
+        };
+        Returns: number;
       };
       accept_quotation_and_create_order: {
         Args: {

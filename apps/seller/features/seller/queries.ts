@@ -426,14 +426,48 @@ export async function getSellerVerificationDocuments(
 // Category Hierarchy Helper (for Product Management & Onboarding)
 // ---------------------------------------------------------------------------
 
+export interface ProductFormOption {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+}
+
 export interface CategoryHierarchy {
   all: CategoryItem[];
   parents: CategoryItem[];
   childrenByParent: Record<string, CategoryItem[]>;
+  forms: ProductFormOption[];
+  enabledFormsByCategory: Record<string, string[]>;
 }
 
+const DEFAULT_ARTICLES_ENABLED_SLUGS = new Set([
+  "agra-red",
+  "dholpur-beige",
+  "dholpur-pink",
+  "bansi-pink",
+  "mint",
+  "teak",
+  "rainbow",
+  "jodhpur-pink",
+  "jaisalmer-yellow",
+]);
+
 export async function getAllCategoriesHierarchy(): Promise<CategoryHierarchy> {
-  const all = await getActiveCategories();
+  const supabase = await getSupabaseServerClient();
+  const [all, formsRes, linksRes] = await Promise.all([
+    getActiveCategories(),
+    supabase
+      .from("product_forms")
+      .select("id, slug, name, description")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true }),
+    supabase
+      .from("category_product_forms")
+      .select("category_id, form_id, is_enabled")
+      .eq("is_enabled", true),
+  ]);
+
   const parents = all.filter((c) => !c.parent_id);
   const childrenByParent: Record<string, CategoryItem[]> = {};
   for (const cat of all) {
@@ -443,7 +477,40 @@ export async function getAllCategoriesHierarchy(): Promise<CategoryHierarchy> {
       childrenByParent[cat.parent_id] = list;
     }
   }
-  return { all, parents, childrenByParent };
+
+  const forms: ProductFormOption[] =
+    formsRes.data && formsRes.data.length > 0
+      ? formsRes.data
+      : [
+          { id: "slabs", slug: "slabs", name: "Slabs", description: "Gangsaw & cutter slabs" },
+          { id: "tiles", slug: "tiles", name: "Tiles", description: "Calibrated floor & wall tiles" },
+          { id: "blocks", slug: "blocks", name: "Blocks", description: "Rough & dressed quarry blocks" },
+          { id: "articles", slug: "articles", name: "Articles", description: "Carved architectural articles" },
+        ];
+
+  const formIdToSlug = new Map<string, string>();
+  forms.forEach((f) => formIdToSlug.set(f.id, f.slug));
+
+  const enabledFormsByCategory: Record<string, string[]> = {};
+  if (linksRes.data && linksRes.data.length > 0) {
+    for (const row of linksRes.data) {
+      const slug = formIdToSlug.get(row.form_id);
+      if (!slug) continue;
+      const list = enabledFormsByCategory[row.category_id] ?? [];
+      list.push(slug);
+      enabledFormsByCategory[row.category_id] = list;
+    }
+  }
+
+  for (const cat of all) {
+    if (!enabledFormsByCategory[cat.id]) {
+      enabledFormsByCategory[cat.id] = DEFAULT_ARTICLES_ENABLED_SLUGS.has(cat.slug)
+        ? ["slabs", "tiles", "blocks", "articles"]
+        : ["slabs", "tiles", "blocks"];
+    }
+  }
+
+  return { all, parents, childrenByParent, forms, enabledFormsByCategory };
 }
 
 // ---------------------------------------------------------------------------

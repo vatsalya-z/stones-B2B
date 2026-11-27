@@ -250,6 +250,9 @@ export const categoryImageUrlSchema = z
   )
   .transform((v) => (v && v.length > 0 ? v : null));
 
+export const PRODUCT_FORM_SLUGS = ["slabs", "tiles", "blocks", "articles"] as const;
+export type ProductFormSlug = (typeof PRODUCT_FORM_SLUGS)[number];
+
 export const categoryFormSchema = z.object({
   id: uuid.optional().nullable().transform((v) => v ?? null),
   parentId: uuid.optional().nullable().transform((v) => v ?? null),
@@ -267,7 +270,9 @@ export const categoryFormSchema = z.object({
     .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens only"),
   description: nullableText(500),
   imageUrl: categoryImageUrlSchema,
+  imageAlt: nullableText(200).optional().default(null),
   isActive: z.boolean().default(true),
+  isFeatured: z.boolean().default(false),
   displayOrder: z.coerce
     .number()
     .int("Order must be a whole number")
@@ -276,12 +281,25 @@ export const categoryFormSchema = z.object({
     .default(0),
   seoTitle: nullableText(160),
   seoDescription: nullableText(320),
+  enabledFormSlugs: z
+    .array(z.enum(PRODUCT_FORM_SLUGS))
+    .default(["slabs", "tiles", "blocks"]),
 });
 export type CategoryFormInput = z.input<typeof categoryFormSchema>;
 export type CategoryFormData = z.output<typeof categoryFormSchema>;
 
 export const deleteCategorySchema = z.object({ categoryId: uuid });
 export type DeleteCategoryInput = z.input<typeof deleteCategorySchema>;
+
+export const reassignCategoryProductsSchema = z
+  .object({
+    fromCategoryId: uuid,
+    toCategoryId: uuid,
+  })
+  .refine((data) => data.fromCategoryId !== data.toCategoryId, {
+    message: "Source and target categories must be different.",
+  });
+export type ReassignCategoryProductsInput = z.input<typeof reassignCategoryProductsSchema>;
 
 // ---------------------------------------------------------------------------
 // Admin users / roles (super_admin only)

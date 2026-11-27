@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { cn } from "@stone/ui";
+
+interface SuggestionItem {
+  label: string;
+  href: string;
+  kind: "category" | "variety" | "form" | "product";
+}
 
 export interface SearchBarProps {
   variant?: "hero" | "compact";
@@ -19,7 +26,10 @@ export function SearchBar({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(defaultValue || searchParams.get("q") || "");
+  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
+  const [openSuggestions, setOpenSuggestions] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suggestAbortRef = useRef<AbortController | null>(null);
 
   const pushSearch = useCallback(
     (query: string) => {
@@ -46,6 +56,24 @@ export function SearchBar({
       debounceRef.current = setTimeout(() => {
         pushSearch(newValue);
       }, 300);
+
+      if (suggestAbortRef.current) suggestAbortRef.current.abort();
+      if (newValue.trim().length >= 2) {
+        const controller = new AbortController();
+        suggestAbortRef.current = controller;
+        fetch(`/api/search/suggestions?q=${encodeURIComponent(newValue.trim())}`, {
+          signal: controller.signal,
+        })
+          .then((r) => (r.ok ? r.json() : { suggestions: [] }))
+          .then((data: { suggestions?: SuggestionItem[] }) => {
+            setSuggestions(data.suggestions ?? []);
+            setOpenSuggestions(true);
+          })
+          .catch(() => undefined);
+      } else {
+        setSuggestions([]);
+        setOpenSuggestions(false);
+      }
     },
     [pushSearch],
   );
@@ -146,6 +174,27 @@ export function SearchBar({
             <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
           </svg>
         </button>
+      )}
+
+      {openSuggestions && suggestions.length > 0 && (
+        <div
+          className="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-xl border border-stone-200 bg-white py-1.5 shadow-xl"
+          role="listbox"
+        >
+          {suggestions.map((item) => (
+            <Link
+              key={`${item.kind}-${item.href}`}
+              href={item.href}
+              onClick={() => setOpenSuggestions(false)}
+              className="flex items-center justify-between px-3.5 py-2 text-xs text-stone-800 hover:bg-amber-50 hover:text-amber-900 transition-colors"
+            >
+              <span className="font-medium truncate">{item.label}</span>
+              <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-stone-500 shrink-0">
+                {item.kind}
+              </span>
+            </Link>
+          ))}
+        </div>
       )}
     </form>
   );

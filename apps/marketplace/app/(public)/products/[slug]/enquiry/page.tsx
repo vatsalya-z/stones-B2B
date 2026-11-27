@@ -95,10 +95,9 @@ export default async function ProductEnquiryPage({ params }: EnquiryPageProps) {
               </span>
               {!isShowcase && product.seller.verification_status === "verified" && <VerifiedBadge />}
             </div>
-            {product.price !== null && (
-              <p className="mt-1 text-xs font-semibold text-stone-900">
-                ₹{product.price.toLocaleString("en-IN")} / {product.unit}
-                {isShowcase && <span className="text-stone-400 font-normal ml-1">(Benchmark)</span>}
+            {product.minimum_order_quantity && (
+              <p className="mt-1 text-xs font-medium text-stone-600">
+                MOQ: {product.minimum_order_quantity} {product.unit}
               </p>
             )}
           </div>

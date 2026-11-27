@@ -9,7 +9,7 @@ export default async function AdminNewCategoryPage() {
   const ctx = await getAdminContext();
   const allCategories = await getAdminCategories(ctx);
 
-  const availableParents = allCategories.map((c) => ({ id: c.id, name: c.name }));
+  const availableParents = allCategories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }));
 
   return (
     <div className="space-y-6">

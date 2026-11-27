@@ -82,17 +82,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           url: `https://stonesdekho.com/products/${p.slug}`,
           image: p.primaryImage || "https://stonesdekho.com/images/products/makrana-white-marble.jpg",
           material: p.materialType,
-          offers: p.price
-            ? {
-                "@type": "Offer",
-                price: p.price,
-                priceCurrency: p.currency,
-                availability:
-                  p.stockStatus === "in_stock"
-                    ? "https://schema.org/InStock"
-                    : "https://schema.org/PreOrder",
-              }
-            : undefined,
         },
       })),
     },

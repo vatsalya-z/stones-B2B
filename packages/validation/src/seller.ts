@@ -237,6 +237,29 @@ export const productSpecificationItemSchema = z.object({
     .max(500, "Specification value max 500 chars"),
 });
 
+export const PRODUCT_FORM_TYPES = ["slabs", "tiles", "blocks", "articles"] as const;
+export type ProductFormType = (typeof PRODUCT_FORM_TYPES)[number];
+
+export const productFormAttributesSchema = z
+  .object({
+    // Slabs
+    slabDimensions: optionalTrimmed(120),
+    surfaceDetails: optionalTrimmed(240),
+    // Tiles
+    piecesPerBox: optionalNonNegativeInt(10000),
+    // Blocks
+    blockDimensions: optionalTrimmed(120),
+    approximateWeight: optionalTrimmed(80),
+    blockGrade: optionalTrimmed(80),
+    // Articles
+    articleType: optionalTrimmed(120),
+    carvingDetails: optionalTrimmed(500),
+    articleDimensions: optionalTrimmed(120),
+    customizationAvailable: z.boolean().optional(),
+  })
+  .default({});
+export type ProductFormAttributes = z.output<typeof productFormAttributesSchema>;
+
 export const productFormSchema = z
   .object({
     // Section A: Basic Information
@@ -258,6 +281,18 @@ export const productFormSchema = z
       .optional()
       .or(z.literal(""))
       .transform((v) => (v && v.length > 0 ? v : null)),
+    formId: z
+      .string()
+      .uuid("Invalid product form")
+      .optional()
+      .or(z.literal(""))
+      .transform((v) => (v && v.length > 0 ? v : null)),
+    formSlug: z
+      .enum(PRODUCT_FORM_TYPES)
+      .optional()
+      .nullable()
+      .transform((v) => v ?? null),
+    formAttributes: productFormAttributesSchema,
     description: optionalTrimmed(10000),
     materialType: optionalTrimmed(100),
     stoneOrigin: optionalTrimmed(150),
@@ -272,10 +307,11 @@ export const productFormSchema = z
     surfaceTreatment: optionalTrimmed(300),
     customSpecifications: z.array(productSpecificationItemSchema).max(30).default([]),
 
-    // Section C: Pricing
-    priceType: z.enum(PRICE_TYPES).default("fixed"),
+    // Section C: Commercial Terms (public price removed — defaults to on_request)
+    priceType: z.enum(PRICE_TYPES).default("on_request"),
     price: z
       .union([z.number(), z.string(), z.null(), z.undefined()])
+      .optional()
       .transform((val, ctx) => {
         if (val === null || val === undefined || val === "") return null;
         const n = typeof val === "number" ? val : Number(String(val).trim());

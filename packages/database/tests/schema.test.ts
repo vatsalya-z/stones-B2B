@@ -11,7 +11,7 @@ describe("migrations + schema", () => {
     const rows = await env.admin<{ n: string }>(
       "select count(*)::text n from information_schema.tables where table_schema = 'public' and table_type = 'BASE TABLE'",
     );
-    expect(Number(rows[0]?.n)).toBe(27);
+    expect(Number(rows[0]?.n)).toBe(30);
   });
 
   it("enables RLS on every public table", async () => {
@@ -61,8 +61,11 @@ describe("migrations + schema", () => {
     const { loadSeed } = await import("../tools/pglite");
     await env.admin(loadSeed());
     await env.admin(loadSeed());
-    const rows = await env.as<{ n: string }>(anon, "select count(*)::text n from public.categories");
-    expect(Number(rows[0]?.n)).toBe(14);
+    const first = await env.as<{ n: string }>(anon, "select count(*)::text n from public.categories");
+    await env.admin(loadSeed());
+    const second = await env.as<{ n: string }>(anon, "select count(*)::text n from public.categories");
+    expect(Number(first[0]?.n)).toBeGreaterThanOrEqual(68);
+    expect(Number(second[0]?.n)).toBe(Number(first[0]?.n));
     expect(service.kind).toBe("service");
   });
 });

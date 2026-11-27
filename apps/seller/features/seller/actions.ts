@@ -486,11 +486,42 @@ export async function createSellerProductAction(
   const finalSlug = await generateUniqueProductSlug(values.slug || values.name);
   const effectivePrice = values.priceType === "on_request" ? null : values.price;
 
+  let resolvedFormId: string | null = values.formId ?? null;
+  if (!resolvedFormId && values.formSlug) {
+    const { data: formRow } = await supabase
+      .from("product_forms")
+      .select("id")
+      .eq("slug", values.formSlug)
+      .maybeSingle();
+    resolvedFormId = formRow?.id ?? null;
+  }
+
+  if (effectiveCategoryId && resolvedFormId) {
+    const { data: formLinks } = await supabase
+      .from("category_product_forms")
+      .select("form_id, is_enabled")
+      .eq("category_id", effectiveCategoryId);
+
+    if (formLinks && formLinks.length > 0) {
+      const isAllowed = formLinks.some(
+        (l) => l.form_id === resolvedFormId && l.is_enabled,
+      );
+      if (!isAllowed) {
+        return {
+          success: false,
+          error: "Selected product form is not enabled for this stone variety.",
+        };
+      }
+    }
+  }
+
   const { data: product, error } = await supabase
     .from("products")
     .insert({
       seller_id: seller.id,
       category_id: effectiveCategoryId,
+      form_id: resolvedFormId,
+      form_attributes: values.formAttributes ?? {},
       name: values.name,
       slug: finalSlug,
       sku: values.sku,
@@ -616,10 +647,41 @@ export async function updateSellerProductAction(
       : await generateUniqueProductSlug(desiredSlug, existing.id);
   const effectivePrice = values.priceType === "on_request" ? null : values.price;
 
+  let resolvedFormId: string | null = values.formId ?? null;
+  if (!resolvedFormId && values.formSlug) {
+    const { data: formRow } = await supabase
+      .from("product_forms")
+      .select("id")
+      .eq("slug", values.formSlug)
+      .maybeSingle();
+    resolvedFormId = formRow?.id ?? null;
+  }
+
+  if (effectiveCategoryId && resolvedFormId) {
+    const { data: formLinks } = await supabase
+      .from("category_product_forms")
+      .select("form_id, is_enabled")
+      .eq("category_id", effectiveCategoryId);
+
+    if (formLinks && formLinks.length > 0) {
+      const isAllowed = formLinks.some(
+        (l) => l.form_id === resolvedFormId && l.is_enabled,
+      );
+      if (!isAllowed) {
+        return {
+          success: false,
+          error: "Selected product form is not enabled for this stone variety.",
+        };
+      }
+    }
+  }
+
   const { data: updated, error: updateErr } = await supabase
     .from("products")
     .update({
       category_id: effectiveCategoryId,
+      form_id: resolvedFormId,
+      form_attributes: values.formAttributes ?? {},
       name: values.name,
       slug: finalSlug,
       sku: values.sku,

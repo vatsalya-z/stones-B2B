@@ -30,7 +30,7 @@ export default async function NewSellerProductPage() {
           Add Natural Stone Product
         </h1>
         <p className="text-sm text-stone-600">
-          Complete specifications, trade pricing, inventory lead times, and Ultra-HD
+          Select stone category, variety, product form, specifications, and Ultra-HD
           photographs.
         </p>
       </div>

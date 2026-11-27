@@ -30,9 +30,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/makrana-white-marble.jpg",
     tags: ["Slab", "Block", "Custom Size"],
-    price: 420,
-    unit: "sq_ft",
-    currency: "INR",
   },
   {
     id: "curated-2",
@@ -44,9 +41,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/black-galaxy-granite.jpg",
     tags: ["Slab", "Tile", "Countertop"],
-    price: 280,
-    unit: "sq_ft",
-    currency: "INR",
   },
   {
     id: "curated-3",
@@ -58,9 +52,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/dholpur-beige-sandstone.jpg",
     tags: ["Slab", "Tile", "Project Supply"],
-    price: 110,
-    unit: "sq_ft",
-    currency: "INR",
   },
   {
     id: "curated-4",
@@ -72,9 +63,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/rajasthan-green-marble.jpg",
     tags: ["Slab", "Block", "Custom Size"],
-    price: 650,
-    unit: "sq_ft",
-    currency: "INR",
   },
   {
     id: "curated-5",
@@ -86,9 +74,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/kota-blue-limestone.jpg",
     tags: ["Slab", "Tile", "Paver"],
-    price: 55,
-    unit: "sq_ft",
-    currency: "INR",
   },
   {
     id: "curated-6",
@@ -100,9 +85,6 @@ const CURATED_MATERIALS = [
     isVerifiedSeller: true,
     primaryImage: "/images/products/classic-travertine-slab.jpg",
     tags: ["Slab", "Tile", "Wall Cladding"],
-    price: 320,
-    unit: "sq_ft",
-    currency: "INR",
   },
 ];
 
@@ -122,9 +104,6 @@ export function FeaturedMaterialsSection({ initialProducts = [] }: FeaturedMater
       isVerifiedSeller: Boolean(p.isVerifiedSeller),
       primaryImage: p.primaryImage || "/images/products/makrana-white-marble.jpg",
       tags: [p.materialType || "Stone", p.finish || "Polished", "Custom Lot"].filter(Boolean),
-      price: p.price,
-      unit: p.unit || "sq_ft",
-      currency: p.currency || "INR",
     }));
 
     // If DB has fewer than 6, blend curated items without duplicate slugs

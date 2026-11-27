@@ -5,9 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardBody, CardHeader } from "@stone/ui";
 import { slugify } from "@stone/utils";
-import type { PriceType, VerificationStatus } from "@stone/types";
-import type { CatalogUnit, StockStatus } from "@stone/validation";
-import type { CategoryHierarchy, SellerProductFull } from "@/features/seller/queries";
+import type { VerificationStatus } from "@stone/types";
+import type {
+  CatalogUnit,
+  ProductFormType,
+  StockStatus,
+} from "@stone/validation";
+import type {
+  CategoryHierarchy,
+  SellerProductFull,
+} from "@/features/seller/queries";
 import {
   changeProductStatusAction,
   createSellerProductAction,
@@ -15,11 +22,9 @@ import {
 } from "@/features/seller/actions";
 import {
   extractProductSpecifications,
-  PRICE_TYPE_LABELS,
   STOCK_STATUS_LABELS,
   STONE_COLOUR_SUGGESTIONS,
   STONE_FINISH_SUGGESTIONS,
-  STONE_MATERIAL_SUGGESTIONS,
   UNIT_LABELS,
   type ModerationStatus,
 } from "@/features/seller/seller-meta";
@@ -37,6 +42,15 @@ export interface ProductFormProps {
   initialProduct?: SellerProductFull | null;
 }
 
+const STEP_LABELS = [
+  { id: 1, title: "Category" },
+  { id: 2, title: "Variety" },
+  { id: 3, title: "Product Form" },
+  { id: 4, title: "Specifications" },
+  { id: 5, title: "Images" },
+  { id: 6, title: "Review & Publish" },
+] as const;
+
 export function ProductForm({
   mode,
   categories,
@@ -48,7 +62,6 @@ export function ProductForm({
   const uploaderRef = useRef<ProductImageUploaderHandle | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Resolve initial parent category & subcategory if editing
   const initialCategoryResolution = useMemo(() => {
     const cid = initialProduct?.category_id;
     if (!cid) return { parentId: "", subId: "" };
@@ -60,12 +73,41 @@ export function ProductForm({
     return { parentId: matched.id, subId: "" };
   }, [categories.all, initialProduct?.category_id]);
 
+  const initialFormSlug = useMemo<ProductFormType>(() => {
+    const fid = initialProduct?.form_id;
+    if (fid) {
+      const matched = categories.forms.find((f) => f.id === fid || f.slug === fid);
+      if (matched && ["slabs", "tiles", "blocks", "articles"].includes(matched.slug)) {
+        return matched.slug as ProductFormType;
+      }
+    }
+    return "slabs";
+  }, [categories.forms, initialProduct?.form_id]);
+
+  const initialFormAttrs = useMemo(() => {
+    const raw = (initialProduct?.form_attributes ?? {}) as Record<string, unknown>;
+    return {
+      slabDimensions: typeof raw.slabDimensions === "string" ? raw.slabDimensions : "",
+      surfaceDetails: typeof raw.surfaceDetails === "string" ? raw.surfaceDetails : "",
+      piecesPerBox:
+        typeof raw.piecesPerBox === "number" || typeof raw.piecesPerBox === "string"
+          ? String(raw.piecesPerBox)
+          : "",
+      blockDimensions: typeof raw.blockDimensions === "string" ? raw.blockDimensions : "",
+      approximateWeight: typeof raw.approximateWeight === "string" ? raw.approximateWeight : "",
+      blockGrade: typeof raw.blockGrade === "string" ? raw.blockGrade : "",
+      articleType: typeof raw.articleType === "string" ? raw.articleType : "",
+      carvingDetails: typeof raw.carvingDetails === "string" ? raw.carvingDetails : "",
+      articleDimensions: typeof raw.articleDimensions === "string" ? raw.articleDimensions : "",
+      customizationAvailable: Boolean(raw.customizationAvailable),
+    };
+  }, [initialProduct?.form_attributes]);
+
   const extractedSpecs = useMemo(
     () => extractProductSpecifications(initialProduct?.specifications ?? []),
     [initialProduct?.specifications],
   );
 
-  // Active product ID (transitions from null -> created ID on create flow)
   const [activeProductId, setActiveProductId] = useState<string | null>(
     initialProduct?.id ?? null,
   );
@@ -73,32 +115,28 @@ export function ProductForm({
     initialProduct?.moderation_status ?? "draft",
   );
 
-  // Section A: Basic Information
-  const [name, setName] = useState(initialProduct?.name ?? "");
-  const [sku, setSku] = useState(initialProduct?.sku ?? "");
+  // Step 1-3: Guided Taxonomy Selection
   const [categoryId, setCategoryId] = useState(initialCategoryResolution.parentId);
   const [subcategoryId, setSubcategoryId] = useState(initialCategoryResolution.subId);
+  const [varietyFilter, setVarietyFilter] = useState("");
+  const [formSlug, setFormSlug] = useState<ProductFormType>(initialFormSlug);
+
+  // Step 4: Common & Form-Specific Information
+  const [name, setName] = useState(initialProduct?.name ?? "");
+  const [sku, setSku] = useState(initialProduct?.sku ?? "");
   const [description, setDescription] = useState(initialProduct?.description ?? "");
   const [materialType, setMaterialType] = useState(initialProduct?.material_type ?? "");
   const [stoneOrigin, setStoneOrigin] = useState(initialProduct?.stone_origin ?? "");
-
-  // Section B: Stone Specifications
   const [colour, setColour] = useState(initialProduct?.colour ?? "");
   const [finish, setFinish] = useState(initialProduct?.finish ?? "");
   const [thickness, setThickness] = useState(
-    initialProduct?.thickness !== null && initialProduct?.thickness !== undefined
-      ? String(initialProduct.thickness)
-      : "",
+    initialProduct?.thickness != null ? String(initialProduct.thickness) : "",
   );
   const [length, setLength] = useState(
-    initialProduct?.length !== null && initialProduct?.length !== undefined
-      ? String(initialProduct.length)
-      : "",
+    initialProduct?.length != null ? String(initialProduct.length) : "",
   );
   const [width, setWidth] = useState(
-    initialProduct?.width !== null && initialProduct?.width !== undefined
-      ? String(initialProduct.width)
-      : "",
+    initialProduct?.width != null ? String(initialProduct.width) : "",
   );
   const [availableSizes, setAvailableSizes] = useState(extractedSpecs.availableSizes);
   const [surfaceTreatment, setSurfaceTreatment] = useState(extractedSpecs.surfaceTreatment);
@@ -106,51 +144,100 @@ export function ProductForm({
     extractedSpecs.customSpecifications,
   );
 
-  // Section C: Pricing
-  const [priceType, setPriceType] = useState<PriceType>(
-    initialProduct?.price_type ?? "fixed",
+  // Form-specific attributes
+  const [slabDimensions, setSlabDimensions] = useState(initialFormAttrs.slabDimensions);
+  const [surfaceDetails, setSurfaceDetails] = useState(initialFormAttrs.surfaceDetails);
+  const [piecesPerBox, setPiecesPerBox] = useState(initialFormAttrs.piecesPerBox);
+  const [blockDimensions, setBlockDimensions] = useState(initialFormAttrs.blockDimensions);
+  const [approximateWeight, setApproximateWeight] = useState(initialFormAttrs.approximateWeight);
+  const [blockGrade, setBlockGrade] = useState(initialFormAttrs.blockGrade);
+  const [articleType, setArticleType] = useState(initialFormAttrs.articleType);
+  const [carvingDetails, setCarvingDetails] = useState(initialFormAttrs.carvingDetails);
+  const [articleDimensions, setArticleDimensions] = useState(initialFormAttrs.articleDimensions);
+  const [customizationAvailable, setCustomizationAvailable] = useState(
+    initialFormAttrs.customizationAvailable,
   );
-  const [price, setPrice] = useState(
-    initialProduct?.price !== null && initialProduct?.price !== undefined
-      ? String(initialProduct.price)
-      : "",
-  );
-  const [currency, setCurrency] = useState(initialProduct?.currency ?? "INR");
+
+  // Commercial availability (no public price list)
   const [unit, setUnit] = useState<CatalogUnit>(
     (initialProduct?.unit as CatalogUnit) ?? "sq_ft",
   );
   const [minimumOrderQuantity, setMinimumOrderQuantity] = useState(
-    initialProduct?.minimum_order_quantity !== null &&
-      initialProduct?.minimum_order_quantity !== undefined
+    initialProduct?.minimum_order_quantity != null
       ? String(initialProduct.minimum_order_quantity)
       : "",
   );
-
-  // Section D: Inventory
   const [stockStatus, setStockStatus] = useState<StockStatus>(
     initialProduct?.stock_status ?? "in_stock",
   );
   const [availableQuantity, setAvailableQuantity] = useState(extractedSpecs.availableQuantity);
   const [leadTime, setLeadTime] = useState(
-    initialProduct?.lead_time !== null && initialProduct?.lead_time !== undefined
-      ? String(initialProduct.lead_time)
-      : "",
+    initialProduct?.lead_time != null ? String(initialProduct.lead_time) : "",
   );
   const [packagingInfo, setPackagingInfo] = useState(extractedSpecs.packagingInfo);
 
-  // Section F: SEO
+  // SEO
   const [seoTitle, setSeoTitle] = useState(extractedSpecs.seoTitle);
   const [seoDescription, setSeoDescription] = useState(extractedSpecs.seoDescription);
   const [slug, setSlug] = useState(initialProduct?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(initialProduct?.slug));
 
-  // Feedback
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
 
-  const subcategories = categoryId ? categories.childrenByParent[categoryId] ?? [] : [];
+  const selectedParent = categories.parents.find((c) => c.id === categoryId) ?? null;
+  const varieties = useMemo(
+    () => (categoryId ? categories.childrenByParent[categoryId] ?? [] : []),
+    [categories.childrenByParent, categoryId],
+  );
+  const filteredVarieties = useMemo(() => {
+    const q = varietyFilter.trim().toLowerCase();
+    if (!q) return varieties;
+    return varieties.filter((v) => v.name.toLowerCase().includes(q));
+  }, [varieties, varietyFilter]);
+
+  const selectedVariety = varieties.find((v) => v.id === subcategoryId) ?? null;
+  const effectiveCategoryId = subcategoryId || categoryId || "";
+
+  const allowedFormSlugs = useMemo(() => {
+    if (!effectiveCategoryId) return ["slabs", "tiles", "blocks"];
+    return categories.enabledFormsByCategory[effectiveCategoryId] ?? ["slabs", "tiles", "blocks"];
+  }, [categories.enabledFormsByCategory, effectiveCategoryId]);
+
+  const visibleForms = useMemo(
+    () => categories.forms.filter((f) => allowedFormSlugs.includes(f.slug)),
+    [categories.forms, allowedFormSlugs],
+  );
+
+  const activeFormOption =
+    visibleForms.find((f) => f.slug === formSlug) ?? visibleForms[0] ?? null;
+
   const isVerifiedSeller = sellerVerificationStatus === "verified";
+
+  const handleSelectCategory = (nextParentId: string) => {
+    setCategoryId(nextParentId);
+    setSubcategoryId("");
+    setVarietyFilter("");
+    const parentObj = categories.parents.find((p) => p.id === nextParentId);
+    if (parentObj && !materialType) {
+      setMaterialType(parentObj.name);
+    }
+    const nextAllowed =
+      categories.enabledFormsByCategory[nextParentId] ?? ["slabs", "tiles", "blocks"];
+    if (!nextAllowed.includes(formSlug)) {
+      setFormSlug((nextAllowed[0] as ProductFormType) ?? "slabs");
+    }
+  };
+
+  const handleSelectVariety = (nextVarietyId: string) => {
+    setSubcategoryId(nextVarietyId);
+    const nextAllowed =
+      categories.enabledFormsByCategory[nextVarietyId] ?? ["slabs", "tiles", "blocks"];
+    if (!nextAllowed.includes(formSlug)) {
+      setFormSlug((nextAllowed[0] as ProductFormType) ?? "slabs");
+    }
+  };
 
   const handleNameChange = (nextName: string) => {
     setName(nextName);
@@ -178,17 +265,42 @@ export function ProductForm({
     setFieldErrors({});
     setSuccessBanner(null);
 
+    if (!categoryId) {
+      setErrorMessage("Step 1: Please select a Stone Category first.");
+      return;
+    }
+
     const cleanedCustomSpecs = customSpecs.filter(
       (s) => s.name.trim().length > 0 || s.value.trim().length > 0,
     );
+
+    const activeForm = visibleForms.find((f) => f.slug === formSlug) ?? visibleForms[0];
+    const isUuid =
+      activeForm?.id &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(activeForm.id);
 
     const payload = {
       name,
       sku,
       categoryId,
       subcategoryId,
+      formId: isUuid ? activeForm.id : undefined,
+      formSlug: (activeForm?.slug as ProductFormType) ?? formSlug,
+      formAttributes: {
+        slabDimensions: formSlug === "slabs" ? slabDimensions : undefined,
+        surfaceDetails: formSlug === "slabs" ? surfaceDetails : undefined,
+        piecesPerBox: formSlug === "tiles" ? piecesPerBox : undefined,
+        blockDimensions: formSlug === "blocks" ? blockDimensions : undefined,
+        approximateWeight: formSlug === "blocks" ? approximateWeight : undefined,
+        blockGrade: formSlug === "blocks" ? blockGrade : undefined,
+        articleType: formSlug === "articles" ? articleType : undefined,
+        carvingDetails: formSlug === "articles" ? carvingDetails : undefined,
+        articleDimensions: formSlug === "articles" ? articleDimensions : undefined,
+        customizationAvailable:
+          formSlug === "articles" ? customizationAvailable : undefined,
+      },
       description,
-      materialType,
+      materialType: materialType || selectedParent?.name || "",
       stoneOrigin,
       colour,
       finish,
@@ -198,9 +310,9 @@ export function ProductForm({
       availableSizes,
       surfaceTreatment,
       customSpecifications: cleanedCustomSpecs,
-      priceType,
-      price: priceType === "on_request" ? null : price,
-      currency,
+      priceType: "on_request" as const,
+      price: null,
+      currency: "INR",
       unit,
       minimumOrderQuantity,
       stockStatus,
@@ -230,7 +342,7 @@ export function ProductForm({
           const uploadRes = await uploaderRef.current.uploadQueuedToProduct(createdId);
           if (!uploadRes.allSucceeded) {
             setErrorMessage(
-              "Product details were saved, but one or more images failed to upload. Use the Retry button in Section E below.",
+              "Product details were saved, but one or more images failed to upload. Use Retry in Step 5.",
             );
             return;
           }
@@ -253,7 +365,7 @@ export function ProductForm({
           const uploadRes = await uploaderRef.current.uploadQueuedToProduct(activeProductId);
           if (!uploadRes.allSucceeded) {
             setErrorMessage(
-              "Product details updated, but one or more staged images failed to upload. Retry below.",
+              "Product details updated, but one or more staged images failed to upload. Retry in Step 5.",
             );
             return;
           }
@@ -312,7 +424,35 @@ export function ProductForm({
 
   return (
     <div className="space-y-6">
-      {/* Workflow & Moderation Status Banner */}
+      {/* Guided Stepper Progress Bar */}
+      <div className="rounded-xl border border-stone-200 bg-white p-4 shadow-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+          {STEP_LABELS.map((step) => {
+            const complete =
+              (step.id === 1 && Boolean(categoryId)) ||
+              (step.id === 2 && (Boolean(subcategoryId) || (Boolean(categoryId) && varieties.length === 0))) ||
+              (step.id === 3 && Boolean(activeFormOption)) ||
+              (step.id === 4 && name.trim().length >= 3);
+            return (
+              <div
+                key={step.id}
+                className={`rounded-lg border px-2.5 py-2 text-xs ${
+                  complete
+                    ? "border-emerald-200 bg-emerald-50/70 text-emerald-900"
+                    : "border-stone-200 bg-stone-50 text-stone-600"
+                }`}
+              >
+                <span className="block text-[10px] font-bold uppercase tracking-wider opacity-75">
+                  Step {step.id}
+                </span>
+                <span className="font-semibold">{step.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Moderation Status Banner */}
       <div className="rounded-xl border border-stone-200 bg-white p-4 shadow-xs sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2.5">
@@ -353,35 +493,13 @@ export function ProductForm({
           )}
         </div>
 
-        {moderationStatus === "rejected" && initialProduct?.rejection_reason && (
-          <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-800">
-            <p className="font-semibold">Admin Review Feedback:</p>
-            <p className="mt-1 text-xs leading-relaxed text-red-700">
-              {initialProduct.rejection_reason}
-            </p>
-            <p className="mt-1.5 text-xs text-red-700">
-              Update the fields or photographs below and click{" "}
-              <strong>Submit for Review</strong> to re-submit.
-            </p>
-          </div>
-        )}
-
-        {moderationStatus === "approved" && (
-          <p className="mt-2.5 text-xs text-stone-600">
-            Note: To protect marketplace buyers against post-approval changes, editing a
-            published product or its gallery automatically sends it back to{" "}
-            <strong>Pending Review</strong> for admin re-approval.
-          </p>
-        )}
-
         {!isVerifiedSeller && (
           <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-800">
-            Your seller account is currently unverified. You can create and manage{" "}
-            <strong>Draft</strong> products now; once your{" "}
+            Your seller account is currently unverified. You can save <strong>Draft</strong> listings now; complete{" "}
             <Link href="/seller/verification" className="font-semibold underline">
               Seller Verification
             </Link>{" "}
-            is approved, you can submit drafts for public marketplace review.
+            to submit for marketplace review.
           </div>
         )}
       </div>
@@ -398,26 +516,157 @@ export function ProductForm({
         </div>
       )}
 
-      {/* SECTION A — BASIC INFORMATION */}
+      {/* STEP 1 — SELECT STONE CATEGORY */}
       <Card>
         <CardHeader className="border-b border-stone-100 pb-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section A
+            Step 1 of 6
           </p>
-          <h2 className="text-lg font-semibold text-stone-900">Basic Information</h2>
+          <h2 className="text-lg font-semibold text-stone-900">Select Stone Category</h2>
         </CardHeader>
-        <CardBody className="space-y-4">
+        <CardBody>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+            {categories.parents.map((cat) => {
+              const active = categoryId === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleSelectCategory(cat.id)}
+                  className={`rounded-xl border p-3 text-left transition-all cursor-pointer ${
+                    active
+                      ? "border-amber-600 bg-amber-50 ring-1 ring-amber-600 text-stone-950 shadow-xs"
+                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                  }`}
+                >
+                  <span className="block text-sm font-bold">{cat.name}</span>
+                  <span className="block text-[11px] text-stone-500 mt-0.5">
+                    {(categories.childrenByParent[cat.id] ?? []).length} varieties
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* STEP 2 — SELECT STONE VARIETY */}
+      <Card>
+        <CardHeader className="border-b border-stone-100 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
+                Step 2 of 6
+              </p>
+              <h2 className="text-lg font-semibold text-stone-900">
+                Select Stone Variety {selectedParent ? `(${selectedParent.name})` : ""}
+              </h2>
+            </div>
+            {varieties.length > 6 && (
+              <input
+                type="search"
+                value={varietyFilter}
+                onChange={(e) => setVarietyFilter(e.target.value)}
+                placeholder="Filter varieties..."
+                className="input-base sm:w-56 !py-1.5 !text-xs"
+              />
+            )}
+          </div>
+        </CardHeader>
+        <CardBody>
+          {!categoryId ? (
+            <p className="text-sm text-stone-500">
+              Select a stone category in Step 1 to see its varieties.
+            </p>
+          ) : varieties.length === 0 ? (
+            <p className="text-sm text-stone-600">
+              No sub-varieties configured for <strong>{selectedParent?.name}</strong>. Your product will be listed under <strong>{selectedParent?.name}</strong> directly.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+              {filteredVarieties.map((variety) => {
+                const active = subcategoryId === variety.id;
+                return (
+                  <button
+                    key={variety.id}
+                    type="button"
+                    onClick={() => handleSelectVariety(variety.id)}
+                    className={`rounded-lg border px-3 py-2 text-left text-xs font-semibold transition-all cursor-pointer ${
+                      active
+                        ? "border-amber-600 bg-amber-600 text-white shadow-xs"
+                        : "border-stone-200 bg-stone-50/70 text-stone-800 hover:border-amber-400 hover:bg-white"
+                    }`}
+                  >
+                    {variety.name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      {/* STEP 3 — SELECT PRODUCT FORM */}
+      <Card>
+        <CardHeader className="border-b border-stone-100 pb-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
+            Step 3 of 6
+          </p>
+          <h2 className="text-lg font-semibold text-stone-900">Select Product Form</h2>
+          <p className="text-xs text-stone-500 mt-0.5">
+            Only product forms enabled by Admin for{" "}
+            <strong>{selectedVariety?.name || selectedParent?.name || "this stone"}</strong> are shown.
+          </p>
+        </CardHeader>
+        <CardBody>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {visibleForms.map((form) => {
+              const active = formSlug === form.slug;
+              return (
+                <button
+                  key={form.slug}
+                  type="button"
+                  onClick={() => setFormSlug(form.slug as ProductFormType)}
+                  className={`rounded-xl border p-4 text-left transition-all cursor-pointer ${
+                    active
+                      ? "border-amber-600 bg-amber-50 ring-1 ring-amber-600 shadow-xs"
+                      : "border-stone-200 bg-white hover:border-stone-400"
+                  }`}
+                >
+                  <span className="block text-sm font-bold text-stone-900">{form.name}</span>
+                  <span className="block text-[11px] text-stone-500 mt-1">
+                    {form.description}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* STEP 4 — PRODUCT INFORMATION & FORM-SPECIFIC SPECS */}
+      <Card>
+        <CardHeader className="border-b border-stone-100 pb-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
+            Step 4 of 6
+          </p>
+          <h2 className="text-lg font-semibold text-stone-900">
+            Product Information &amp; {activeFormOption?.name ?? "Form"} Specifications
+          </h2>
+        </CardHeader>
+        <CardBody className="space-y-5">
+          {/* Common Product Info */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="sm:col-span-2">
               <label htmlFor="prod-name" className="label-base mb-1">
-                Product Name <span className="text-red-500">*</span>
+                Product Title <span className="text-red-500">*</span>
               </label>
               <input
                 id="prod-name"
                 type="text"
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                placeholder="e.g. Makrana White Sangemarmar First Quality Slab"
+                placeholder={`e.g. ${selectedVariety?.name || selectedParent?.name || "Agra Red"} ${activeFormOption?.name || "Slabs"}`}
                 className="input-base"
                 required
               />
@@ -435,125 +684,16 @@ export function ProductForm({
                 type="text"
                 value={sku}
                 onChange={(e) => setSku(e.target.value)}
-                placeholder="e.g. MKR-WHT-20MM-01"
+                placeholder="e.g. AGR-SLB-20MM"
                 className="input-base"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="prod-category" className="label-base mb-1">
-                Category
-              </label>
-              <select
-                id="prod-category"
-                value={categoryId}
-                onChange={(e) => {
-                  setCategoryId(e.target.value);
-                  setSubcategoryId("");
-                }}
-                className="input-base"
-              >
-                <option value="">Select primary stone category</option>
-                {categories.parents.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="prod-subcategory" className="label-base mb-1">
-                Subcategory
-              </label>
-              <select
-                id="prod-subcategory"
-                value={subcategoryId}
-                onChange={(e) => setSubcategoryId(e.target.value)}
-                disabled={subcategories.length === 0}
-                className="input-base"
-              >
-                <option value="">
-                  {subcategories.length === 0
-                    ? "No subcategories for selection"
-                    : "Optional subcategory"}
-                </option>
-                {subcategories.map((sub) => (
-                  <option key={sub.id} value={sub.id}>
-                    {sub.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="prod-material" className="label-base mb-1">
-                Material Type
-              </label>
-              <input
-                id="prod-material"
-                list="stone-material-list"
-                type="text"
-                value={materialType}
-                onChange={(e) => setMaterialType(e.target.value)}
-                placeholder="e.g. Marble, Granite, Sandstone"
-                className="input-base"
-              />
-              <datalist id="stone-material-list">
-                {STONE_MATERIAL_SUGGESTIONS.map((m) => (
-                  <option key={m} value={m} />
-                ))}
-              </datalist>
-            </div>
-
-            <div>
-              <label htmlFor="prod-origin" className="label-base mb-1">
-                Stone Origin / Quarry Belt
-              </label>
-              <input
-                id="prod-origin"
-                type="text"
-                value={stoneOrigin}
-                onChange={(e) => setStoneOrigin(e.target.value)}
-                placeholder="e.g. Makrana, Rajasthan, India"
-                className="input-base"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="prod-desc" className="label-base mb-1">
-              Product Description
-            </label>
-            <textarea
-              id="prod-desc"
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe mineral grain, veining consistency, architectural applications, grading, and quarry block quality…"
-              className="input-base"
-            />
-          </div>
-        </CardBody>
-      </Card>
-
-      {/* SECTION B — STONE SPECIFICATIONS */}
-      <Card>
-        <CardHeader className="border-b border-stone-100 pb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section B
-          </p>
-          <h2 className="text-lg font-semibold text-stone-900">Stone Specifications</h2>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
             <div>
               <label htmlFor="prod-colour" className="label-base mb-1">
-                Primary Colour
+                Colour
               </label>
               <input
                 id="prod-colour"
@@ -561,7 +701,7 @@ export function ProductForm({
                 type="text"
                 value={colour}
                 onChange={(e) => setColour(e.target.value)}
-                placeholder="e.g. White, Black, Beige"
+                placeholder="e.g. Red, Beige, White"
                 className="input-base"
               />
               <datalist id="stone-colour-list">
@@ -581,7 +721,7 @@ export function ProductForm({
                 type="text"
                 value={finish}
                 onChange={(e) => setFinish(e.target.value)}
-                placeholder="e.g. Mirror Polished, Honed, Leathered, Flamed"
+                placeholder="e.g. Natural Cleft, Honed, Polished"
                 className="input-base"
               />
               <datalist id="stone-finish-list">
@@ -590,270 +730,285 @@ export function ProductForm({
                 ))}
               </datalist>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <label htmlFor="prod-thickness" className="label-base mb-1">
-                Thickness (mm)
-              </label>
-              <input
-                id="prod-thickness"
-                type="number"
-                step="0.01"
-                min="0"
-                value={thickness}
-                onChange={(e) => setThickness(e.target.value)}
-                placeholder="e.g. 18 or 20"
-                className="input-base"
-              />
-              {fieldErrors.thickness && (
-                <p className="mt-1 text-xs text-red-600">{fieldErrors.thickness}</p>
-              )}
-            </div>
 
             <div>
-              <label htmlFor="prod-length" className="label-base mb-1">
-                Standard Length (mm)
+              <label htmlFor="prod-surface-treatment" className="label-base mb-1">
+                Surface Treatment
               </label>
               <input
-                id="prod-length"
-                type="number"
-                step="0.01"
-                min="0"
-                value={length}
-                onChange={(e) => setLength(e.target.value)}
-                placeholder="e.g. 2800"
-                className="input-base"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="prod-width" className="label-base mb-1">
-                Standard Width (mm)
-              </label>
-              <input
-                id="prod-width"
-                type="number"
-                step="0.01"
-                min="0"
-                value={width}
-                onChange={(e) => setWidth(e.target.value)}
-                placeholder="e.g. 1800"
-                className="input-base"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="prod-sizes" className="label-base mb-1">
-                Available Sizes / Formats
-              </label>
-              <input
-                id="prod-sizes"
-                type="text"
-                value={availableSizes}
-                onChange={(e) => setAvailableSizes(e.target.value)}
-                placeholder="e.g. Gangsaw Slabs (9×6 ft), Cut-to-Size 600×600mm, 1200×600mm"
-                className="input-base"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="prod-treatment" className="label-base mb-1">
-                Surface Treatment / Backing
-              </label>
-              <input
-                id="prod-treatment"
+                id="prod-surface-treatment"
                 type="text"
                 value={surfaceTreatment}
                 onChange={(e) => setSurfaceTreatment(e.target.value)}
-                placeholder="e.g. Italian Epoxy Resin Vacuum Treated + Fiber Mesh Backing"
+                placeholder="e.g. Epoxy Filled, Nano Sealed"
                 className="input-base"
               />
             </div>
-          </div>
-
-          {/* Custom Specifications Builder */}
-          <div className="space-y-3 border-t border-stone-100 pt-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-stone-900">
-                  Custom Technical Specifications
-                </h3>
-                <p className="text-xs text-stone-500">
-                  Add lab properties such as Water Absorption, Compressive Strength, Density, or
-                  Bookmatch availability.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={addCustomSpec}
-                className="btn-secondary !px-3 !py-1.5 !text-xs"
-              >
-                + Add Spec
-              </button>
-            </div>
-
-            {customSpecs.length > 0 && (
-              <div className="space-y-2.5">
-                {customSpecs.map((spec, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col gap-2 rounded-lg border border-stone-200 bg-stone-50/70 p-2.5 sm:flex-row sm:items-center"
-                  >
-                    <input
-                      type="text"
-                      value={spec.name}
-                      onChange={(e) => updateCustomSpec(idx, "name", e.target.value)}
-                      placeholder="Property (e.g. Water Absorption)"
-                      className="input-base sm:w-5/12"
-                    />
-                    <input
-                      type="text"
-                      value={spec.value}
-                      onChange={(e) => updateCustomSpec(idx, "value", e.target.value)}
-                      placeholder="Value (e.g. < 0.15% by weight)"
-                      className="input-base sm:flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeCustomSpec(idx)}
-                      className="self-end rounded-lg px-2.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 sm:self-center"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </CardBody>
-      </Card>
-
-      {/* SECTION C — PRICING */}
-      <Card>
-        <CardHeader className="border-b border-stone-100 pb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section C
-          </p>
-          <h2 className="text-lg font-semibold text-stone-900">Commercial Pricing &amp; MOQ</h2>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <label htmlFor="prod-price-type" className="label-base mb-1">
-                Pricing Model
-              </label>
-              <select
-                id="prod-price-type"
-                value={priceType}
-                onChange={(e) => {
-                  const next = e.target.value as PriceType;
-                  setPriceType(next);
-                  if (next === "on_request") setPrice("");
-                }}
-                className="input-base"
-              >
-                {(Object.keys(PRICE_TYPE_LABELS) as PriceType[]).map((pt) => (
-                  <option key={pt} value={pt}>
-                    {PRICE_TYPE_LABELS[pt]}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             <div>
-              <label htmlFor="prod-price" className="label-base mb-1">
-                {priceType === "starting" ? "Starting Price" : "Unit Price"}{" "}
-                {priceType !== "on_request" && <span className="text-red-500">*</span>}
+              <label htmlFor="prod-origin" className="label-base mb-1">
+                Origin / Quarry Belt
               </label>
               <input
-                id="prod-price"
-                type="number"
-                step="0.01"
-                min="0"
-                disabled={priceType === "on_request"}
-                value={priceType === "on_request" ? "" : price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder={priceType === "on_request" ? "POA" : "e.g. 285"}
+                id="prod-origin"
+                type="text"
+                value={stoneOrigin}
+                onChange={(e) => setStoneOrigin(e.target.value)}
+                placeholder="e.g. Agra / Dholpur / Makrana, Rajasthan"
                 className="input-base"
               />
-              {fieldErrors.price && (
-                <p className="mt-1 text-xs text-red-600">{fieldErrors.price}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="prod-currency" className="label-base mb-1">
-                Currency
-              </label>
-              <select
-                id="prod-currency"
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="input-base"
-              >
-                <option value="INR">INR (₹)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="AED">AED</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="prod-unit" className="label-base mb-1">
-                Selling Unit
-              </label>
-              <select
-                id="prod-unit"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value as CatalogUnit)}
-                className="input-base"
-              >
-                {(Object.keys(UNIT_LABELS) as CatalogUnit[]).map((u) => (
-                  <option key={u} value={u}>
-                    {UNIT_LABELS[u]}
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
 
-          <div className="max-w-xs">
-            <label htmlFor="prod-moq" className="label-base mb-1">
-              Minimum Order Quantity (MOQ in {UNIT_LABELS[unit]})
+          {/* Conditional Form Fields */}
+          {formSlug === "slabs" && (
+            <div className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-4 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                Slabs Specifications
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="prod-thickness" className="label-base mb-1">
+                    Slab Thickness (mm)
+                  </label>
+                  <input
+                    id="prod-thickness"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={thickness}
+                    onChange={(e) => setThickness(e.target.value)}
+                    placeholder="e.g. 18, 20, 30"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="slab-dims" className="label-base mb-1">
+                    Slab Dimensions
+                  </label>
+                  <input
+                    id="slab-dims"
+                    type="text"
+                    value={slabDimensions}
+                    onChange={(e) => setSlabDimensions(e.target.value)}
+                    placeholder="e.g. 2400 x 1200 mm (8 x 4 ft)"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="surface-details" className="label-base mb-1">
+                    Surface Details
+                  </label>
+                  <input
+                    id="surface-details"
+                    type="text"
+                    value={surfaceDetails}
+                    onChange={(e) => setSurfaceDetails(e.target.value)}
+                    placeholder="e.g. Calibrated back, edges sawn"
+                    className="input-base"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {formSlug === "tiles" && (
+            <div className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-4 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                Tiles Specifications
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div>
+                  <label htmlFor="prod-length" className="label-base mb-1">
+                    Tile Length (mm)
+                  </label>
+                  <input
+                    id="prod-length"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={length}
+                    onChange={(e) => setLength(e.target.value)}
+                    placeholder="e.g. 600"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="prod-width" className="label-base mb-1">
+                    Tile Width (mm)
+                  </label>
+                  <input
+                    id="prod-width"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={width}
+                    onChange={(e) => setWidth(e.target.value)}
+                    placeholder="e.g. 600"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="prod-thickness" className="label-base mb-1">
+                    Thickness (mm)
+                  </label>
+                  <input
+                    id="prod-thickness"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={thickness}
+                    onChange={(e) => setThickness(e.target.value)}
+                    placeholder="e.g. 20"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pieces-per-box" className="label-base mb-1">
+                    Pieces Per Box
+                  </label>
+                  <input
+                    id="pieces-per-box"
+                    type="number"
+                    min="0"
+                    value={piecesPerBox}
+                    onChange={(e) => setPiecesPerBox(e.target.value)}
+                    placeholder="e.g. 4"
+                    className="input-base"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {formSlug === "blocks" && (
+            <div className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-4 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                Quarry Block Specifications
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="block-dims" className="label-base mb-1">
+                    Block Dimensions
+                  </label>
+                  <input
+                    id="block-dims"
+                    type="text"
+                    value={blockDimensions}
+                    onChange={(e) => setBlockDimensions(e.target.value)}
+                    placeholder="e.g. 300 x 180 x 160 cm"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="block-weight" className="label-base mb-1">
+                    Approximate Weight
+                  </label>
+                  <input
+                    id="block-weight"
+                    type="text"
+                    value={approximateWeight}
+                    onChange={(e) => setApproximateWeight(e.target.value)}
+                    placeholder="e.g. 24 - 28 Metric Tons"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="block-grade" className="label-base mb-1">
+                    Block Grade
+                  </label>
+                  <input
+                    id="block-grade"
+                    type="text"
+                    value={blockGrade}
+                    onChange={(e) => setBlockGrade(e.target.value)}
+                    placeholder="e.g. Export Gangsaw Grade A"
+                    className="input-base"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {formSlug === "articles" && (
+            <div className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-4 space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                Architectural Article Specifications
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="article-type" className="label-base mb-1">
+                    Article Type
+                  </label>
+                  <input
+                    id="article-type"
+                    type="text"
+                    value={articleType}
+                    onChange={(e) => setArticleType(e.target.value)}
+                    placeholder="e.g. Carved Jaali, Pillar, Fountain, Gazebo"
+                    className="input-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="article-dims" className="label-base mb-1">
+                    Dimensions
+                  </label>
+                  <input
+                    id="article-dims"
+                    type="text"
+                    value={articleDimensions}
+                    onChange={(e) => setArticleDimensions(e.target.value)}
+                    placeholder="e.g. 1200 x 900 x 50 mm"
+                    className="input-base"
+                  />
+                </div>
+                <div className="flex items-end pb-2">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-stone-800 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={customizationAvailable}
+                      onChange={(e) => setCustomizationAvailable(e.target.checked)}
+                      className="h-4 w-4 rounded border-stone-300 text-amber-600 focus:ring-amber-600"
+                    />
+                    Custom CAD / Bespoke Carving Available
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="carving-details" className="label-base mb-1">
+                  Design / Carving Details
+                </label>
+                <input
+                  id="carving-details"
+                  type="text"
+                  value={carvingDetails}
+                  onChange={(e) => setCarvingDetails(e.target.value)}
+                  placeholder="e.g. Hand-chiseled Rajasthani floral lattice work"
+                  className="input-base"
+                />
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label htmlFor="prod-desc" className="label-base mb-1">
+              Product Description
             </label>
-            <input
-              id="prod-moq"
-              type="number"
-              step="0.01"
-              min="0"
-              value={minimumOrderQuantity}
-              onChange={(e) => setMinimumOrderQuantity(e.target.value)}
-              placeholder="e.g. 1500"
+            <textarea
+              id="prod-desc"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe stone texture, applications, grading, and export/domestic supply readiness…"
               className="input-base"
             />
           </div>
-        </CardBody>
-      </Card>
 
-      {/* SECTION D — INVENTORY */}
-      <Card>
-        <CardHeader className="border-b border-stone-100 pb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section D
-          </p>
-          <h2 className="text-lg font-semibold text-stone-900">
-            Inventory, Lead Time &amp; Packaging
-          </h2>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {/* Availability, Unit & MOQ (Public Prices Removed) */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 border-t border-stone-100 pt-4">
             <div>
               <label htmlFor="prod-stock" className="label-base mb-1">
-                Stock Availability
+                Availability
               </label>
               <select
                 id="prod-stock"
@@ -868,21 +1023,54 @@ export function ProductForm({
                 ))}
               </select>
             </div>
-
             <div>
               <label htmlFor="prod-avail-qty" className="label-base mb-1">
-                Available Ready Lot Quantity
+                Available Quantity
               </label>
               <input
                 id="prod-avail-qty"
                 type="text"
                 value={availableQuantity}
                 onChange={(e) => setAvailableQuantity(e.target.value)}
-                placeholder="e.g. 18,500 Sq. Ft. ready in stockyard"
+                placeholder="e.g. 15,000 sq. ft."
                 className="input-base"
               />
             </div>
+            <div>
+              <label htmlFor="prod-unit" className="label-base mb-1">
+                Supply Unit
+              </label>
+              <select
+                id="prod-unit"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value as CatalogUnit)}
+                className="input-base"
+              >
+                {(Object.keys(UNIT_LABELS) as CatalogUnit[]).map((u) => (
+                  <option key={u} value={u}>
+                    {UNIT_LABELS[u]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="prod-moq" className="label-base mb-1">
+                MOQ ({UNIT_LABELS[unit]})
+              </label>
+              <input
+                id="prod-moq"
+                type="number"
+                step="0.01"
+                min="0"
+                value={minimumOrderQuantity}
+                onChange={(e) => setMinimumOrderQuantity(e.target.value)}
+                placeholder="e.g. 500"
+                className="input-base"
+              />
+            </div>
+          </div>
 
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <label htmlFor="prod-lead-time" className="label-base mb-1">
                 Dispatch Lead Time (Days)
@@ -898,36 +1086,90 @@ export function ProductForm({
                 className="input-base"
               />
             </div>
+            <div>
+              <label htmlFor="prod-sizes" className="label-base mb-1">
+                Additional Sizes / Notes
+              </label>
+              <input
+                id="prod-sizes"
+                type="text"
+                value={availableSizes}
+                onChange={(e) => setAvailableSizes(e.target.value)}
+                placeholder="Custom cut-to-size options"
+                className="input-base"
+              />
+            </div>
+            <div>
+              <label htmlFor="prod-packaging" className="label-base mb-1">
+                Packaging Details
+              </label>
+              <input
+                id="prod-packaging"
+                type="text"
+                value={packagingInfo}
+                onChange={(e) => setPackagingInfo(e.target.value)}
+                placeholder="Seaworthy wooden crates"
+                className="input-base"
+              />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="prod-packaging" className="label-base mb-1">
-              Packaging &amp; Container Loading Details
-            </label>
-            <input
-              id="prod-packaging"
-              type="text"
-              value={packagingInfo}
-              onChange={(e) => setPackagingInfo(e.target.value)}
-              placeholder="e.g. Heavy-duty seaworthy wooden bundles, 7–8 bundles per 20ft container (27 MT)"
-              className="input-base"
-            />
+          <div className="rounded-lg border border-stone-200 bg-stone-50 px-3.5 py-2.5 text-xs text-stone-600">
+            <strong>Commercial Privacy:</strong> Public product prices are hidden on the marketplace. Buyers will click <em>Request a Quote</em> or <em>Get Best Price</em> and you send private pricing directly inside Quotations.
+          </div>
+
+          {/* Custom Specifications Builder */}
+          <div className="space-y-2 border-t border-stone-100 pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-stone-700">
+                Extra Technical Properties (Optional)
+              </span>
+              <button
+                type="button"
+                onClick={addCustomSpec}
+                className="btn-secondary !px-3 !py-1 !text-xs"
+              >
+                + Add Spec
+              </button>
+            </div>
+            {customSpecs.map((spec, idx) => (
+              <div key={idx} className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  value={spec.name}
+                  onChange={(e) => updateCustomSpec(idx, "name", e.target.value)}
+                  placeholder="Property"
+                  className="input-base sm:w-5/12"
+                />
+                <input
+                  type="text"
+                  value={spec.value}
+                  onChange={(e) => updateCustomSpec(idx, "value", e.target.value)}
+                  placeholder="Value"
+                  className="input-base sm:flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeCustomSpec(idx)}
+                  className="rounded-lg px-2.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
           </div>
         </CardBody>
       </Card>
 
-      {/* SECTION E — ULTRA-HD IMAGES */}
+      {/* STEP 5 — MULTIPLE PRODUCT IMAGES */}
       <Card>
         <CardHeader className="border-b border-stone-100 pb-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section E
+            Step 5 of 6
           </p>
-          <h2 className="text-lg font-semibold text-stone-900">
-            Ultra-HD Product Photographs
-          </h2>
+          <h2 className="text-lg font-semibold text-stone-900">Product Images</h2>
           <p className="mt-1 text-xs text-stone-500">
-            Upload authentic slab, close-up mineral grain, and bookmatch photographs. Select the
-            primary cover image and arrange display order.
+            Upload main cover image and additional gallery angles. Reorder or set primary cover anytime.
           </p>
         </CardHeader>
         <CardBody>
@@ -940,15 +1182,34 @@ export function ProductForm({
         </CardBody>
       </Card>
 
-      {/* SECTION F — SEO */}
+      {/* STEP 6 — REVIEW, SEO & PUBLISH */}
       <Card>
         <CardHeader className="border-b border-stone-100 pb-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Section F
+            Step 6 of 6
           </p>
-          <h2 className="text-lg font-semibold text-stone-900">Search Engine &amp; URL (SEO)</h2>
+          <h2 className="text-lg font-semibold text-stone-900">Review, SEO &amp; Publish</h2>
         </CardHeader>
         <CardBody className="space-y-4">
+          <div className="rounded-xl border border-stone-200 bg-stone-50 p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div>
+              <span className="block text-stone-500">Category</span>
+              <strong className="text-stone-900">{selectedParent?.name || "—"}</strong>
+            </div>
+            <div>
+              <span className="block text-stone-500">Variety</span>
+              <strong className="text-stone-900">{selectedVariety?.name || "Direct"}</strong>
+            </div>
+            <div>
+              <span className="block text-stone-500">Product Form</span>
+              <strong className="text-stone-900">{activeFormOption?.name || "Slabs"}</strong>
+            </div>
+            <div>
+              <span className="block text-stone-500">Commercial Mode</span>
+              <strong className="text-amber-800">Request a Quote</strong>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="prod-seo-title" className="label-base mb-1">
@@ -977,12 +1238,9 @@ export function ProductForm({
                   setSlugTouched(true);
                   setSlug(slugify(e.target.value));
                 }}
-                placeholder="makrana-white-marble-slab"
+                placeholder="agra-red-sandstone-slabs"
                 className="input-base"
               />
-              {fieldErrors.slug && (
-                <p className="mt-1 text-xs text-red-600">{fieldErrors.slug}</p>
-              )}
             </div>
           </div>
 
@@ -996,7 +1254,7 @@ export function ProductForm({
               maxLength={320}
               value={seoDescription}
               onChange={(e) => setSeoDescription(e.target.value)}
-              placeholder="Concise summary shown in Google search results for architects and stone importers…"
+              placeholder="Concise summary shown in search results…"
               className="input-base"
             />
           </div>
@@ -1043,4 +1301,3 @@ export function ProductForm({
     </div>
   );
 }
-

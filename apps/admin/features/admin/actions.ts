@@ -9,6 +9,7 @@ import {
   accountStatusActionSchema,
   categoryFormSchema,
   deleteCategorySchema,
+  reassignCategoryProductsSchema,
   grantAdminRoleSchema,
   orderStatusTransitionSchema,
   revokeAdminRoleSchema,
@@ -20,6 +21,7 @@ import {
   type AccountStatusActionInput,
   type CategoryFormInput,
   type DeleteCategoryInput,
+  type ReassignCategoryProductsInput,
   type GrantAdminRoleInput,
   type OrderStatusTransitionInput,
   type RevokeAdminRoleInput,
@@ -351,12 +353,40 @@ export async function saveCategoryAction(
     };
   }
 
-  const { id, name, slug, description, imageUrl, parentId, displayOrder, isActive } = parsed.data;
+  const {
+    id,
+    name,
+    slug,
+    description,
+    imageUrl,
+    imageAlt,
+    parentId,
+    displayOrder,
+    isActive,
+    isFeatured,
+    seoTitle,
+    seoDescription,
+    enabledFormSlugs,
+  } = parsed.data;
   const { supabase } = auth.ctx;
 
   try {
+    // Prevent duplicate slugs before write
+    const { data: existingSlugRow } = await supabase
+      .from("categories")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (existingSlugRow && existingSlugRow.id !== id) {
+      return {
+        success: false,
+        error: `Slug "/${slug}" is already used by another category or variety.`,
+      };
+    }
+
+    let savedId = id;
     if (id) {
-      // Update
       const { data, error } = await supabase
         .from("categories")
         .update({
@@ -364,20 +394,21 @@ export async function saveCategoryAction(
           slug,
           description: description || null,
           image_url: imageUrl || null,
+          image_alt: imageAlt || null,
           parent_id: parentId || null,
           display_order: displayOrder,
           is_active: isActive,
+          is_featured: isFeatured,
+          seo_title: seoTitle || null,
+          seo_description: seoDescription || null,
         })
         .eq("id", id)
         .select("id")
         .single();
 
       if (error) throw error;
-      revalidatePath("/admin/categories");
-      revalidatePath("/categories");
-      return { success: true, data: { id: data.id } };
+      savedId = data.id;
     } else {
-      // Create
       const { data, error } = await supabase
         .from("categories")
         .insert({
@@ -385,20 +416,82 @@ export async function saveCategoryAction(
           slug,
           description: description || null,
           image_url: imageUrl || null,
+          image_alt: imageAlt || null,
           parent_id: parentId || null,
           display_order: displayOrder,
           is_active: isActive,
+          is_featured: isFeatured,
+          seo_title: seoTitle || null,
+          seo_description: seoDescription || null,
         })
         .select("id")
         .single();
 
       if (error) throw error;
-      revalidatePath("/admin/categories");
-      revalidatePath("/categories");
-      return { success: true, data: { id: data.id } };
+      savedId = data.id;
     }
+
+    if (savedId) {
+      const { data: allForms } = await supabase
+        .from("product_forms")
+        .select("id, slug, display_order")
+        .eq("is_active", true);
+
+      if (allForms && allForms.length > 0) {
+        const enabledSet = new Set(enabledFormSlugs);
+        const upsertRows = allForms.map((f) => ({
+          category_id: savedId!,
+          form_id: f.id,
+          is_enabled: enabledSet.has(f.slug as "slabs" | "tiles" | "blocks" | "articles"),
+          display_order: f.display_order,
+        }));
+        const { error: formsErr } = await supabase
+          .from("category_product_forms")
+          .upsert(upsertRows, { onConflict: "category_id,form_id" });
+        if (formsErr) throw formsErr;
+      }
+    }
+
+    revalidatePath("/admin/categories");
+    revalidatePath("/categories");
+    return { success: true, data: { id: savedId! } };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to save category.";
+    return { success: false, error: message };
+  }
+}
+
+export async function reassignCategoryProductsAction(
+  rawInput: ReassignCategoryProductsInput,
+): Promise<AdminActionResult<{ movedCount: number }>> {
+  const auth = await authorizeAdminAction("admin");
+  if (!auth.ok) {
+    return { success: false, error: auth.error };
+  }
+
+  const parsed = reassignCategoryProductsSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid category reassignment input.",
+    };
+  }
+
+  const { fromCategoryId, toCategoryId } = parsed.data;
+  const { supabase } = auth.ctx;
+
+  try {
+    const { data, error } = await supabase.rpc("admin_reassign_category_products", {
+      _from_category_id: fromCategoryId,
+      _to_category_id: toCategoryId,
+    });
+    if (error) throw error;
+
+    revalidatePath("/admin/categories");
+    revalidatePath("/categories");
+    return { success: true, data: { movedCount: Number(data ?? 0) } };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to reassign products.";
     return { success: false, error: message };
   }
 }
@@ -423,6 +516,31 @@ export async function deleteCategoryAction(
   const { supabase } = auth.ctx;
 
   try {
+    const [{ count: productCount }, { count: childCount }] = await Promise.all([
+      supabase
+        .from("products")
+        .select("id", { count: "exact", head: true })
+        .eq("category_id", categoryId),
+      supabase
+        .from("categories")
+        .select("id", { count: "exact", head: true })
+        .eq("parent_id", categoryId),
+    ]);
+
+    if ((productCount ?? 0) > 0) {
+      return {
+        success: false,
+        error: `Cannot delete: ${productCount} product(s) still reference this category/variety. Reassign them to another category first.`,
+      };
+    }
+
+    if ((childCount ?? 0) > 0) {
+      return {
+        success: false,
+        error: `Cannot delete: ${childCount} child variety/varieties belong to this category. Reassign or remove child varieties first.`,
+      };
+    }
+
     const { error } = await supabase.from("categories").delete().eq("id", categoryId);
     if (error) throw error;
 

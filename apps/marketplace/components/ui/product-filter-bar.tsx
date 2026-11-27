@@ -139,164 +139,6 @@ function HorizontalFilterDropdown({
 }
 
 // ---------------------------------------------------------------------------
-// Popover Dropdown for Price Range
-// ---------------------------------------------------------------------------
-function HorizontalPriceDropdown({
-  minPrice,
-  maxPrice,
-  onApply,
-}: {
-  minPrice: string;
-  maxPrice: string;
-  onApply: (min: string, max: string) => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [tempMin, setTempMin] = useState(minPrice);
-  const [tempMax, setTempMax] = useState(maxPrice);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setTempMin(minPrice);
-    setTempMax(maxPrice);
-  }, [minPrice, maxPrice]);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const hasActive = Boolean(minPrice || maxPrice);
-
-  return (
-    <div ref={containerRef} className="relative inline-block text-left shrink-0">
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className={cn(
-          "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs transition-all cursor-pointer whitespace-nowrap shadow-2xs border",
-          hasActive
-            ? "bg-stone-900 text-white border-stone-900 font-semibold shadow-xs"
-            : "bg-stone-50/70 text-stone-700 border-stone-200/90 hover:border-stone-400 hover:bg-white hover:text-stone-950 font-medium",
-        )}
-        aria-expanded={isOpen}
-      >
-        <span>
-          {hasActive
-            ? `₹${minPrice || "0"} - ₹${maxPrice || "Max"}`
-            : "Price Range"}
-        </span>
-        <ChevronDown
-          className={cn(
-            "h-3.5 w-3.5 transition-transform duration-150",
-            isOpen ? "rotate-180" : "",
-            hasActive ? "text-stone-300" : "text-stone-400",
-          )}
-        />
-      </button>
-
-      {isOpen && (
-        <div className="absolute left-0 top-full mt-2 z-50 w-72 rounded-2xl border border-stone-200/90 bg-white p-3.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 space-y-3">
-          <div className="flex items-center justify-between border-b border-stone-100 pb-2">
-            <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">
-              Wholesale Rate (₹ / unit)
-            </span>
-            {hasActive && (
-              <button
-                type="button"
-                onClick={() => {
-                  setTempMin("");
-                  setTempMax("");
-                  onApply("", "");
-                  setIsOpen(false);
-                }}
-                className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 cursor-pointer"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-
-          {/* Quick presets */}
-          <div className="grid grid-cols-2 gap-1.5">
-            {[
-              { label: "< ₹200", min: "", max: "200" },
-              { label: "₹200 - ₹500", min: "200", max: "500" },
-              { label: "₹500 - ₹1000", min: "500", max: "1000" },
-              { label: "₹1000+", min: "1000", max: "" },
-            ].map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => {
-                  setTempMin(preset.min);
-                  setTempMax(preset.max);
-                  onApply(preset.min, preset.max);
-                  setIsOpen(false);
-                }}
-                className="rounded-lg border border-stone-200 bg-stone-50/70 hover:bg-stone-100 hover:border-stone-300 py-1 text-[11px] font-medium text-stone-700 transition-colors cursor-pointer"
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2 pt-1">
-            <div className="relative flex-1">
-              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400 font-medium">
-                ₹
-              </span>
-              <input
-                type="number"
-                min={0}
-                placeholder="Min"
-                value={tempMin}
-                onChange={(e) => setTempMin(e.target.value)}
-                className="w-full rounded-xl border border-stone-200 bg-stone-50/50 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:bg-white focus:border-amber-600 focus:outline-none transition-colors"
-              />
-            </div>
-            <span className="text-xs text-stone-400 font-medium">to</span>
-            <div className="relative flex-1">
-              <span className="absolute left-2.5 top-1.5 text-xs text-stone-400 font-medium">
-                ₹
-              </span>
-              <input
-                type="number"
-                min={0}
-                placeholder="Max"
-                value={tempMax}
-                onChange={(e) => setTempMax(e.target.value)}
-                className="w-full rounded-xl border border-stone-200 bg-stone-50/50 py-1.5 pl-6 pr-2 text-xs text-stone-900 focus:bg-white focus:border-amber-600 focus:outline-none transition-colors"
-              />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              onApply(tempMin, tempMax);
-              setIsOpen(false);
-            }}
-            className="w-full rounded-xl bg-amber-600 hover:bg-amber-700 text-white py-2 text-xs font-bold transition-colors shadow-2xs cursor-pointer"
-          >
-            Apply Price Filter
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Main Product Filter Bar (Architectural Sourcing Toolbar)
 // ---------------------------------------------------------------------------
 export function ProductFilterBar({
@@ -339,25 +181,6 @@ export function ProductFilterBar({
     [router, pathname, searchParams],
   );
 
-  const updatePriceRange = useCallback(
-    (min: string, max: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (min.trim()) {
-        params.set("minPrice", min.trim());
-      } else {
-        params.delete("minPrice");
-      }
-      if (max.trim()) {
-        params.set("maxPrice", max.trim());
-      } else {
-        params.delete("maxPrice");
-      }
-      params.delete("page");
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [router, pathname, searchParams],
-  );
-
   const toggleVerified = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     if (params.get("verified") === "true") {
@@ -370,8 +193,6 @@ export function ProductFilterBar({
   }, [router, pathname, searchParams]);
 
   const isVerified = searchParams.get("verified") === "true";
-  const minPrice = searchParams.get("minPrice") ?? "";
-  const maxPrice = searchParams.get("maxPrice") ?? "";
 
   const activeCount =
     getParamValues("category").length +
@@ -382,8 +203,6 @@ export function ProductFilterBar({
     getParamValues("thickness").length +
     getParamValues("stockStatus").length +
     (isVerified ? 1 : 0) +
-    (minPrice ? 1 : 0) +
-    (maxPrice ? 1 : 0) +
     (searchParams.get("location") ? 1 : 0) +
     (searchParams.get("q") ? 1 : 0);
 
@@ -553,13 +372,6 @@ export function ProductFilterBar({
               onChange={updateParams}
             />
           )}
-
-          {/* Quick Dropdown: Price */}
-          <HorizontalPriceDropdown
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            onApply={updatePriceRange}
-          />
 
           {/* Quick Pill: Verified Suppliers Only */}
           <button

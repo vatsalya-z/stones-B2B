@@ -75,7 +75,8 @@ const SEED_CATEGORIES: CategoryItem[] = [
   { id: "cat-6", parent_id: null, name: "Travertine", slug: "travertine", description: "Travertine tiles and slabs — Classic Cream, Walnut, Silver", image_url: "/images/categories/travertine.jpg", display_order: 60, seo_title: "Travertine Suppliers", seo_description: null },
   { id: "cat-7", parent_id: null, name: "Slate Stone", slug: "slate", description: "Slate roofing, flooring and cladding — Kund Black, Peacock, Multi-color", image_url: "/images/categories/slate.jpg", display_order: 70, seo_title: "Slate Stone Suppliers", seo_description: null },
   { id: "cat-8", parent_id: null, name: "Limestone", slug: "limestone", description: "Kota Blue, Kota Brown, Jaisalmer & Tandur limestone tiles and slabs", image_url: "/images/categories/limestone.jpg", display_order: 80, seo_title: "Limestone Suppliers", seo_description: null },
-  { id: "cat-9", parent_id: null, name: "Pebbles", slug: "pebbles", description: "River pebbles, white pebbles and mixed stone for landscaping and garden", image_url: "/images/categories/decorative-stone.jpg", display_order: 90, seo_title: "Pebbles & Garden Stone Suppliers", seo_description: null },
+  { id: "cat-9", parent_id: null, name: "Basalt", slug: "basalt", description: "Dense volcanic basalt slabs, tiles, cobbles and quarry blocks", image_url: "/images/categories/stone-blocks.jpg", display_order: 90, seo_title: "Basalt Stone Suppliers", seo_description: null },
+  { id: "cat-10", parent_id: null, name: "Pebbles & Cobbles", slug: "pebbles-and-cobbles", description: "River pebbles, white pebbles, black pebbles and cobbles for landscaping", image_url: "/images/categories/decorative-stone.jpg", display_order: 100, seo_title: "Pebbles & Cobbles Suppliers", seo_description: null },
 
   // ─── Level 2: Sandstone Subcategories (parent: cat-1) ──────────────────────
   { id: "sub-sand-1", parent_id: "cat-1", name: "Agra Red", slug: "agra-red", description: "Rich iron-red natural sandstone for heritage monuments and exterior facades", image_url: "/images/products/agra-red-sandstone.jpg", display_order: 101, seo_title: "Agra Red Sandstone Slabs & Tiles", seo_description: null },
@@ -96,11 +97,16 @@ const SEED_CATEGORIES: CategoryItem[] = [
   { id: "sub-sand-16", parent_id: "cat-1", name: "Rainbow", slug: "rainbow", description: "Vibrant swirled bands of purple, violet, violet-red, and gold quartz sandstone", image_url: "/images/categories/sandstone-macro.jpg", display_order: 116, seo_title: "Rainbow Sandstone Slabs", seo_description: null },
   { id: "sub-sand-17", parent_id: "cat-1", name: "Jodhpur Pink", slug: "jodhpur-pink", description: "Authentic Jodhpur pink sandstone from Mandore quarries for carved architectural screens", image_url: "/images/categories/sandstone.jpg", display_order: 117, seo_title: "Jodhpur Pink Sandstone", seo_description: null },
   { id: "sub-sand-18", parent_id: "cat-1", name: "Jaisalmer Yellow", slug: "jaisalmer-yellow", description: "Warm ochre-golden sandstone and yellow stone from Thar desert formations", image_url: "/images/products/dholpur-beige-sandstone.jpg", display_order: 118, seo_title: "Jaisalmer Yellow Sandstone", seo_description: null },
+  { id: "sub-sand-19", parent_id: "cat-1", name: "Camel Dust", slug: "camel-dust", description: "Warm sandy buff sandstone with subtle golden-brown mineral flecks for paving and cladding", image_url: "/images/categories/sandstone.jpg", display_order: 119, seo_title: "Camel Dust Sandstone", seo_description: null },
+  { id: "sub-sand-20", parent_id: "cat-1", name: "Ravina", slug: "ravina", description: "Rich warm terracotta and rose-tinted sandstone with fine natural grain", image_url: "/images/categories/sandstone-macro.jpg", display_order: 120, seo_title: "Ravina Sandstone", seo_description: null },
+  { id: "sub-sand-21", parent_id: "cat-1", name: "Mandana Red", slug: "mandana-red", description: "Deep maroon-red dense quartzitic sandstone from Mandana quarries for paving and walling", image_url: "/images/products/agra-red-sandstone.jpg", display_order: 121, seo_title: "Mandana Red Sandstone", seo_description: null },
+  { id: "sub-sand-22", parent_id: "cat-1", name: "Red Multy", slug: "red-multy", description: "Multi-tonal red, plum and warm ochre banded sandstone for exterior paving and feature walls", image_url: "/images/products/agra-red-sandstone.jpg", display_order: 122, seo_title: "Red Multy Sandstone", seo_description: null },
 
   // ─── Level 2: Marble Subcategories (parent: cat-2) ─────────────────────────
   { id: "sub-marb-1", parent_id: "cat-2", name: "Indian White Marble", slug: "indian-white-marble", description: "Makrana, Ambaji, and Banswara pure white calcite marble varieties", image_url: "/images/products/makrana-white-marble.jpg", display_order: 201, seo_title: "Indian White Marble Suppliers", seo_description: null },
   { id: "sub-marb-2", parent_id: "cat-2", name: "Indian Colored Marble", slug: "indian-colored-marble", description: "Rajasthan Forest Green, Rain Forest Brown, Torrone and Pink marble slabs", image_url: "/images/products/rajasthan-green-marble.jpg", display_order: 202, seo_title: "Indian Colored Marble Slabs", seo_description: null },
-  { id: "sub-marb-3", parent_id: "cat-2", name: "Imported Marble", slug: "imported-marble", description: "Italian Statuario, Botticino, Calacatta, and Carrara imported gangsaw slabs", image_url: "/images/categories/marble.jpg", display_order: 203, seo_title: "Imported Italian Marble Slabs", seo_description: null },
+  { id: "sub-marb-3", parent_id: "cat-2", name: "Englo Indian Marble", slug: "englo-indian-marble", description: "Englo Indian Marble slabs, tiles, and blocks for architectural interiors", image_url: "/images/categories/marble-macro.jpg", display_order: 203, seo_title: "Englo Indian Marble Slabs & Tiles", seo_description: null },
+  { id: "sub-marb-4", parent_id: "cat-2", name: "Imported Marble", slug: "imported-marble", description: "Italian Statuario, Botticino, Calacatta, and Carrara imported gangsaw slabs", image_url: "/images/categories/marble.jpg", display_order: 204, seo_title: "Imported Italian Marble Slabs", seo_description: null },
 
   // ─── Level 2: Granite Subcategories (parent: cat-3) ────────────────────────
   { id: "sub-gran-1", parent_id: "cat-3", name: "North India Granite", slug: "north-india-granite", description: "Crystal Yellow, Chima Pink, Tiger Black, and Jalore granite varieties", image_url: "/images/categories/granite-macro.jpg", display_order: 301, seo_title: "North India Granite Slabs", seo_description: null },
@@ -142,11 +148,11 @@ const SEED_CATEGORIES: CategoryItem[] = [
   { id: "sub-lime-5", parent_id: "cat-8", name: "Tandur Blue", slug: "tandur-blue", description: "Uniform greenish-blue natural cleft South Indian paving limestone", image_url: "/images/products/kota-blue-limestone.jpg", display_order: 805, seo_title: "Tandur Blue Limestone", seo_description: null },
   { id: "sub-lime-6", parent_id: "cat-8", name: "Kadapa Black", slug: "kadapa-black", description: "Deep black dense limestone from Andhra Pradesh for heavy-duty paving", image_url: "/images/categories/limestone-macro.jpg", display_order: 806, seo_title: "Kadapa Black Limestone", seo_description: null },
 
-  // ─── Level 2: Pebbles Subcategories (parent: cat-9) ────────────────────────
-  { id: "sub-pebb-1", parent_id: "cat-9", name: "River Pebbles", slug: "river-pebbles", description: "Smooth water-worn river gravel pebbles for landscaping, water features and gardens", image_url: "/images/categories/decorative-stone.jpg", display_order: 901, seo_title: "Natural River Pebbles", seo_description: null },
-  { id: "sub-pebb-2", parent_id: "cat-9", name: "White Pebbles", slug: "white-pebbles", description: "Tumbled brilliant white marble pebbles for modern planters and landscape pathways", image_url: "/images/categories/decorative-stone.jpg", display_order: 902, seo_title: "Pure White Decorative Pebbles", seo_description: null },
-  { id: "sub-pebb-3", parent_id: "cat-9", name: "Black Pebbles", slug: "black-pebbles", description: "Polished obsidian and matte basalt black river pebbles", image_url: "/images/categories/decorative-stone.jpg", display_order: 903, seo_title: "Black River Pebbles", seo_description: null },
-  { id: "sub-pebb-4", parent_id: "cat-9", name: "Coloured Pebbles", slug: "coloured-pebbles", description: "Curated mixed spectrum natural stone tumbled pebbles for landscape accents", image_url: "/images/categories/decorative-stone.jpg", display_order: 904, seo_title: "Coloured Mixed Stone Pebbles", seo_description: null },
+  // ─── Level 2: Pebbles & Cobbles Subcategories (parent: cat-10) ────────────
+  { id: "sub-pebb-1", parent_id: "cat-10", name: "River Pebbles", slug: "river-pebbles", description: "Smooth water-worn river gravel pebbles for landscaping, water features and gardens", image_url: "/images/categories/decorative-stone.jpg", display_order: 901, seo_title: "Natural River Pebbles", seo_description: null },
+  { id: "sub-pebb-2", parent_id: "cat-10", name: "White Pebbles", slug: "white-pebbles", description: "Tumbled brilliant white marble pebbles for modern planters and landscape pathways", image_url: "/images/categories/decorative-stone.jpg", display_order: 902, seo_title: "Pure White Decorative Pebbles", seo_description: null },
+  { id: "sub-pebb-3", parent_id: "cat-10", name: "Black Pebbles", slug: "black-pebbles", description: "Polished obsidian and matte basalt black river pebbles", image_url: "/images/categories/decorative-stone.jpg", display_order: 903, seo_title: "Black River Pebbles", seo_description: null },
+  { id: "sub-pebb-4", parent_id: "cat-10", name: "Coloured Pebbles", slug: "coloured-pebbles", description: "Curated mixed spectrum natural stone tumbled pebbles for landscape accents", image_url: "/images/categories/decorative-stone.jpg", display_order: 904, seo_title: "Coloured Mixed Stone Pebbles", seo_description: null },
 ];
 
 // ─── Categories ──────────────────────────────────────────────────────────────
@@ -1168,33 +1174,48 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
     list = list.filter((p) => p.seller.verification_status === "verified");
   }
 
-  if (params.minPrice) {
-    const min = Number(params.minPrice);
-    if (!Number.isNaN(min)) {
-      list = list.filter((p) => p.price !== null && p.price >= min);
-    }
-  }
-
-  if (params.maxPrice) {
-    const max = Number(params.maxPrice);
-    if (!Number.isNaN(max)) {
-      list = list.filter((p) => p.price !== null && p.price <= max);
-    }
+  if (params.format) {
+    const fmts = (Array.isArray(params.format) ? params.format : [params.format]).map((f) =>
+      f.toLowerCase(),
+    );
+    list = list.filter((p) => {
+      const n = p.name.toLowerCase();
+      return fmts.some(
+        (fmt) =>
+          n.includes(fmt.replace(/s$/, "")) ||
+          (fmt === "slabs" && p.unit === "sq_ft") ||
+          (fmt === "blocks" && p.unit === "metric_ton"),
+      );
+    });
   }
 
   if (params.q?.trim()) {
-    const query = params.q.toLowerCase().trim();
-    list = list.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.material_type?.toLowerCase().includes(query) ||
-        p.stone_origin?.toLowerCase().includes(query) ||
-        p.colour?.toLowerCase().includes(query) ||
-        p.finish?.toLowerCase().includes(query) ||
-        p.description?.toLowerCase().includes(query) ||
-        p.seller.business_name?.toLowerCase().includes(query) ||
-        p.seller.city?.toLowerCase().includes(query),
-    );
+    const intent = parseStoneSearchIntent(params.q);
+    const query = (intent.remainingQuery || params.q).toLowerCase().trim();
+    if (intent.formSlug) {
+      const singular = intent.formSlug.replace(/s$/, "");
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(singular) ||
+          p.description?.toLowerCase().includes(singular) ||
+          (intent.formSlug === "slabs" && p.unit === "sq_ft") ||
+          (intent.formSlug === "blocks" && p.unit === "metric_ton"),
+      );
+    }
+    if (query) {
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.material_type?.toLowerCase().includes(query) ||
+          p.stone_origin?.toLowerCase().includes(query) ||
+          p.colour?.toLowerCase().includes(query) ||
+          p.finish?.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query) ||
+          p.seller.business_name?.toLowerCase().includes(query) ||
+          p.seller.city?.toLowerCase().includes(query) ||
+          (intent.categorySlug && p.category?.slug === intent.categorySlug),
+      );
+    }
   }
 
   if (params.location?.trim()) {
@@ -1210,10 +1231,8 @@ function filterSeedProducts(params: ProductFilterParams = {}): {
     );
   }
 
-  if (params.sort === "price_asc") {
-    list.sort((a, b) => (a.price ?? Number.MAX_SAFE_INTEGER) - (b.price ?? Number.MAX_SAFE_INTEGER));
-  } else if (params.sort === "price_desc") {
-    list.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
+  if (params.sort === "name_asc") {
+    list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   const total = list.length;
@@ -1439,20 +1458,29 @@ export async function getProducts(params: ProductFilterParams = {}): Promise<{
       }
     }
 
-    if (params.minPrice) {
-      const min = Number(params.minPrice);
-      if (!isNaN(min)) query = query.gte("price", min);
+    const formats = Array.isArray(params.format)
+      ? params.format
+      : params.format
+        ? [params.format]
+        : [];
+    if (formats.length > 0) {
+      const normalizedFormats = formats.map((f) => f.trim().toLowerCase()).filter(Boolean);
+      if (normalizedFormats.length > 0) {
+        const { data: formRows } = await supabase
+          .from("product_forms")
+          .select("id")
+          .in("slug", normalizedFormats);
+        const formIds = (formRows ?? []).map((row) => row.id);
+        if (formIds.length > 0) {
+          query = query.in("form_id", formIds);
+        } else {
+          return filterSeedProducts(params);
+        }
+      }
     }
 
-    if (params.maxPrice) {
-      const max = Number(params.maxPrice);
-      if (!isNaN(max)) query = query.lte("price", max);
-    }
-
-    if (params.sort === "price_asc") {
-      query = query.order("price", { ascending: true });
-    } else if (params.sort === "price_desc") {
-      query = query.order("price", { ascending: false });
+    if (params.sort === "name_asc") {
+      query = query.order("name", { ascending: true });
     } else {
       query = query.order("published_at", { ascending: false });
     }
@@ -2225,4 +2253,174 @@ export async function getSellerBySlug(slug: string): Promise<PublicSeller | null
   } catch {
     return seedMatch();
   }
+}
+
+// ─── Product Forms, Search Intent & Catalogue Autocomplete ────────────────────
+
+export type ProductFormSlug = "slabs" | "tiles" | "blocks" | "articles";
+
+export interface ProductFormMeta {
+  slug: ProductFormSlug;
+  name: string;
+  description: string;
+}
+
+export const ALL_PRODUCT_FORMS: ProductFormMeta[] = [
+  { slug: "slabs", name: "Slabs", description: "Gangsaw, cutter, and architectural project slabs" },
+  { slug: "tiles", name: "Tiles", description: "Calibrated flooring, wall cladding, and paving tiles" },
+  { slug: "blocks", name: "Blocks", description: "Rough and dressed quarry blocks for processing" },
+  { slug: "articles", name: "Articles", description: "Carved jaali, pillars, fountains, and architectural stonework" },
+];
+
+export const ARTICLES_ENABLED_VARIETY_SLUGS = new Set([
+  "agra-red",
+  "dholpur-beige",
+  "dholpur-pink",
+  "bansi-pink",
+  "mint",
+  "teak",
+  "rainbow",
+  "jodhpur-pink",
+  "jaisalmer-yellow",
+]);
+
+export async function getEnabledFormsForCategory(
+  categoryId: string,
+  categorySlug: string,
+): Promise<ProductFormMeta[]> {
+  const fallback = () =>
+    ALL_PRODUCT_FORMS.filter(
+      (f) => f.slug !== "articles" || ARTICLES_ENABLED_VARIETY_SLUGS.has(categorySlug),
+    );
+
+  if (!isSupabaseConfigured() || !/^[0-9a-f-]{36}$/i.test(categoryId)) {
+    return fallback();
+  }
+
+  try {
+    const supabase = await getSupabaseServerClient();
+    const [{ data: links }, { data: forms }] = await Promise.all([
+      supabase
+        .from("category_product_forms")
+        .select("form_id, is_enabled")
+        .eq("category_id", categoryId)
+        .eq("is_enabled", true),
+      supabase
+        .from("product_forms")
+        .select("id, slug, name, description")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true }),
+    ]);
+
+    if (!links || links.length === 0 || !forms || forms.length === 0) {
+      return fallback();
+    }
+
+    const enabledIds = new Set(links.map((l) => l.form_id));
+    const resolved = forms
+      .filter((f) => enabledIds.has(f.id))
+      .map((f) => ({
+        slug: f.slug as ProductFormSlug,
+        name: f.name,
+        description: f.description || "",
+      }));
+    return resolved.length > 0 ? resolved : fallback();
+  } catch {
+    return fallback();
+  }
+}
+
+export function parseStoneSearchIntent(raw?: string): {
+  categorySlug: string | null;
+  formSlug: ProductFormSlug | null;
+  remainingQuery: string;
+} {
+  if (!raw?.trim()) {
+    return { categorySlug: null, formSlug: null, remainingQuery: "" };
+  }
+  let text = raw.toLowerCase().trim();
+  let formSlug: ProductFormSlug | null = null;
+
+  const formMatchers: Array<[RegExp, ProductFormSlug]> = [
+    [/\b(slabs?)\b/i, "slabs"],
+    [/\b(tiles?)\b/i, "tiles"],
+    [/\b(blocks?)\b/i, "blocks"],
+    [/\b(articles?|carvings?|jaali)\b/i, "articles"],
+  ];
+
+  for (const [regex, slug] of formMatchers) {
+    if (regex.test(text)) {
+      formSlug = slug;
+      text = text.replace(regex, " ").replace(/\s+/g, " ").trim();
+      break;
+    }
+  }
+
+  const matchedCat = SEED_CATEGORIES.find(
+    (c) =>
+      text === c.name.toLowerCase() ||
+      text === c.slug ||
+      text.includes(c.name.toLowerCase()),
+  );
+
+  return {
+    categorySlug: matchedCat?.slug ?? null,
+    formSlug,
+    remainingQuery: text,
+  };
+}
+
+export interface SearchSuggestionItem {
+  label: string;
+  href: string;
+  kind: "category" | "variety" | "form" | "product";
+}
+
+export async function getSearchSuggestions(rawQuery: string): Promise<SearchSuggestionItem[]> {
+  const q = rawQuery.trim().toLowerCase();
+  if (!q) return [];
+
+  const suggestions: SearchSuggestionItem[] = [];
+  const parentById = new Map(SEED_CATEGORIES.filter((c) => !c.parent_id).map((c) => [c.id, c]));
+
+  for (const cat of SEED_CATEGORIES) {
+    if (cat.name.toLowerCase().includes(q) || cat.slug.includes(q)) {
+      const parent = cat.parent_id ? parentById.get(cat.parent_id) : null;
+      if (parent) {
+        suggestions.push({
+          label: `${cat.name} (${parent.name})`,
+          href: `/categories/${parent.slug}/${cat.slug}`,
+          kind: "variety",
+        });
+        const forms = ARTICLES_ENABLED_VARIETY_SLUGS.has(cat.slug)
+          ? (["Slabs", "Tiles", "Blocks", "Articles"] as const)
+          : (["Slabs", "Tiles", "Blocks"] as const);
+        for (const f of forms) {
+          suggestions.push({
+            label: `${cat.name} ${f}`,
+            href: `/categories/${parent.slug}/${cat.slug}/${f.toLowerCase()}`,
+            kind: "form",
+          });
+        }
+      } else {
+        suggestions.push({
+          label: cat.name,
+          href: `/categories/${cat.slug}`,
+          kind: "category",
+        });
+      }
+    }
+  }
+
+  for (const prod of SEED_PRODUCTS) {
+    if (prod.name.toLowerCase().includes(q)) {
+      suggestions.push({
+        label: prod.name,
+        href: `/products/${prod.slug}`,
+        kind: "product",
+      });
+    }
+  }
+
+  return suggestions.slice(0, 8);
 }

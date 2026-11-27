@@ -469,6 +469,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   key={sub.id}
                   name={sub.name}
                   slug={sub.slug}
+                  href={`/categories/${slug}/${sub.slug}`}
                   description={sub.description}
                   imageUrl={sub.image_url}
                 />
@@ -506,6 +507,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                     key={sub.id}
                     name={sub.name}
                     slug={sub.slug}
+                    href={`/categories/${parentCategory.slug}/${sub.slug}`}
                     description={sub.description}
                     imageUrl={sub.image_url}
                   />
