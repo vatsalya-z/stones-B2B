@@ -24,6 +24,10 @@ import {
   decodeSellerDescription,
   encodeSellerDescription,
 } from "./seller-meta";
+import {
+  validateCategoryAndProductForm,
+  type FormValidationClient,
+} from "./form-validation";
 
 export interface ActionResult<T = undefined> {
   success: boolean;
@@ -482,38 +486,26 @@ export async function createSellerProductAction(
     };
   }
 
-  const effectiveCategoryId = values.subcategoryId || values.categoryId || null;
+  const formValidation = await validateCategoryAndProductForm(
+    supabase as unknown as FormValidationClient,
+    {
+      categoryId: values.categoryId,
+      subcategoryId: values.subcategoryId,
+      formId: values.formId,
+      formSlug: values.formSlug,
+    },
+  );
+  if (!formValidation.ok) {
+    return {
+      success: false,
+      error: formValidation.error,
+    };
+  }
+
+  const effectiveCategoryId = formValidation.categoryId;
+  const resolvedFormId = formValidation.formId;
   const finalSlug = await generateUniqueProductSlug(values.slug || values.name);
   const effectivePrice = values.priceType === "on_request" ? null : values.price;
-
-  let resolvedFormId: string | null = values.formId ?? null;
-  if (!resolvedFormId && values.formSlug) {
-    const { data: formRow } = await supabase
-      .from("product_forms")
-      .select("id")
-      .eq("slug", values.formSlug)
-      .maybeSingle();
-    resolvedFormId = formRow?.id ?? null;
-  }
-
-  if (effectiveCategoryId && resolvedFormId) {
-    const { data: formLinks } = await supabase
-      .from("category_product_forms")
-      .select("form_id, is_enabled")
-      .eq("category_id", effectiveCategoryId);
-
-    if (formLinks && formLinks.length > 0) {
-      const isAllowed = formLinks.some(
-        (l) => l.form_id === resolvedFormId && l.is_enabled,
-      );
-      if (!isAllowed) {
-        return {
-          success: false,
-          error: "Selected product form is not enabled for this stone variety.",
-        };
-      }
-    }
-  }
 
   const { data: product, error } = await supabase
     .from("products")
@@ -639,42 +631,30 @@ export async function updateSellerProductAction(
     }
   }
 
-  const effectiveCategoryId = values.subcategoryId || values.categoryId || null;
+  const formValidation = await validateCategoryAndProductForm(
+    supabase as unknown as FormValidationClient,
+    {
+      categoryId: values.categoryId,
+      subcategoryId: values.subcategoryId,
+      formId: values.formId,
+      formSlug: values.formSlug,
+    },
+  );
+  if (!formValidation.ok) {
+    return {
+      success: false,
+      error: formValidation.error,
+    };
+  }
+
+  const effectiveCategoryId = formValidation.categoryId;
+  const resolvedFormId = formValidation.formId;
   const desiredSlug = values.slug || existing.slug || values.name;
   const finalSlug =
     desiredSlug === existing.slug
       ? existing.slug
       : await generateUniqueProductSlug(desiredSlug, existing.id);
   const effectivePrice = values.priceType === "on_request" ? null : values.price;
-
-  let resolvedFormId: string | null = values.formId ?? null;
-  if (!resolvedFormId && values.formSlug) {
-    const { data: formRow } = await supabase
-      .from("product_forms")
-      .select("id")
-      .eq("slug", values.formSlug)
-      .maybeSingle();
-    resolvedFormId = formRow?.id ?? null;
-  }
-
-  if (effectiveCategoryId && resolvedFormId) {
-    const { data: formLinks } = await supabase
-      .from("category_product_forms")
-      .select("form_id, is_enabled")
-      .eq("category_id", effectiveCategoryId);
-
-    if (formLinks && formLinks.length > 0) {
-      const isAllowed = formLinks.some(
-        (l) => l.form_id === resolvedFormId && l.is_enabled,
-      );
-      if (!isAllowed) {
-        return {
-          success: false,
-          error: "Selected product form is not enabled for this stone variety.",
-        };
-      }
-    }
-  }
 
   const { data: updated, error: updateErr } = await supabase
     .from("products")

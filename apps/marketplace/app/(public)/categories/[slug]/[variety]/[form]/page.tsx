@@ -20,7 +20,7 @@ const VALID_FORMS = new Set(["slabs", "tiles", "blocks", "articles"]);
 export async function generateMetadata({ params }: VarietyFormPageProps): Promise<Metadata> {
   const { slug, variety, form } = await params;
   if (!VALID_FORMS.has(form)) {
-    return { title: "Product Form Not Found" };
+    return { title: "Product Form Not Found", robots: { index: false, follow: false } };
   }
 
   const [parent, child] = await Promise.all([
@@ -28,16 +28,16 @@ export async function generateMetadata({ params }: VarietyFormPageProps): Promis
     getCategoryBySlug(variety),
   ]);
   if (!parent || !child) {
-    return { title: "Stone Form Not Found" };
+    return { title: "Stone Form Not Found", robots: { index: false, follow: false } };
   }
 
   const enabledForms = await getEnabledFormsForCategory(child.id, child.slug);
   const matchedForm = enabledForms.find((f) => f.slug === form);
   if (!matchedForm) {
-    return { title: "Product Form Unavailable" };
+    return { title: "Product Form Unavailable", robots: { index: false, follow: false } };
   }
 
-  const title = `${child.name} ${matchedForm.name} (${parent.name}) — Direct Quarry Sourcing | StonesDekho`;
+  const title = `${child.name} ${matchedForm.name} (${parent.name}) — Direct Quarry Sourcing`;
   const description = `Source ${child.name} ${matchedForm.name} directly from verified Indian quarries and processors. Request quotes for custom thicknesses, finishes and export bulk orders.`;
 
   return {
