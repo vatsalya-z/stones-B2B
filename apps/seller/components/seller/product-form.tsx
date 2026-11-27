@@ -220,7 +220,7 @@ export function ProductForm({
     setSubcategoryId("");
     setVarietyFilter("");
     const parentObj = categories.parents.find((p) => p.id === nextParentId);
-    if (parentObj && !materialType) {
+    if (parentObj && (mode === "create" || !materialType)) {
       setMaterialType(parentObj.name);
     }
     const nextAllowed =
@@ -516,18 +516,56 @@ export function ProductForm({
         </div>
       )}
 
-      {/* STEP 1 — SELECT STONE CATEGORY */}
+      {/* STEPS 1 & 2 — SELECT STONE CATEGORY & INLINE SUBCATEGORY (VARIETY) */}
       <Card>
         <CardHeader className="border-b border-stone-100 pb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-            Step 1 of 6
-          </p>
-          <h2 className="text-lg font-semibold text-stone-900">Select Stone Category</h2>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
+                Step 1 &amp; 2 of 6
+              </p>
+              <h2 className="text-lg font-semibold text-stone-900">
+                Select Stone Category &amp; Subcategory
+              </h2>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Click any stone category below to instantly open and pick its subcategory.
+              </p>
+            </div>
+
+            {/* Live Selection Path Pill */}
+            <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-xs">
+              <span className={selectedParent ? "font-semibold text-stone-900" : "text-stone-400"}>
+                {selectedParent ? selectedParent.name : "1. Category"}
+              </span>
+              <span className="text-stone-300">→</span>
+              <span
+                className={
+                  selectedVariety
+                    ? "font-semibold text-amber-700"
+                    : selectedParent && varieties.length === 0
+                      ? "font-medium text-emerald-700"
+                      : "text-stone-400"
+                }
+              >
+                {selectedVariety
+                  ? selectedVariety.name
+                  : selectedParent && varieties.length === 0
+                    ? "Direct Category"
+                    : "2. Subcategory"}
+              </span>
+              <span className="text-stone-300">→</span>
+              <span className="font-semibold text-stone-700">
+                {activeFormOption?.name ?? "3. Form"}
+              </span>
+            </div>
+          </div>
         </CardHeader>
-        <CardBody>
+        <CardBody className="space-y-4">
+          {/* Step 1: Parent Stone Categories */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
             {categories.parents.map((cat) => {
               const active = categoryId === cat.id;
+              const childCount = (categories.childrenByParent[cat.id] ?? []).length;
               return (
                 <button
                   key={cat.id}
@@ -536,71 +574,76 @@ export function ProductForm({
                   className={`rounded-xl border p-3 text-left transition-all cursor-pointer ${
                     active
                       ? "border-amber-600 bg-amber-50 ring-1 ring-amber-600 text-stone-950 shadow-xs"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400"
+                      : "border-stone-200 bg-white text-stone-700 hover:border-stone-400 hover:bg-stone-50/50"
                   }`}
                 >
-                  <span className="block text-sm font-bold">{cat.name}</span>
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="block text-sm font-bold">{cat.name}</span>
+                    {active && (
+                      <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-600 text-[10px] font-bold text-white">
+                        ✓
+                      </span>
+                    )}
+                  </div>
                   <span className="block text-[11px] text-stone-500 mt-0.5">
-                    {(categories.childrenByParent[cat.id] ?? []).length} varieties
+                    {childCount > 0 ? `${childCount} subcategories` : "Direct category"}
                   </span>
                 </button>
               );
             })}
           </div>
-        </CardBody>
-      </Card>
 
-      {/* STEP 2 — SELECT STONE VARIETY */}
-      <Card>
-        <CardHeader className="border-b border-stone-100 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-                Step 2 of 6
-              </p>
-              <h2 className="text-lg font-semibold text-stone-900">
-                Select Stone Variety {selectedParent ? `(${selectedParent.name})` : ""}
-              </h2>
-            </div>
-            {varieties.length > 6 && (
-              <input
-                type="search"
-                value={varietyFilter}
-                onChange={(e) => setVarietyFilter(e.target.value)}
-                placeholder="Filter varieties..."
-                className="input-base sm:w-56 !py-1.5 !text-xs"
-              />
-            )}
-          </div>
-        </CardHeader>
-        <CardBody>
-          {!categoryId ? (
-            <p className="text-sm text-stone-500">
-              Select a stone category in Step 1 to see its varieties.
-            </p>
-          ) : varieties.length === 0 ? (
-            <p className="text-sm text-stone-600">
-              No sub-varieties configured for <strong>{selectedParent?.name}</strong>. Your product will be listed under <strong>{selectedParent?.name}</strong> directly.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-              {filteredVarieties.map((variety) => {
-                const active = subcategoryId === variety.id;
-                return (
-                  <button
-                    key={variety.id}
-                    type="button"
-                    onClick={() => handleSelectVariety(variety.id)}
-                    className={`rounded-lg border px-3 py-2 text-left text-xs font-semibold transition-all cursor-pointer ${
-                      active
-                        ? "border-amber-600 bg-amber-600 text-white shadow-xs"
-                        : "border-stone-200 bg-stone-50/70 text-stone-800 hover:border-amber-400 hover:bg-white"
-                    }`}
-                  >
-                    {variety.name}
-                  </button>
-                );
-              })}
+          {/* Step 2: Inline Expanded Subcategory Drawer right under the selected category */}
+          {selectedParent && (
+            <div className="rounded-2xl border border-amber-200/90 bg-amber-50/40 p-4 sm:p-5 space-y-3 transition-all">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-amber-800">
+                    Step 2 of 6 · {selectedParent.name} Subcategories
+                  </span>
+                  <h3 className="text-sm font-bold text-stone-900 mt-0.5">
+                    {varieties.length > 0
+                      ? `Select ${selectedParent.name} Subcategory (${varieties.length} available)`
+                      : `${selectedParent.name} (Direct Category)`}
+                  </h3>
+                </div>
+                {varieties.length > 6 && (
+                  <input
+                    type="search"
+                    value={varietyFilter}
+                    onChange={(e) => setVarietyFilter(e.target.value)}
+                    placeholder={`Search ${selectedParent.name} subcategory...`}
+                    className="input-base sm:w-64 !py-1.5 !text-xs bg-white"
+                  />
+                )}
+              </div>
+
+              {varieties.length === 0 ? (
+                <p className="text-xs text-stone-700 bg-white/80 border border-stone-200 rounded-xl px-3.5 py-2.5">
+                  No sub-varieties configured for <strong>{selectedParent.name}</strong>. Your product will be listed directly under <strong>{selectedParent.name}</strong> — choose a Product Form below.
+                </p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+                  {filteredVarieties.map((variety) => {
+                    const active = subcategoryId === variety.id;
+                    return (
+                      <button
+                        key={variety.id}
+                        type="button"
+                        onClick={() => handleSelectVariety(variety.id)}
+                        className={`flex items-center justify-between gap-1.5 rounded-xl border px-3 py-2.5 text-left text-xs font-semibold transition-all cursor-pointer ${
+                          active
+                            ? "border-amber-600 bg-amber-600 text-white shadow-xs ring-1 ring-amber-600"
+                            : "border-stone-200 bg-white text-stone-800 hover:border-amber-400 hover:bg-amber-50/40"
+                        }`}
+                      >
+                        <span className="truncate">{variety.name}</span>
+                        {active && <span className="text-[11px] shrink-0">✓</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </CardBody>
@@ -619,28 +662,36 @@ export function ProductForm({
           </p>
         </CardHeader>
         <CardBody>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {visibleForms.map((form) => {
-              const active = formSlug === form.slug;
-              return (
-                <button
-                  key={form.slug}
-                  type="button"
-                  onClick={() => setFormSlug(form.slug as ProductFormType)}
-                  className={`rounded-xl border p-4 text-left transition-all cursor-pointer ${
-                    active
-                      ? "border-amber-600 bg-amber-50 ring-1 ring-amber-600 shadow-xs"
-                      : "border-stone-200 bg-white hover:border-stone-400"
-                  }`}
-                >
-                  <span className="block text-sm font-bold text-stone-900">{form.name}</span>
-                  <span className="block text-[11px] text-stone-500 mt-1">
-                    {form.description}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {!categoryId || (varieties.length > 0 && !subcategoryId) ? (
+            <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50/70 px-4 py-5 text-center text-xs text-stone-600">
+              {!categoryId
+                ? "Please select a Stone Category in Step 1 above to continue."
+                : `Please select a ${selectedParent?.name ?? "stone"} subcategory in Step 2 above to see its available Product Forms (Slabs, Tiles, Blocks${selectedParent?.slug === "sandstone" ? ", Articles" : ""}).`}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {visibleForms.map((form) => {
+                const active = formSlug === form.slug;
+                return (
+                  <button
+                    key={form.slug}
+                    type="button"
+                    onClick={() => setFormSlug(form.slug as ProductFormType)}
+                    className={`rounded-xl border p-4 text-left transition-all cursor-pointer ${
+                      active
+                        ? "border-amber-600 bg-amber-50 ring-1 ring-amber-600 shadow-xs"
+                        : "border-stone-200 bg-white hover:border-stone-400"
+                    }`}
+                  >
+                    <span className="block text-sm font-bold text-stone-900">{form.name}</span>
+                    <span className="block text-[11px] text-stone-500 mt-1">
+                      {form.description}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </CardBody>
       </Card>
 
